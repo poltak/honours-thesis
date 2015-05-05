@@ -1,0 +1,54 @@
+% Set up a title page
+\thispagestyle{empty} % no page number on very first page
+% Use roman numerals for page numbers initially
+\renewcommand{\thepage}{\roman{page}}
+
+\author{Jonathan Poltak Samosir}
+\title{Honours Thesis}
+
+\begin{spacing}{1.5}
+\begin{center}
+{\Large \bfseries
+Clayton School of Information Technology\\
+Monash University}
+
+\vspace*{30mm}
+
+\includegraphics[width=5cm]{img/MonashCrest.pdf}
+
+\vspace*{15mm}
+
+{\large \bfseries
+Honours Thesis --- Semester 1, 2015
+}
+
+\vspace*{10mm}
+
+{\LARGE \bfseries
+A study of data stream processing systems for use with railway
+}
+
+\vspace*{20mm}
+
+{\large \bfseries
+Jonathan Poltak Samosir
+
+[2271 3603]
+
+\vspace*{20mm}
+
+Supervisors: \parbox[t]{50mm}{\mbox{Dr Maria Indrawan-Santiago}\\Dr Pari Delir Haghighi}
+}
+
+\end{center}
+\end{spacing}
+
+\newpage
+
+
+\tableofcontents
+
+\newpage
+% Now reset page number counter,and switch to arabic numerals for remaining page numbers
+\setcounter{page}{1}
+\renewcommand{\thepage}{\arabic{page}}

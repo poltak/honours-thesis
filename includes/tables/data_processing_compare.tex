@@ -1,0 +1,22 @@
+\begin{landscape}
+\begin{table}[H]
+\centering
+\caption{\textbf{Realtime data processing systems compared}}
+\label{tab:processing_systems_compare}
+
+\begin{tabular}{ |>{\columncolor[gray]{0.9}}l | l | l | l | l | }
+
+\hline
+\rowcolor{gray!20}
+                                                & \textbf{Storm}            & \textbf{Spark Streaming}  & \textbf{S4}               & \textbf{Samza}          \\ \hline
+\textbf{1: Data mobility}                       & Fetch                     & Micro-batch               & Push                      & Fetch (Kafka)           \\ \hline
+\textbf{2: SQL on streams}                      & Extension (Trident)       & No                        & No                        & No                      \\ \hline
+\textbf{3: Handling stream imperfections}       & User responsiblity        & N/A                       & No                        & Yes (Kafka)             \\ \hline
+\textbf{4: Deterministic outcomes}              & N/A                       & N/A                       & Depends on operation      & N/A                     \\ \hline
+\textbf{5: Stored and streaming data}           & Yes (Lambda architecture) & Yes (Spark)               & N/A                       & No                      \\ \hline
+\textbf{6: High availability}                   & Yes (rollback recovery)   & Yes (checkpoint recovery) & Yes (checkpoint recovery) & Yes (rollback recovery) \\ \hline
+\textbf{7: Partition and scaling}               & User responsiblity        & N/A                       & Yes (KVP)                 & Yes (Kafka topics)      \\ \hline
+\textbf{8: Instant response}                    & N/A                       & N/A                       & N/A                       & N/A                     \\ \hline
+\end{tabular}
+\end{table}
+\end{landscape}
