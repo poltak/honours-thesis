@@ -28,22 +28,22 @@ algorithms related to data analytics~\cite{liu_survey_2014}.
 What is proposed in this chapter is a realtime big data processing system for the aforementioned railway monitoring system by the IRT at Monash University given the possibility that data is able to be streamed in realtime from the railway in realtime.
 
 This chapter will be structured as follows:\\
-Our research questions, along with an outline of what we will be doing
-will be outlined in~\sectref{sec:objectives}. The methodology used to achieve the deliverables of this project will be
-discussed in~\sectref{sec:methodology}. The design of the entire research project will be shown
-in~\sectref{sec:research_design}.  Finally, we will conclude with an overview, in~\sectref{sec:expected_outcomes}, of
-what the expected outcomes and deliverables of this project will be.
+A brief outline of the domain on big data processing, both batch and realtime processing, will be given
+in~\sectref{sec:research_context}. Furthermore, an overview of the Monash University Institute of Railway Technology's
+project, upon which this project is based on, will be covered in the aforementioned chapter. In~\sectref{sec:objectives},
+the goals and aims of the project will be given, as well as more specific goals and aims relating to the subproject
+covered in this thesis. Research questions for this subproject will be given in~\sectref{sub:research_questions}.
+Finally, the structure of this overall thesis will be given in~\sectref{sub:proposed_thesis_chapter_headings}, before
+concluding this chapter in~\sectref{sec:summary}.
 
 % section introduction (end)
 
 
-\newpage
 
-
-\section{Research Context} % (fold)
+\subsection{Research Context} % (fold)
 \label{sec:research_context}
 
-\subsection{Big Data} % (fold)
+\subsubsection{Big Data} % (fold)
 \label{sub:big_data}
 
 Big data, as explained previously, is becoming commonplace in both industry and academia. Everyday companies are finding
@@ -61,7 +61,7 @@ processing operations that was needed at the time~\cite{ghemawat_google_2003}~\c
 
 % subsection big_data (end)
 
-\subsection{Batch data processing} % (fold)
+\subsubsection{Batch data processing} % (fold)
 \label{sub:apache hadoop}
 
 From the success of MapReduce usage combined with GFS at Google, the open-source community responded swiftly with the
@@ -87,7 +87,7 @@ Hadoop ecosystem~\cite{harrison_hadoops_2012}.
 
 % subsection apache_hadoop (end)
 
-\subsection{Realtime data processing} % (fold)
+\subsubsection{Realtime data processing} % (fold)
 \label{sub:prop_realtime_data_processing}
 
 One of the major limitations of Hadoop, and the MapReduce model in general, soon became obvious:\@ MapReduce was designed
@@ -109,169 +109,87 @@ which is a recently open-sourced project, currently being used in production at 
 
 % subsection realtime_data_processing (end)
 
-\subsection{Monash IRT Railway Project} % (fold)
+\subsubsection{Monash IRT Railway Project} % (fold)
 \label{sub:monash_irt_railway_project}
 
 The railway project that has been developed at Monash University's Institute of Railway Technology uses numerous sensor
 technologies on certain train cars, such as the Track Geometry Recording Car (TGRC) and the Instrumented Ore Car (IOC),
 to monitor railway track conditions and detect track abnormalities~\cite{darby2003development}~\cite{darby2005track}.
+These train cars operate in the Pilbara region of Western Australia, continously performing round trips from a port
+to a given loading point, where they are loaded with recently mined minerals and ores.
 
+As is currently the case, data is received and processed using batch data processing technologies. Due to limited coverage
+of cellular networks in the Pilbara region of Western Australia, in which the trains currently operate, sensor data from
+a given trip is automatically transmitted in large batches to be received by remote servers once a train has concluded a
+round trip and
+arrives back in port from a loading point~\cite{thomas2012taking}. Given the current cellular network infrastructure in
+the region, this is the only feasible option for transmission of data, however Monash IRT have indicated that given
+future improvements in cellular network infrastructure, streaming the data back to remote servers in realtime is a likely
+possibility. This leads to the potential possibility of this research project's outcomes outlined in this thesis.
+
+The form of batch handling and processing performed on the railway data currently leads to a number of limitations and
+problems. The data is currently stored in a relational database management system (RDBMS), and with the current
+implementation
+of the sensors, the data received is not consistently structured. In fact, the only sensor data guaranteed to be received
+in each batch is geographic location and time. Due to the highly structured nature of RDBMS technology, certain work-arounds
+need to be performed on the data so that it is compliant to RDBMS schemas, such as the insertions of default values in
+in the case of missing attributes. Furthermore, low query performance has been noted as a problem plaguing the IRT team
+working with the railway data. They wish to resolve these problems by looking into non-relational models for their data
+storage and processing systems.
 
 % subsection monash_irt_railway_project (end)
 
 % section research_context (end)
 
 
-
-\section{Research Objectives} % (fold)
+\subsection{Research Objectives} % (fold)
 \label{sec:objectives}
+
+The main aim or goal of this research project is to develop a fully automated, non-relational big data system to manage
+the data received from railway car sensors as a part of Monash University's Institute of Railway Technology project. The
+intention is to replace their current relational solution, offering at least the same capabilities at a larger scale, and
+with higher performance. The scope of this project is relatively large, and the project, or subproject, outlined in this
+thesis only covers a portion of the greater aforementioned project.
+
+The main aim of this subproject is to look at the hypothetical possibility of dealing with the railway sensor data being
+streamed in realtime. This will also involve non-relational big data systems, however the details of these such systems
+in the scope of the greater project will be left up to other individuals working on those subprojects.
+
+To allow the possibility of realtime data streaming from the railway sensors, appropriate data stream processing system
+(DSPS) technology needs to be looked at, tested, and evaluated. This makes up the core part of this subproject's work.
+These DSPS technologies need to appropriately take, or accept, the data from some specified source, \eg the sensors, apply
+any realtime processing logic that is required, \eg pre-processing, then forward the data on for handling at
+another source, \eg long term storage, such as HDFS.
+
+This DSPS system will act as a sort of processing ``pipeline'' through which the sensor data flows.
+By the end of this subproject, we aim to have proof-of-concept implementations of the pipeline working on the National
+eResearch Collaboration Tools and Resources (NeCTAR) cloud services~\cite{web:Nectar}, making use of certain DSPS
+technologies.
+
+% section objectives (end)
+
+
 
 \subsection{Research Questions} % (fold)
 \label{sub:research_questions}
 
-The following research questions will be the main focus of our project:
+The following research questions are the main focus points of this subproject:
 
 \begin{enumerate}
-  \item\label{item:taxonomy} What characteristics of data systems can be identified to develop a data class taxonomy
-  for real time big data processing?
-  \item\label{item:recommendations} How can the taxonomy, stated in~\listref{item:taxonomy}, be utilised to provide a set
-  of recommendations in designing a pipeline of data processing components to support a particular data system's
-  processing requirements?
-  \item\label{item:pipeline} How can the recommendations be used in practice to create an appropriate instance of a realtime
-  data processing pipeline from existing DSPS technologies?
+  \item\label{item:dsps} How can existing DSPS technologies be used to fill this realtime processing gap in the Monash
+  University's IRT project?
+  \item\label{item:pipeline} What qualitative and quantitative tests can be performed to recommend a particular DSPS
+  technology for building the pipeline?
+  \item\label{item:recommendations} How can we design the DSPS processing pipeline to be extensible, allowing for the
+  addition of future realtime processing requirements?
 \end{enumerate}
 
 Additionally, after answering each of these preliminary research questions, we will want to properly implement the
 theoretical discoveries from each stage. We do this with the goal of achieving some deployable pipeline that can be then
 be used in the testing and overall evaluation stages.
 
-Note that the methodology behind how we are going to answer these questions is given in~\sectref{sec:methodology}.
-
 % subsection research_questions (end)
 
-
-\subsection{Research Aims} % (fold)
-\label{sub:research_aims}
-
-The main aim or goal of this research project is to develop a set of recommendations that define exactly how certain
-types, or classes, of data should be processed. These recommendations can then be used to specify particular DSPS technology
-that can be used to make up a realtime data processing pipeline. The purpose of the pipeline being to take data from
-arbitrary sources, process it in some specified way, then store the needed results on some storage medium, \eg HDFS.
-
-Relating back to the first research question, to achieve the goal of developing a set of processing recommendations for
-specific classes of data, we first aim to discover and implement a classification model for the purpose of
-classifying different types of data. To implement the entire pipeline, this classification stage will need to happen early
-on, hence will be one of our first aims we attempt to satisfy.
-
-By the end of the project, we aim to have a proof-of-concept implementation of the pipeline working on the National
-eResearch Collaboration Tools and Resources (NeCTAR) cloud~\cite{web:Nectar}. Further details regarding NeCTAR can be
-found in~\sectref{sub:use_of_nectar_cloud_services} and~\sectref{sub:special_facilities_required}. Further details can be found on the
-implementation of the pipeline in~\sectref{sec:expected_outcomes}.
-
-We aim to be able to automate the formulation of some NeCTAR-compatible scripts, based on the data processing
-recommendations. These scripts will be produced with the aim of enabling NeCTAR end-users to be able to deploy a
-specific variation of the pipeline on their own NeCTAR instances. The scripts, and the pipelines they produce, will vary in
-which DSPS technologies make up the pipeline for the given use-case. The use-case being for the specific class of data that
-they are attempting to process.
-
-Further detail on the project deliverables based upon these aims can be found in~\sectref{sec:expected_outcomes}.
-
-% subsection research_aims (end)
-
-% section objectives (end)
-
-
-\newpage
-
-
-\section{Research Methodology} % (fold)
-\label{sec:methodology}
-
-\subsection{Data Classification method} % (fold)
-\label{sub:data_classification_method}
-
-For the research methodology surrounding the data classification method, we will employ a qualitative classification
-method with the aim of producing a taxonomy of the different classes of data. This will allow us to clearly show the
-requirements needed for processing each of the specific classes of data. Similarly, producing a taxonomy for a range of
-different open-source DSPS technologies will allow us to show the data requirements for each specific DSPS. The purpose
-of this taxonomy of DSPS technologies being so that we can directly form recommendations for the processing of specific
-classes of data, relating such data classes with specific DSPS technologies that would be best suited for the given
-task.
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[scale=0.5]{img/taxonomy.png}
-  \caption{Example data class and DSPS taxonomies, along with the mappings between them. Note that for simplification
-  purposes, not all mappings are shown.}
-\label{fig:taxonomy}
-\end{figure}
-
-As can be seen in~\figref{fig:taxonomy}, after we develop taxonomies for the classes of data and DSPS technologies, we
-will attempt to map specific data classes to specific DSPS technologies. This mapping will form the basis of our set of
-processing recommendations. Note that it is possible that different data classes may be mapped to the same DSPS technology.
-
-From preliminary research for this project, we have discovered that there is a relatively small set of possible DSPS
-technologies currently available to choose from. Hence, regardless of the number of different classes of data, multiple
-different classes may have to be given the same DSPS recommendations, effectively limiting the number of data
-classes. This makes the task of employing a data classification method much more simple in the context of this project.
-
-% subsection data_classification_method (end)
-
-\subsection{Data processing recommendations} % (fold)
-\label{sub:data_processing_recommendations}
-
-As stated in~\listref{item:recommendations}, in~\sectref{sub:research_questions}, we will formulate specific processing
-recommendations for each given class of data. An example of these recommendations would be for data displaying
-properties such as those of belonging to a graph data class. For this data class, we would recommend the usage of the
-GraphX abstraction on top of the Apache Spark DSPS for processing, given GraphX's suitability for the processing of
-graph data~\cite{DBLP:journals/corr/XinCDGFS14}.
-
-% TODO: flow diagram of this example
-
-These recommendations will be based directly off the data class and DSPS taxonomies that we will produce, as discussed
-in~\sectref{sub:data_classification_method}.
-
-% subsection data_processing_recommendations (end)
-
-\subsection{Use of NeCTAR cloud services for evaluation} % (fold)
-\label{sub:use_of_nectar_cloud_services}
-
-One of the key parts of our research methodology will be the applied use of the National eResearch Collaboration Tools
-and Resources cloud (NeCTAR)~\cite{web:Nectar}. Access to this cloud will facilitate the majority of applied work that
-happens in this project, including the testing of existing big data stream processing technologies along with the
-evaluation of our project's technical outcomes. It will also serve as the target platform for the implementation and
-deployment of our pipeline.
-
-To give a brief overview of NeCTAR, NeCTAR is a \$47 million (AUD) project funded by the Australian government to
-facilitate Australian eResearch through providing shared Cloud infrastructures, among other
-facilities~\cite{sinnott_towards_2011}.
-
-As of writing, we have acquired two NeCTAR Cloud instances for this project's use. The instances having 16 shared
-cores, 6400 hours of processing time, and one terabyte of shared volume storage. Going by initial estimates, these
-requested resources should suffice for the scope of this research project. These resources are further touched on
-in~\sectref{sub:special_facilities_required}.
-
-Our NeCTAR instances will be used for a range of different tasks relating to testing and evaluation. Initially, we will
-be installing different DSPS technologies on NeCTAR for the qualitative evaluation stage mentioned
-in~\sectref{sub:data_classification_method}. This will be performed with the purpose of producing our taxonomy of DSPS
-technologies. Secondly, we will use NeCTAR to construct instances of our data stream processing pipeline on, using the
-available NeCTAR scripting environment. This will allow us to test the implemented pipeline and perform our final
-evaluation of the resulting implementation.
-
-From this testing and evaluation of our pipeline instances on NeCTAR, we will produce NeCTAR-compatible scripts for the
-purpose of deploying the pipeline on NeCTAR cloud instances. This will allow any NeCTAR user to deploy instances of our
-pipeline on their own account. These scripts are further touched on in~\sectref{sec:expected_outcomes}.
-
-% subsection use_of_nectar_cloud_services (end)
-
-% section methodology (end)
-
-
-\newpage
-
-
-\section{Research Design} % (fold)
-\label{sec:research_design}
 
 \subsection{Thesis Structure} % (fold)
 \label{sub:proposed_thesis_chapter_headings}
@@ -289,83 +207,22 @@ gaps that have been made apparent as the result of this project.
 % subsection proposed_thesis_chapter_headings (end)
 
 
-\subsection{Potential difficulties} % (fold)
-\label{sub:potential_difficulties}
-
-While we believe that most components of this project are very much feasible given the time and resources we have been
-allocated so far, we have identified a small number of possible difficulties that may be encountered as the project
-progresses. The most obvious difficulty so far that we have identified is the need to acquire a substantial amount of
-data that we can use for both during the testing and the evaluation stages of the project. As this data will be used to
-test our data classification methods and evaluate our pipeline deployed in the cloud, it will need to be diverse. By
-diverse, what we mean is it must display heterogeneity in terms of its type and origin; data from many different sources
-would be ideal.
-
-Currently we have no concrete leads on the acquisition of this data, although we will look into collaboration with other
-data-based research projects ongoing at Monash University. We also are yet to explore freely available data sets, such
-as the Enron corpus email dataset~\cite{klimt2004introducing}, although these may definitely be taken into consideration
-at a later stage in the project in the case that data acquisition from within Monash University proves infeasible.
-
-% subsection potential_difficulties (end)
-
-\subsection{Special facilities required} % (fold)
-\label{sub:special_facilities_required}
-
-As we are aiming to deploy a proof-of-concept of this pipeline, the main special facility needed access to is a cloud
-solution that enables us to install and test our pipeline. For this, we have already been granted access for what we are
-planning to do in this project on the National eResearch Collaboration Tools and Resources (NeCTAR)
-cloud~\cite{web:Nectar}. This cloud is funded by the Australian Government and available to Australian researchers in
-many different disciplines.
-
-With access to this cloud for the duration of this project, we will be able to install and perform qualitative
-comparisons between the numerous realtime data processing solutions available as of now. This will assist us in making
-our recommendations for the pipeline based on the classification of particular set of data.
-
-This access to cloud resources at NeCTAR will also facilitate our later testing and evaluation stages of the project,
-where we will be hoping to test the pipeline with real heterogeneous data. This is all explained in greater detail
-in~\sectref{sub:use_of_nectar_cloud_services}.
-
-% subsection special_facilities_required (end)
-
-% section research_design (end)
-
-
-\newpage
-
-
-\section{Expected Outcomes} % (fold)
-\label{sec:expected_outcomes}
-
-The expected outcomes of this project include both technical contributions and theoretical contributions; the technical
-outcomes of the project essentially being implementations of the theoretical outcomes.
-
-Our main theoretical contribution will be the realtime processing recommendations we produce for specific classes of
-data. These recommendations will recommend specific realtime data processing technologies for use within the pipeline to
-process the given data. These recommendations will be sourced from our initial studies into qualitative data classification
-producing the taxonomies of both classes of data, and DSPS technologies, earlier mentioned in~\sectref{sub:data_classification_method}.
-
-Looking at the project's outcomes in terms of technical contributions, they directly relate back to the theoretical
-contributions. The main technical contribution will be NeCTAR template scripts which enable the deployment of the
-pipeline on the NeCTAR cloud. These scripts will be constructed based upon the recommendations produced for specific
-dataset classes.
-
-To summarise, the expected outcomes of this project include the following contributions:
-
-\begin{itemize}
-  \item A taxonomy of different classes of data.
-  \item A taxonomy of different DSPS technologies.
-  \item A set of recommendations for specific classes of data, recommending how each class should be processed in realtime.
-  \item NeCTAR-compatible scripts allowing the deployment of the recommended pipeline instances on the NeCTAR cloud.
-\end{itemize}
-
-All of these contributions will be assembled together to make complete instances of a realtime heterogeneous data
-stream processing pipeline system for many different types of data.
-
-% section expected_outcomes (end)
-
-
-\section{Summary} % (fold)
+\subsection{Summary} % (fold)
 \label{sec:summary}
 
+This chapter has introduced the overall project, and in-turn the subproject upon which this thesis will be based. It
+has described the current state of the Monash University Institute of Railway Technology's project and the current
+problems that they are faced with, such as the need to deal with non-consistently structured data and low query
+performance. These problems are exacerbated given the non-realtime nature of the current data, where issues with sensors
+are only discovered much later after-the-fact. To overcome these issues, and look forward into the hypothetical,
+but likely, possibility of having the technological infrastructure to support realtime data processing, this research
+aims to develop a realtime processing pipeline, taking the data straight from the railway sensors and perform any
+needed realtime processing.
+
+This chapter also outlined a brief context of the research project and big data as a whole, the scope of this subproject,
+this subproject's research questions. Finally it was concluded with an overview of this thesis' entire structure. The
+following chapter will look into previous research that has been done on realtime big data processing and handling,
+along with going into more detail of the railway project's needs.
+
+
 % section summary (end)
-
-
