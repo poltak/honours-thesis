@@ -1,8 +1,7 @@
 %!TEX root = thesis.tex
 % Start of content
-
-\section{Introduction} % (fold)
-\label{sec:litrev_introduction}
+\section{Literature Review}
+\label{sec:litrev}
 
 The realtime processing of big data is of great importance to both academia and industry. Advancements and progress in
 modern society can be directly attributed back to data. The value of data has become more apparent, and data has become
@@ -24,9 +23,7 @@ greater influence on the field  as a whole. This includes both works looking spe
 data, and works involving processed big data in batch mode, given that batch mode processing arguably led onto the
 current hot-topic of realtime stream processing.
 
-This review will be structured in three main sections. In~\sectref{sec:big_data_types_background}, an overview of the
-different classes and types of big data will be presented. This section will be concluded with a discussion on the
-literature that has been reviewed, along with a comparison of the different classifications.
+This review will be structured in two main sections.
 In~\sectref{sec:big_data_processing_background}, an overview will be given of the major open-source big data processing
 systems in the scope of the Hadoop ecosystem. A special emphasis will be given to realtime data processing systems,
 otherwise known as data stream processing systems (DSPSs), given that the main area of this research is focusing on
@@ -37,256 +34,8 @@ relevant literature.
 
 % section introduction (end)
 
-\newpage
 
-
-\section{Data types and characteristics background} % (fold)
-\label{sec:big_data_types_background}
-
-\subsection{Velocity, variety, volume, and veracity} % (fold)
-\label{sub:four_v}
-
-Data, and more specifically, big data, are often characterised into what is known as the ``four
-V's''~\cite{wang2014bigdatabench}. These can be thought of as different ``dimensions'' of big data, and can be
-summarised as follows~\cite{dong2013big}:
-
-\begin{itemize}
-  \item \emph{Velocity:} The rate at which data is being collected and made available to the data consumers.
-  \item \emph{Variety:} The heterogeneity of data. Big data often exhibits substantial variations in both the structural
-  level and the instance level (representations of real-world entities). This is often highlighted by data systems that
-  depend on acquiring of data from a number of non-conforming, and sometimes unrelated, data sources.
-  \item \emph{Volume:} The amount of data that is obtained by the data consumer from the data source/s.
-  \item \emph{Veracity:} The quality, in terms of accuracy, coverage, and timeliness, of data that is consumed from
-  the data source/s. Veracity of data can widely differ between sources.
-\end{itemize}
-
-While the four V's are often described in terms of big data, they can also apply to more traditional data warehousing
-and processing in general, albeit on a far smaller scale. In the domain of big data processing, data will exhibit signs
-of high velocity, variety, and volume~\cite{beyer2011gartner}, and hence the veracity of the data may also fluctuate.
-Meanwhile, in more traditional data processing, the scope may be limited, especially in terms of factors such as variety
-and, as a consequence, there is less need of an emphasis on veracity due to limited variety in data sources.
-
-As will be made clear in the following sections, a lot of the identified classes and characteristics of data directly
-relate back to these four V's. These can be considered the underlying features of many characteristics of data, both in
-the sense of big data and traditional data.
-
-% subsection velocity_variety_volume_and_veracity (end)
-
-
-\subsection{Classification of data} % (fold)
-\label{sub:data_classification}
-
-Data, in general, can be categorised into a number of different classes or types. We define the concept of a data class
-to mean the same as the terms of ``data type'', ``data category'', or ``data format'', as all terms were often used
-interchangeably in other literature.
-
-Each class of data can be further defined and categorised via the characteristics they exhibit. Furthermore, these
-characteristics exhibited by data classes can be exploited and it is often possible to optimise the processing of each
-class of data by processing it using a specific method depending on those characteristics.
-
-To give an example of this, data that is expected to have highly iterative processing applied to it would benefit from a
-data processor that does not have to unnecessarily write to disk after every single iteration. The elimination of this
-I/O overhead is an example of the optimisations that could be applied to the overall process from correctly identifying
-the data class beforehand, and processing it accordingly.
-
-Furthermore, particular classes of data are generally only found in particular applications or use cases of data
-processing. As this is the case, it narrows down the amount of classification needed, depending on the application that
-is being looked at. This will be elaborated on in later parts of this section.
-
-There is no concrete, universally accepted standard for the classification of data. While the study of big data
-processing can arguably be considered still in its infancy, data handling and processing in general is relatively
-mature. From preliminary research on looking at past work and literature in this area, it must be noted that there is a
-significant lack of research on the classification of data.
-
-The literature that will be reviewed in this section is often not wholly focused on the idea of data classification,
-hence data classification is presented relative to whatever the overall topic of the literature is on. This is important
-to note, as one attempt at data classification may not be appropriate under a different context. This also explains the
-large variation in different classification attempts, although we will also highlight the recurring similarities between
-different data classification literature.
-
-
-\subsubsection{IBM's classification of big data}
-\label{ssub:data_charact}
-
-This section looks at a classification of big data types, along with the key data characteristics, proposed by IBM
-Architects Mysore, Khupat, and Jain, published by IBM in 2013~\cite{ibm_big_2013}. The content is targeted towards
-beginners in the area of big data processing; much like the set of recommendations that we intend to produce from this
-research project. The different data classes, or ``formats'' as they were labelled, that are commonly encountered in big
-data are identified. For each of these formats, the underlying characteristics of the data was discussed, and it was
-noted that the type of processing needed would be dependent on those characteristics.
-
-\noindent The characteristics of data, as put forward by Mysore et al., in~\cite{ibm_big_2013}, include the following:
-
-\noindent \textbf{Analysis type -} Whether or not the data would be processed/analysed in realtime, or batched for later
-processing. Often this data class characteristic is dependent on the application of the data, \eg{}the processing of
-social media data for the analysis of currently occurring events would want to be processed in realtime, regardless of
-the type of data that is involved.
-
-\noindent \textbf{Processing methodology -} This characteristic involves the approach used when processing the data.
-Some examples of different processing methodologies include: predictive processing, analytical, ad-hoc queries, and
-reporting. Often the processing methodology for a particular class is determined by the business requirements or
-application of the data. Depending on the processing methodology used, many different combinations of big data
-technologies can be used.
-
-\noindent \textbf{Data frequency and size -} The amount of data expected to arrive to the processing system, along with
-the speed and regularity of the incoming data. Knowing this characteristic beforehand can determine the methods for data
-storage and preprocessing, if needed. Examples of data frequency includes: on-demand data (social media),
-continuous/realtime (weather data, transactions), time-series (email). Considering the four V's, the characteristic of
-data frequency and size directly relates back to velocity and volume.
-
-\noindent \textbf{Content format -} This characteristic relates back to the structure of the underlying data. Examples
-of data content format include: structured (JSON, XML), unstructured (human-readable literature), semi-structured
-(email).
-
-\noindent \textbf{Data source -} This characteristic relates back to where the data originated from. As discussed
-previously in~\sectref{sub:four_v}, the origin of data can have a great effect on whether or not that data is usable, as
-data often varies greatly, especially when many different sources are used which may or may  not conform to a specific
-content format. Another thing that is dependent on the data source is whether or not the data can be trusted.
-Considering the four V's, the characteristic of data source directly relates back to veracity and variety.
-
-\tabref{tab:ibm_data_tab}, highlights the different classes of data put forward by Mysore, et al.,
-in~\cite{ibm_big_2013}. The table organises each class, along with giving a brief explanation of the class. Furthermore,
-each class is related back to the previously explained characteristics in an attempt to show the connections between
-class and underlying characteristics.
-
-The classes and characteristics of data presented by Mysore et al., in~\cite{ibm_big_2013}, are highly oriented towards
-industry and business users. While this is not an issue as such, as noted earlier in this section, these characteristics
-and data classes may not be as relevant or appropriate for usage in other non-business domains, or even business domains
-with a different focus on data.
-
-\import{includes/tables/}{ibm_data_classes}
-
-% subsubsection data_classification (end)
-
-
-\subsubsection{Big data classification in BI\&A} % (fold)
-\label{ssub:big_data_BIA}
-
-Another major contribution to big data classification is a paper from Chen, Chiang, and Storey, focusing on the impact
-of big data in the field of business intelligence and analytics~\cite{chen2012business}. Similarly to the paper looked
-at in~\sectref{ssub:data_charact}, there is an emphasis on data classes and how they relate to the area of business and
-organisations. However, this paper has more of an explicit focus on business, being in published in the area of business
-intelligence and analytics (BI\&A). BI\&A in itself is a highly data driven field, where data is gathered and analysed
-to help make informed business decisions~\cite{watson2009tutorial}.
-
-In the paper, Chen et al.~\cite{chen2012business}, discuss the evolution of the field of BI\&A, while elaborating on
-each identified stage of the evolution through highlighting of the major BI\&A applications present. For each of the
-BI\&A applications presented, they attempt to show the classes of data which are deemed important, and subsequently the
-characteristics associated which each class.
-
-In Table~\ref{tab:bia_data_tab}, the classes and characteristics of data, given by Chen et
-al.~\cite{chen2012business}, are presented. They are presented in terms of the BI\&A application of which they
-are categorised under.
-
-As can be seen from the data classes and characteristics identified by Chen et al.~\cite{chen2012business}, there is a
-far greater variation to those previously presented by Mysore et al., in~\cite{bifet_mining_2013}. As explained earlier,
-this is mainly because of the more domain specific content of this piece of literature, while the paper from Mysore et
-al.~\cite{bifet_mining_2013}, while still having underlying tones of business and industry, had a less explicit focus on
-their particular domain.
-
-\import{includes/tables/}{big_data_classes}
-
-% subsubsection characteristics_of_data_from_chen_et_al_ (end)
-
-
-\subsubsection{Big data classification in contemporary organisations} % (fold)
-\label{ssub:big_data_contemp}
-
-Coming away from the business point-of-view, G\'eczy~\cite{geczy_big_2014} attempts to characterise big data in a more
-generic way. He uses what he labels as ``aspects'' to determine what he believes to be the deciding characteristics of
-data, in terms of the way they should be processed and also simply their intrinsic traits.
-
-\noindent G\'eczy uses the following aspects to determine the different intrinsic characteristics of data:
-
-\noindent \textbf{Sensitivity -} Relates to whether or not given data contains sensitive information, \ie{}personally
-identifiable information, confidential information, etc. The sensitivity of the data determines the requirements relating
-to how it should be handled. Often it is either a legal requirement, or in the owners' interest, to keep protected the
-handled data deemed sensitive.
-
-\noindent \textbf{Diversity -} Relates to the range of different data elements present within the data. The example given
-explains the ability of smart phones to produce highly diverse data; \eg{}audio, video, location data, gyroscopic data,
-etc. Having high diversity in data can both be beneficial and detrimental; diversity can add factors of complexity,
-although also makes for a more rich dataset. Note that this data characteristic relates directly back to the
-\emph{Variety} dimension, of the four V's.
-
-\noindent \textbf{Quality -} Quality characteristics of data are defined to be features that affect data quality;
-\eg{}completeness, accuracy, timeliness. Often the quality of data may be subject to the qualitative metrics of an
-organisation, or predefined standards. The quality of data relates back to the \emph{Veracity} dimension, of the four
-V's.
-
-\noindent \textbf{Volume -} Volume refers to the size of data in terms of its basic forms of measurement, bits and bytes.
-Volume is an important characteristic to take into consideration when it comes to determining the type of processing
-needed. Volume, as the name suggests, directly relates back to the \emph{Volume} dimension of the four V's.
-
-\noindent \textbf{Speed -} Data speed refers to the inflow and outflow speeds; inflow being the data that is being
-acquired, while outflow being the data leaving the system (often results of computations). Different classes of data
-often require different data speeds. \eg{}audio is often streamed at a far lesser speed than video, due to the
-relatively low amount of data in audio when compared with video.
-
-\noindent \textbf{Structure -} Structure relates to whether data are in structured or unstructured formats. Generally
-unstructured data is more suitable for human consumption, such as literature or music. Structured data is usually
-structured in such a way that it is easily able to be parsed by an algorithm, often automated by computers. The
-structure of data directly relates to the difficulty of processing that data, as unstructured data usually will need
-some pre-processing or artificial intelligence to process.
-
-G\'eczy later goes on to talk about the aspects of data that relate to data processing, similar to what will be talked
-about later in~\sectref{sec:big_data_processing_background}.
-
-Overall, G\'eczy looks at data characteristics, not from any particular perspective, but from one that attempts to capture
-the interests and be relevant to a number of disciplines.
-
-% subsubsection characteristics_of_data_from_ge_czy (end)
-
-% subsection data_classification (end)
-
-\subsection{Discussion and analysis} % (fold)
-\label{sub:classification_conclusion}
-
-From the literature presented previously in this section, there are a number of notable points. Firstly, they were all
-highly varied in the classifications and characteristics of data given. As previously stated, this can be attributed
-to the variety in sources for this literature; they were all produced in the context of quite different domains, aiming
-the content for most relevance in those domains. However, while there is much disconnect between the identified classes and
-characteristics of data presented in the papers, there are also some similarities which show the connections
-between data in different research domains.
-
-For example, Biometrics Data, as shown in~\tabref{tab:ibm_data_tab} by Mysore et al.\cite{ibm_big_2013}, can be seen as
-being related to that of data under the BI\&A application of Smart Health \& Wellbeing, as presented
-in~\tabref{tab:bia_data_tab} from Chen et al.\cite{chen2012business}. By ``related'', what is meant is that the
-characteristics of data underlying these classes will be similar. For example, data relating to a hospital patient's
-vital signs may fall under both of these identified classes. These relations between data classes extend to G\'eczy's
-classifications as well, with certain data that would fall under the class of Transaction Data, from Mysore et
-al.\cite{ibm_big_2013}, also falling under the classification of being highly sensitive data, as put forward by
-G\'eczy~\cite{geczy_big_2014}.
-
-Given G\'eczy's contribution of big data classification in terms of characteristics intrinsic to
-data~\cite{geczy_big_2014}, shown in~\sectref{ssub:big_data_contemp}, a lot of these characteristics can be related back
-to the big data classifications given by Mysore et al.\cite{ibm_big_2013} and Chen et al.\cite{chen2012business}
-in~\tabref{tab:ibm_data_tab} and~\tabref{tab:bia_data_tab}, respectively. This has been attempted to be shown
-in~\tabref{tab:data_class_compare}, where the classes of big data from Mysore et al., and Chen et al., are shown in
-relation to each of G\'eczy's characteristics, and whether or not they show high or low levels of those characteristics.
-
-Note that certain data classes fall under both high and low variations of a given characteristic, and sometimes are
-not present under either. This is mainly due to displaying high or low levels of a characteristic under different
-contexts, or there being inconclusive information relating to the data classes' characteristics.
-
-Also note that the data classes of machine and human generated data, as put forward by Mysore et al.\cite{ibm_big_2013},
-have been emitted. In the classification given by Mysore et al., the classes of machine and
-human generated data are presented as two discrete classes of data. The distinction between the two is very clear,
-however it could very much be argued that these two classes should be considered super classes of which other presented
-data classes could be classified under, rather than being presented as equal classes. The examples given for types of
-data that fall under the classes of human generated and
-machine generated data are also very vague in the way that they are presented, and could very easily fall under other
-identified classes as well.
-
-\import{includes/tables/}{data_classes_compared}
-
-% subsection conclusion (end)
-
-% section big_data_types_background (end)
-
-\newpage
-
-\section{Big data processing background} % (fold)
+\subsection{Big data processing background} % (fold)
 \label{sec:big_data_processing_background}
 
 Much more work has been done in the area of data processing than the area related to classification of data; both in the
@@ -297,7 +46,7 @@ processing of data in realtime as simply ``realtime data processing''. This term
 meaning that is also often represented as ``data stream processing'', ``realtime stream processing'', and ``stream
 processing''.
 
-\subsection{Batch data processing} % (fold)
+\subsubsection{Batch data processing} % (fold)
 \label{sub:batch_data_processing}
 
 Over the last decade, the main ``go-to'' solution for any sort of processing needed on datasets falling under the
@@ -311,7 +60,7 @@ The MapReduce data processing model specialises in batch mode processing. Batch 
 data needed to be processed is first queued up in batches before processing begins. Once ready, those batches get fed
 into the processing system and handled accordingly. %TODO: try get a reference
 
-\subsubsection{MapReduce and GFS} % (fold)
+\paragraph{MapReduce and GFS} % (fold)
 \label{ssub:mapreduce_and_gfs}
 
 Dean and Ghemawat, in~\cite{dean_mapreduce:_2008}, originally presented MapReduce as a technology that had been
@@ -335,7 +84,7 @@ relating to their many web-oriented applications rely on GFS.
 % subsubsection mapreduce_and_gfs (end)
 
 
-\subsubsection{Hadoop MapReduce and HDFS} % (fold)
+\paragraph{Hadoop MapReduce and HDFS} % (fold)
 \label{ssub:hadoop_mapreduce_and_hdfs}
 
 While MapReduce paired with GFS proved to be very successful solution for big data processing at Google, Inc., and
@@ -368,7 +117,7 @@ less low-level technical difference.
 % subsubsection hadoop_mapreduce_and_hdfs (end)
 
 
-\subsubsection{Pig and Hive} % (fold)
+\paragraph{Pig and Hive} % (fold)
 \label{ssub:pig_and_hive}
 
 Given the popularity of Hadoop, there were several early attempts at building further abstractions on top of the
@@ -396,7 +145,7 @@ optimisations, familiar to programmers familiar with query optimisations from SQ
 % subsection batch_data_processing (end)
 
 
-\subsection{Realtime data processing} % (fold)
+\subsubsection{Realtime data processing} % (fold)
 \label{sub:realtime_data_processing}
 
 With HDFS being an open source project with a large range of users~\cite{hadoop_users} and code
@@ -417,7 +166,7 @@ A realtime processing system, often called a data stream processing system (DSPS
 to deal with these timeliness issues, while a batch data processing system may expect everything that needs to be there
 to be available.
 
-\subsubsection{Hadoop YARN} % (fold)
+\paragraph{Hadoop YARN} % (fold)
 \label{ssub:apache_hadoop_yarn_}
 
 As previously looked at, the focus of the MapReduce model was performing distributed and highly parallel computations
@@ -461,7 +210,7 @@ These are just some of the more popular examples of applications built to intera
 % subsubsection apache_hadoop_yarn_ (end)
 
 
-\subsubsection{Storm} % (fold)
+\paragraph{Storm} % (fold)
 \label{ssub:storm}
 
 One very notable DSPS technology developed independently of Hadoop, and that is gaining immense popularity and growth in its
@@ -482,7 +231,7 @@ channels such as the Yahoo Developer Network~\cite{web_yahoo_blog} and Hortonwor
 % subsubsection storm (end)
 
 
-\subsubsection{Spark Streaming} % (fold)
+\paragraph{Spark Streaming} % (fold)
 \label{ssub:spark_streaming}
 
 Spark is another popular big data distributed processing framework, offering of both realtime data processing
@@ -513,7 +262,7 @@ Spark~\cite{hunter2011scaling}.
 
 % subsubsection spark_streaming (end)
 
-\subsubsection{Samza} % (fold)
+\paragraph{Samza} % (fold)
 \label{ssub:samza}
 
 Samza is a relatively new realtime big data processing framework originally developed at LinkedIn, which has since been
@@ -530,7 +279,7 @@ cluster~\cite{bockermann2014survey}.
 
 % subsubsection samza (end)
 
-\subsubsection{S4} % (fold)
+\paragraph{S4} % (fold)
 \label{ssub:s4}
 
 S4 (Simple Scalable Streaming System) is another realtime big data processing framework that originated at Yahoo!, Inc.\
@@ -608,7 +357,7 @@ is inconclusive on whether or not they adhere to the particular requirement. Fur
 % section big_data_processing_background (end)
 
 
-\section{Conclusion} % (fold)
+\subsection{Conclusion} % (fold)
 \label{sec:conclusion_litrev}
 
 The choosing of appropriate realtime data processing frameworks for the processing of a given application and dataset
@@ -616,18 +365,6 @@ is an important, and often confusing, problem. Most frameworks compare themselve
 frameworks, often which are disputed by members in other framework ``camps''~\cite{web_slideshare_b,web_slideshare_a}.
 Hence, providing an informed recommendation based on processing requirements and the class into which the dataset
 falls is a much needed and important contribution to address the gap shown to exist in current systems.
-
-As has been noted early in~\sectref{sub:data_classification}, there is a significant lack of research in terms of the
-classification of data, and thus there is no standard metric that can be used to easily classify different data. We have
-presented a comparison of existing data classification methods in~\tabref{tab:data_class_compare} that we will work with
-to provide our own taxonomy of data which can be used for the appropriate classification of data under several domains.
-The main sources, presented in~\sectref{sub:data_classification}, have been chosen as the basis for the development of
-the data taxonomy to address this gap in existing research.
-
-An additional point to note about the presented data classification literature, which may have been obvious but is still
-of much importance, is that there was no processing recommendations given by the literature when defining each of the
-different classes of data. Hence, our recommendations which will be produced will be based off our developed taxonomy of
-realtime processing frameworks.
 
 This taxonomy of realtime data processing technologies will be based off the literature relating to the realtime data
 processing frameworks, as presented in~\sectref{sub:realtime_data_processing}. This taxonomy will be used, along with the

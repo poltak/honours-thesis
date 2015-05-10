@@ -18,52 +18,49 @@
 \usepackage[font={small}]{caption}
 \usepackage[hidelinks]{hyperref}
 \usepackage{import}
+\usepackage{titlesec}
+
+\setcounter{secnumdepth}{4}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
 \begin{document}
 
 % Cover page + TOC
 \include{includes/cover/cover}
 
+\pagenumbering{Roman}
+
 
 % Abstract
-\section{Abstract}
-\label{sec:abstract}
 \include{abstract}
 
+\pagenumbering{arabic}
 
 % Section 1: Intro/proposal
-\section{Introduction}
-\label{sec:intro}
 \include{introduction}
 
 
 % Section 2: Lit review
-\section{Literature Review}
-\label{sec:litrev}
 \include{litreview}
 
 
 % Sections 3: Study of DSPS tech
-\section{DSPS Technology Overview}
-\label{sec:overview}
 \include{overview}
 
 
 % Section 4: Implementation
-\section{Implementation}
-\label{sec:implementation}
 \include{implementation}
 
 
 % Section 5: Evaluation
-\section{Discussion and Evaluation}
-\label{sec:evaluation}
 \include{evaluation}
 
 
 % Section 6: Conclusion
-\section{Conclusions}
-\label{sec:conclusion}
 \include{conclusion}
 
 
