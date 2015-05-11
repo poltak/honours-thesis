@@ -3,34 +3,35 @@
 \section{Literature Review}
 \label{sec:litrev}
 
-The realtime processing of big data is of great importance to both academia and industry. Advancements and progress in
-modern society can be directly attributed back to data. The value of data has become more apparent, and data has become
-a sort of currency for the information economy~\cite{st2009examining}. Hence, those in society who realised the value of
-data early hold immense power over the entire economy, and in turn society, overall~\cite{lievesley1993increasing}.
-From seemingly inconsequential gains at the macro level, such as the ability to more
-accurately predict the rise and fall of airline tickets~\cite{darlin2006airfares}, to those of utmost importance for
-society as a whole, such as predicting and tracking the spread of the Swine Flu Pandemic in 2009 more accurately than
-the United States Centers for Disease Control and Prevention could~\cite{ritterman2009using,mayer2013big}. It is
-applications of big data processing like these that have been recognised by academics and organisations in
-industry alike, with the last decade seeing a major shift in research and development into new methods for the handling
+To lay the ground work and context of this research project, this chapter goes into detail on existing
+research and work done in the areas of big data processing. Both more traditional batch processing of big
+data will be looked at, along with newer advances in the area of realtime stream processing. Different
+technologies enabling these processes will be discussed in detail, with the main focus being placed on the
+widely used open-source projects, such as those encompassed within the Hadoop ecosystem.
+
+The realtime processing of big data is now of more great importance to both academia and industry than it has
+ever been before. Advancements and progress in modern society can be directly attributed back to data and
+how we deal with it. The value of data has become increasingly more apparent, and data has become a sort of
+currency for the information economy~\cite{st2009examining}. Hence, those in society who realised the value of
+data early hold immense power over the entire economy, and in turn society,
+overall~\cite{lievesley1993increasing}. From seemingly inconsequential gains at the macro level, such as the
+ability to more accurately predict the rise and fall of airline tickets~\cite{darlin2006airfares}, to those
+of utmost importance for society as a whole, such as predicting and tracking the spread of the Swine Flu
+Pandemic in 2009 more accurately than the United States Centers for Disease Control and Prevention
+could using big data processing~\cite{ritterman2009using,mayer2013big}. It is applications of big data
+processing such as these that have been recognised by academics and organisations in industry alike, with the
+last decade seeing a major shift in research and development into new methods for the handling
 and processing of big data.
 
-This review will give a background on the types and classes of big data, as well as the various methods employed to
-process those given classes of data. We will more specifically be focusing on the methods that are involved with the
-analysis and processing of realtime data streams, as opposed to the batch processing of big data. This review will look
-into detail at previous work that has been done in the field of big data, specifically those works that have had a
-greater influence on the field  as a whole. This includes both works looking specifically at the processing of streaming
-data, and works involving processed big data in batch mode, given that batch mode processing arguably led onto the
-current hot-topic of realtime stream processing.
-
 This review will be structured in two main sections.
-In~\sectref{sec:big_data_processing_background}, an overview will be given of the major open-source big data processing
-systems in the scope of the Hadoop ecosystem. A special emphasis will be given to realtime data processing systems,
-otherwise known as data stream processing systems (DSPSs), given that the main area of this research is focusing on
-realtime data processing. This section will also be concluded with a brief comparison of the presented systems.
-In~\sectref{sec:conclusion} an analysis and discussion will be given on the content covered from the relevant
-literature, as well as identifying how the research contributions of this project will address the gaps found in the
-relevant literature.
+In~\sectref{sub:batch_data_processing}, an overview and history for the existing major open-source batch
+processing systems for big data will be given. This will mostly surround the projects which fall under the
+umbrella of the Hadoop ecosystem. In~\sectref{sub:realtime_data_processing}, the current state of realtime
+data processing systems for big data will be discussed, including examples of the most widely used open-source
+data stream processing systems (DSPS). Comparisons will be drawn between the DSPS technologies and outlined
+in how they differ. Further discussion and analysis will be given in~\sectref{sub:processing_conclusion},
+including identifying the gaps in existing literature to which this research project aims to fill,
+before concluding in~\sectref{sec:conclusion}.
 
 % section introduction (end)
 
@@ -38,29 +39,43 @@ relevant literature.
 \subsection{Big data processing background} % (fold)
 \label{sec:big_data_processing_background}
 
-Much more work has been done in the area of data processing than the area related to classification of data; both in the
-areas of big data and traditional data processing. Unlike data classification, which was more aimed at the classifying
-of data in general, when looking at data processing, we are more interested in the relatively newer technologies which
-enable the processing of big data, both in batch mode and realtime. Note that in this review, we will refer to the
-processing of data in realtime as simply ``realtime data processing''. This term should be assumed to encompass the
-meaning that is also often represented as ``data stream processing'', ``realtime stream processing'', and ``stream
-processing''.
+Much work has been done in the area of big data processing in the past decade, given the rise of large
+scale applications and services, a lot of the time involving large numbers of users and their given data.
+Data processing in general has been of large importance for many years, as no matter the business model,
+some sort of data has had to be dealt with. Traditionally, this has often been handled through the use of
+relational models, as introduced by Codd~\cite{codd1970relational}, through use of relational database
+management systems (RDBMS), providing methods for the long term storage of
+data and functions for performing queries and manipulation on that data~\cite{astrahan1976system},
+such as through use of an implementation of structured query language (SQL)~\cite{chamberlin1974sequel}.
 
-\subsubsection{Batch data processing} % (fold)
+Given larger scales of data in newer projects, along with the needs to scale horizontally in terms of
+parallel and distributed processing, the more traditional relational forms of data management have become
+less attractive due to their complexity in terms of horizontal scaling~\cite{agrawal2011big}. Hence,
+companies dealing with these large scale use cases have started to look outwards to new directions of
+data management. This unattractiveness of existing technologies, in terms of scaling and parallelism,
+arguably led to the need to develop something new with these objectives in mind.
+
+Note that in this chapter, we will refer to the processing of data in realtime as simply ``realtime data
+processing''. This term should be assumed to encompass the meanings that are also often represented through
+use of terms such as ``data stream processing'', ``realtime stream processing'', and ``stream processing''.
+
+\subsection{Batch data processing} % (fold)
 \label{sub:batch_data_processing}
 
-Over the last decade, the main ``go-to'' solution for any sort of processing needed on datasets falling under the
-umbrella of big data has been the MapReduce programming model on top of some sort of scalable distributed storage
-system~\cite{bifet_mining_2013}. From a very simplified functionality standpoint, the MapReduce programming model essentially
-combines the common \textbf{Map} and \textbf{Reduce} functions (among others), found in the standard libraries of many functional
-programming languages, such as Haskell~\cite{lammel2008google} or even Java 8~\cite{su2014changing}, to apply a specified
-type of processing in a highly parallelised and distributed fashion~\cite{yang2007map}.
+Over the last decade, the main ``go-to'' solution for any sort of processing needed on datasets falling under
+the umbrella of big data has been the MapReduce programming model on top of some sort of scalable distributed
+storage system~\cite{bifet_mining_2013}. From a overly simplified functional standpoint, the MapReduce
+programming model essentially combines the common \textbf{Map} and \textbf{Reduce} functions (among others),
+often found in the standard libraries of many functional programming languages, such as
+Haskell~\cite{lammel2008google}, Clojure~\cite{hickey2008clojure}, or even Java 8~\cite{su2014changing}, to
+apply a specified type of processing in a highly parallelised and distributed fashion~\cite{yang2007map}.
 
-The MapReduce data processing model specialises in batch mode processing. Batch data processing can be thought of where
-data needed to be processed is first queued up in batches before processing begins. Once ready, those batches get fed
-into the processing system and handled accordingly. %TODO: try get a reference
+The MapReduce data processing model specialises in batch mode processing on data which is already available.
+Batch data processing can be thought of where data needed to be processed is first queued up in ``batches''
+before processing then begins on those batches. Once ready, those batches get fed into the processing system
+and handled accordingly~\cite{condie2010online}.
 
-\paragraph{MapReduce and GFS} % (fold)
+\subsubsection{MapReduce and GFS} % (fold)
 \label{ssub:mapreduce_and_gfs}
 
 Dean and Ghemawat, in~\cite{dean_mapreduce:_2008}, originally presented MapReduce as a technology that had been
@@ -84,7 +99,7 @@ relating to their many web-oriented applications rely on GFS.
 % subsubsection mapreduce_and_gfs (end)
 
 
-\paragraph{Hadoop MapReduce and HDFS} % (fold)
+\subsubsection{Hadoop MapReduce and HDFS} % (fold)
 \label{ssub:hadoop_mapreduce_and_hdfs}
 
 While MapReduce paired with GFS proved to be very successful solution for big data processing at Google, Inc., and
@@ -117,7 +132,7 @@ less low-level technical difference.
 % subsubsection hadoop_mapreduce_and_hdfs (end)
 
 
-\paragraph{Pig and Hive} % (fold)
+\subsubsection{Pig and Hive} % (fold)
 \label{ssub:pig_and_hive}
 
 Given the popularity of Hadoop, there were several early attempts at building further abstractions on top of the
@@ -145,7 +160,7 @@ optimisations, familiar to programmers familiar with query optimisations from SQ
 % subsection batch_data_processing (end)
 
 
-\subsubsection{Realtime data processing} % (fold)
+\subsection{Realtime data processing} % (fold)
 \label{sub:realtime_data_processing}
 
 With HDFS being an open source project with a large range of users~\cite{hadoop_users} and code
@@ -166,7 +181,7 @@ A realtime processing system, often called a data stream processing system (DSPS
 to deal with these timeliness issues, while a batch data processing system may expect everything that needs to be there
 to be available.
 
-\paragraph{Hadoop YARN} % (fold)
+\subsubsection{Hadoop YARN} % (fold)
 \label{ssub:apache_hadoop_yarn_}
 
 As previously looked at, the focus of the MapReduce model was performing distributed and highly parallel computations
@@ -210,7 +225,7 @@ These are just some of the more popular examples of applications built to intera
 % subsubsection apache_hadoop_yarn_ (end)
 
 
-\paragraph{Storm} % (fold)
+\subsubsection{Storm} % (fold)
 \label{ssub:storm}
 
 One very notable DSPS technology developed independently of Hadoop, and that is gaining immense popularity and growth in its
@@ -231,7 +246,7 @@ channels such as the Yahoo Developer Network~\cite{web_yahoo_blog} and Hortonwor
 % subsubsection storm (end)
 
 
-\paragraph{Spark Streaming} % (fold)
+\subsubsection{Spark Streaming} % (fold)
 \label{ssub:spark_streaming}
 
 Spark is another popular big data distributed processing framework, offering of both realtime data processing
@@ -262,7 +277,7 @@ Spark~\cite{hunter2011scaling}.
 
 % subsubsection spark_streaming (end)
 
-\paragraph{Samza} % (fold)
+\subsubsection{Samza} % (fold)
 \label{ssub:samza}
 
 Samza is a relatively new realtime big data processing framework originally developed at LinkedIn, which has since been
@@ -279,7 +294,7 @@ cluster~\cite{bockermann2014survey}.
 
 % subsubsection samza (end)
 
-\paragraph{S4} % (fold)
+\subsubsection{S4} % (fold)
 \label{ssub:s4}
 
 S4 (Simple Scalable Streaming System) is another realtime big data processing framework that originated at Yahoo!, Inc.\
