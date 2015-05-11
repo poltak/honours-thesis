@@ -293,8 +293,19 @@
   year = {2014},
   howpublished = {\mbox{\url{http://samza.incubator.apache.org}}}
 }
+@misc{Samza6:online,
+author = {},
+title = {Samza - API Overview},
+howpublished = {\url{https://samza.apache.org/learn/documentation/0.9/api/overview.html}},
+month = {},
+year = {},
+note = {(Visited on 2015-05-12)}
+}
 
-
+@article{yangradstack,
+  title={The RADStack: Open Source Lambda Architecture for Interactive Analytics},
+  author={Yang, Fangjin and Merlino, Gian and L{\'e}aut{\'e}, Xavier}
+}
 @book{islam_cloud_2014,
   title = {A Cloud Based Platform for Big Data Science},
   url = {http://www.diva-portal.org/smash/record.jsf?pid=diva2:690525},
@@ -540,8 +551,7 @@
   author = {Huynh, Xinh},
   month = jun,
   year = {2014},
-  keywords = {big data, side-by-side comparison, Spark, Spark streaming, Storm, streaming data, stream processing},
-  file = {Blogspot Snapshot:/Users/poltak/Library/Application Support/Zotero/Profiles/xrhso8df.default/zotero/storage/U23QVXSV/Huynh - 2014 - Xinh's Tech Blog Storm vs. Spark Streaming Side-.html:text/html}
+  keywords = {big data, side-by-side comparison, Spark, Spark streaming, Storm, streaming data, stream processing}
 }
 
 @inproceedings{dave_mining_2003,
@@ -582,6 +592,15 @@
   pages={97--105},
   year={2011},
   organization={ACM}
+}
+
+@incollection{stewart2011comparing,
+  title={Comparing high level mapreduce query languages},
+  author={Stewart, Robert J and Trinder, Phil W and Loidl, Hans-Wolfgang},
+  booktitle={Advanced Parallel Processing Technologies},
+  pages={58--72},
+  year={2011},
+  publisher={Springer}
 }
 
 @inproceedings{pang_sentimental_2004,
@@ -862,8 +881,7 @@ Only the very largest Hadoop users are likely to benefit from {YARN}'s scalabili
   journal = {{ACM} Computing Surveys ({CSUR})},
   author = {Hirzel, Martin and Soulé, Robert and Schneider, Scott and Gedik, Buğra and Grimm, Robert},
   year = {2014},
-  pages = {46},
-  file = {[PDF] from usi.ch:/Users/poltak/Library/Application Support/Zotero/Profiles/xrhso8df.default/zotero/storage/XRS6HHEE/Hirzel et al. - 2014 - A catalog of stream processing optimizations.pdf:application/pdf;Snapshot:/Users/poltak/Library/Application Support/Zotero/Profiles/xrhso8df.default/zotero/storage/UD7DT7H3/login.html:text/html}
+  pages = {46}
 }
 
 @inproceedings{ghemawat_google_2003,
@@ -889,7 +907,6 @@ Only the very largest Hadoop users are likely to benefit from {YARN}'s scalabili
   shorttitle = {Towards Answering Opinion Questions},
   url = {http://dx.doi.org.ezproxy.lib.monash.edu.au/10.3115/1119355.1119372},
   doi = {10.3115/1119355.1119372},
-  abstract = {Opinion question answering is a challenging task for natural language processing. In this paper, we discuss a necessary component for an opinion question answering system: separating opinions from fact, at both the document and sentence level. We present a Bayesian classifier for discriminating between documents with a preponderance of opinions such as editorials from regular news stories, and describe three unsupervised, statistical techniques for the significantly harder task of detecting opinions at the sentence level. We also present a first model for classifying opinion sentences as positive or negative in terms of the main perspective being expressed in the opinion. Results from a large collection of news stories and a human evaluation of 400 sentences are reported, indicating that we achieve very high performance in document classification (upwards of 97\% precision and recall), and respectable performance in detecting opinions and classifying them at the sentence level as positive, negative, or neutral (up to 91\% accuracy).},
   urldate = {2014-09-07},
   booktitle = {Proceedings of the 2003 Conference on Empirical Methods in Natural Language Processing},
   publisher = {Association for Computational Linguistics},
@@ -1142,7 +1159,11 @@ year={2013}
   year={2012},
   institution={DTIC Document}
 }
-
+@inproceedings{kumar2014architectural,
+  title={Architectural Paradigms of Big Data},
+  author={Kumar, Rakesh and Gupta, Neha and Charu, Shilpi and Jangir, Sunil Kumar},
+  booktitle={National Conference on Innovation in Wireless Communication and Networking Technology--2014, Association with THE INSTITUTION OF ENGINEERS (INDIA)}
+}
 @misc{web_yahoo_blog,
 author={Walker, Jim},
 title={Streaming {IN} {H}adoop: {Y}ahoo! release {S}torm-{YARN} - {H}ortonworks},
@@ -1171,6 +1192,12 @@ year={2013}
   author={Zaharia, Matei and Chowdhury, Mosharaf and Das, Tathagata and Dave, Ankur and Ma, Justin and Mccauley, Murphy and Franklin, M and Shenker, Scott and Stoica, Ion},
   year={2012},
   organization={USENIX}
+}
+@article{jones2013process,
+  title={Process real-time big data with Twitter Storm},
+  author={Jones, M Tim},
+  journal={IBM Technical Library},
+  year={2013}
 }
 @misc{web_spark_conviva,
 author={Joseph, Dilip},
@@ -1370,6 +1397,22 @@ note = {(Visited on 2015-05-09)}
   year={2013},
   organization={IEEE}
 }
+@misc{About8:online,
+author = {},
+title = {About Storm},
+howpublished = {\url{https://storm.apache.org/about/multi-language.html}},
+month = {},
+year = {2014},
+note = {(Visited on 2015-05-12)}
+}
+@article{slee2007thrift,
+  title={Thrift: Scalable cross-language services implementation},
+  author={Slee, Mark and Agarwal, Aditya and Kwiatkowski, Marc},
+  journal={Facebook White Paper},
+  volume={5},
+  number={8},
+  year={2007}
+}
 
 @inproceedings{thusoo2010data,
   title={Data warehousing and analytics infrastructure at facebook},
@@ -1377,6 +1420,31 @@ note = {(Visited on 2015-05-09)}
   booktitle={Proceedings of the 2010 ACM SIGMOD International Conference on Management of data},
   pages={1013--1020},
   year={2010},
+  organization={ACM}
+}
+
+@inproceedings{olston2011nova,
+  title={Nova: continuous pig/hadoop workflows},
+  author={Olston, Christopher and Chiou, Greg and Chitnis, Laukik and Liu, Francis and Han, Yiping and Larsson, Mattias and Neumann, Andreas and Rao, Vellanki BN and Sankarasubramanian, Vijayanand and Seth, Siddharth and others},
+  booktitle={Proceedings of the 2011 ACM SIGMOD International Conference on Management of data},
+  pages={1081--1090},
+  year={2011},
+  organization={ACM}
+}
+
+@article{stewart1988problems,
+  title={The problems of mathematics},
+  author={Stewart, RJ and Trinder, PW and Loidl, Hw},
+  year={1988},
+  publisher={Citeseer}
+}
+
+@inproceedings{borthakur2011apache,
+  title={Apache Hadoop goes realtime at Facebook},
+  author={Borthakur, Dhruba and Gray, Jonathan and Sarma, Joydeep Sen and Muthukkaruppan, Kannan and Spiegelberg, Nicolas and Kuang, Hairong and Ranganathan, Karthik and Molkov, Dmytro and Menon, Aravind and Rash, Samuel and others},
+  booktitle={Proceedings of the 2011 ACM SIGMOD International Conference on Management of data},
+  pages={1071--1080},
+  year={2011},
   organization={ACM}
 }
 
