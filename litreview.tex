@@ -59,6 +59,7 @@ Note that in this chapter, we will refer to the processing of data in realtime a
 processing''. This term should be assumed to encompass the meanings that are also often represented through
 use of terms such as ``data stream processing'', ``realtime stream processing'', and ``stream processing''.
 
+
 \subsection{Batch data processing} % (fold)
 \label{sub:batch_data_processing}
 
@@ -75,16 +76,27 @@ Batch data processing can be thought of where data needed to be processed is fir
 before processing then begins on those batches. Once ready, those batches get fed into the processing system
 and handled accordingly~\cite{condie2010online}.
 
+
 \subsubsection{MapReduce and GFS} % (fold)
 \label{ssub:mapreduce_and_gfs}
 
 Dean and Ghemawat, in~\cite{dean_mapreduce:_2008}, originally presented MapReduce as a technology that had been
 developed internally at Google, Inc.\ to be an abstraction to simplify the various computations that engineers were
 trying to perform on their large datasets. The implementations of these computations, while not complicated functions
-themselves, were obscured by the fact of having to manually parallelise the computations, distribute the data, and
-handle faults all in an effective manner. The MapReduce model then enabled these computations to be expressed in a
-simple, high-level manner without the programmer needing to worry about optimising for available resources. Furthermore,
-the MapReduce abstraction provided high scalability to differently sized clusters.
+themselves, were obfuscated by the fact of having to manually parallelise the computations, distribute the data, and
+handle faults all in an effective manner that met their performance requirements. The MapReduce model that was developed,
+enabled these computations to be approached from a more simple, high-level manner without the programmer needing to worry
+about optimising for available resources. In this way, it was more ``declarative'' while still allowing it to be written
+in a procedural language, such as Java. Furthermore, the MapReduce abstraction provided high horizontal scalability to
+differently sized clusters running on modest hardware.
+
+While MapReduce conceptually offers many features that may be found in parallel database technologies, Dean and
+Ghemawat, in~\cite{dean2010mapreduce} emphasise the differences, and specifically flawed assumptions made about MapReduce
+in light of parallel databases. Issues in parallel databases such as fault tolerance when it comes to job failure,
+difficulties with input data from heterogeneous sources, and performing more complicated functions than those supported
+in SQL, are all fully supported and taken into consideration with MapReduce. Notably, while the programming model
+allows for further complicated functions, it also remains to be simple with only two major functions that need to be
+implemented: Map and Reduce~\cite{pavlo2009comparison}.
 
 As previously stated, the MapReduce programming model is generally used on top of some sort of distributed storage
 system. In the previous case at Google, Inc., in the original MapReduce implementation, it was implemented on top of
@@ -103,31 +115,39 @@ relating to their many web-oriented applications rely on GFS.
 \label{ssub:hadoop_mapreduce_and_hdfs}
 
 While MapReduce paired with GFS proved to be very successful solution for big data processing at Google, Inc., and
-there was notable research published on the technology, it was proprietary in-house software unique to Google, and
-availability elsewhere was often not an option~\cite{grossman2009varieties}. Hence, the open-source software community
-responded in turn with their own implementation of MapReduce and a distributed file system analogous to GFS, known as the
-Hadoop Distributed File System (HDFS). Both of these projects, along with others to date, make up the Apache Hadoop
+there was a considerable amount of notable research published on the technology, it was proprietary in-house software
+unique to Google, and availability elsewhere was often not an option~\cite{grossman2009varieties}. Hence, the
+open-source software community responded in turn with their own implementation of Google's MapReduce and a
+distributed file system on which it runs,
+analogous to the role GFS played. The file system is known as the Hadoop Distributed File System (HDFS). Both of these
+projects, along with many others to date, make up the Apache Hadoop
 big data ecosystem~\footnote{https://hadoop.apache.org}. The Apache Hadoop ecosystem, being a top level Apache Software
-Foundation open source project, has been developed by a number of joint contributors from organisations and institutions
-such as Yahoo!, Inc., Intel, IBM, UC Berkeley, among others~\cite{hadoop_committers}.
+Foundation open-source project, has been developed by a number of joint contributors from various organisations and
+institutions such as Yahoo!, Inc., Intel, IBM, UC Berkeley, among others~\cite{hadoop_committers}.
 
-While Hadoop's MapReduce implementation very much was designed to be a functional replacements for Google's MapReduce,
+While Hadoop's MapReduce implementation very much was designed to be a complete functional replacement for Google's MapReduce, based upon published works by Google,
 HDFS is an entirely separate project in its own right. In the original paper from Yahoo!~\cite{shvachko2010hadoop},
 Inc., Shvachko et al.\ present HDFS as ``the file system component of Hadoop'' with the intention of being similar to
-the UNIX file system, however they also state that ``faithfulness to standards was sacrificed in favour of improved
-performance''.
+in external appearance to the UNIX file system, however they also state that ``faithfulness to standards was sacrificed
+in favour of improved performance''.
 
 While HDFS was designed with replicating GFS' functionality in mind, several low-level architectural and design decisions
 were made that substantially differ to those documented in GFS. For example, in~\cite{borthakur2007hadoop}, Borthakur
 documents the method HDFS uses when it comes to file deletion. Borthakur talks about how when a file is deleted in HDFS,
 it essentially gets moved to a \texttt{/trash} directory, much like what happens in a lot of modern operating systems.
 This \texttt{/trash} directory is then purged after a configurable amount of time, the default of which being six hours.
-To contrast with this, GFS is documented to have more primitive way of managing deleted files. Ghemawat, et al.,
+To contrast with this, GFS is documented to have a more primitive way of managing deleted files. Ghemawat, et al.,
 in~\cite{ghemawat_google_2003}, document GFS' garbage collection implementation. Instead of having a centralised
 \texttt{/trash} storage, deleted files get renamed to a hidden name. The GFS master then, during a regularly scheduled
 scan, will delete any of these hidden files that have remained deleted for a configurable amount of time, the default
 being three days. This is by far not the only difference between the two file systems, this is simply an example of a
 less low-level technical difference.
+
+HDFS, being designed as a standalone technology, is now used as a data storage component for many different big data
+technologies, not limited to only those within the Hadoop ecosystem~\cite{taylor2010overview} but also projects
+outside~\cite{xin2013graphx,yang2013big}. HDFS was designed with general usage in mind and adhered for horizontal
+scalability being a key asset, hence runs on inexpensive clusters using modest hardware, while still delivering all
+its potential advantages~\cite{borthakur2008hdfs}.
 
 % subsubsection hadoop_mapreduce_and_hdfs (end)
 
@@ -138,19 +158,31 @@ less low-level technical difference.
 Given the popularity of Hadoop, there were several early attempts at building further abstractions on top of the
 MapReduce model, which were met with a high level of success. As highlighted earlier, MapReduce was originally designed
 to be a nice abstraction on top of the underlying hardware, however according to Thusoo et al., in~\cite{thusoo2009hive},
-MapReduce was still too low level resulting in programmers writing programs that are ``are hard to maintain and reuse''.
-Thus, Thusoo et al.\ built the Hive abstraction on top of MapReduce. Hive allows programmers to write queries in a
-similarly declarative language to SQL --- known affectionately as \emph{HiveQL} --- which then get compiled down into
-MapReduce jobs to run on Hadoop~\cite{thusoo2010hive}.
+MapReduce was still too low level resulting in programmers writing programs that are considered to be ``hard to maintain
+and reuse''. Thus, Thusoo et al.\ at Facebook Inc.\ built the Hive abstraction on top of MapReduce. Hive allows
+programmers to write queries in a similarly declarative language to SQL --- known affectionately as \emph{HiveQL} ---
+which then get compiled down into MapReduce jobs to run on Hadoop~\cite{thusoo2010hive}.
+
+Hive, along with HiveQL, provide a platform to run ad-hoc queries on top of HDFS stored data, which are run as batch
+MapReduce jobs. For example, all generated reports on Facebook to their paid advertisers are generated using batch jobs
+constructed using Hive, along with several other analytics use cases at Facebook~\cite{thusoo2010data}. An added benefit
+shown at Facebook from the use of Hive, over traditional MapReduce, was the users familiarity with SQL-like
+declarativeness in regards to querying and manipulating data~\cite{borthakur2011apache}.
 
 Another common abstraction that was developed prior to Hive was what is known simply as Pig. Like Hive, Pig attempts to
-be a further higher level abstraction on top of MapReduce, which ultimately compiles down into MapReduce jobs, although
-what differentiates it from Hive is that instead of being a solely declarative SQL-like language, it is more of a mix of
-procedural programming languages while allowing for SQL-like constraints to be specified on the data set to define the
+be a further higher level abstraction on top of the MapReduce model, which ultimately compiles down into MapReduce jobs.
+what differentiates it more from Hive is that instead of offering a solely declarative SQL-like language for data
+manipulation and querying, it offers a language that takes more of a procedural and functional pipeline paradigm
+influenced approach~\cite{olston2011nova}. This still allows for relational algebraic constraints to be specified on the data set in relation to defining the
 result~\cite{olston2008pig}. Olston et al.\ describe Pig's language --- known as \emph{Pig Latin} --- to be what they
 define as a ``dataflow language'', rather than a strictly procedural or declarative language.
 
-Furthermore, note that Pig and Hive, being high level abstractions on top of MapReduce, also enable many of their own
+Pig works by having the program first parsed into a directed acyclic graph (DAG), which then can be be optimised using
+DAG-related graph theory, before having that DAG being compiled down into native MapReduce batch jobs. The MapReduce
+stage is also optimised through use of function ordering, before being submitted to run on a Hadoop
+cluster~\cite{stewart2011comparing}.
+
+Hive, also being a high level abstraction on top of MapReduce, also enable many of their own
 optimisations to be applied to the underlying MapReduce jobs during the compilation
 stage~\cite{gates2009building,thusoo2010hive} as well as having the benefit of being susceptible to manual query
 optimisations, familiar to programmers familiar with query optimisations from SQL~\cite{gruenheid2011query}.
@@ -158,6 +190,7 @@ optimisations, familiar to programmers familiar with query optimisations from SQ
 % subsubsection pig_and_hive (end)
 
 % subsection batch_data_processing (end)
+
 
 
 \subsection{Realtime data processing} % (fold)

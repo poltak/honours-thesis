@@ -208,7 +208,6 @@
   shorttitle = {Pig Latin},
   url = {http://doi.acm.org.ezproxy.lib.monash.edu.au/10.1145/1376616.1376726},
   doi = {10.1145/1376616.1376726},
-  abstract = {There is a growing need for ad-hoc analysis of extremely large data sets, especially at internet companies where innovation critically depends on being able to analyze terabytes of data collected every day. Parallel database products, e.g., Teradata, offer a solution, but are usually prohibitively expensive at this scale. Besides, many of the people who analyze this data are entrenched procedural programmers, who find the declarative, {SQL} style to be unnatural. The success of the more procedural map-reduce programming model, and its associated scalable implementations on commodity hardware, is evidence of the above. However, the map-reduce paradigm is too low-level and rigid, and leads to a great deal of custom user code that is hard to maintain, and reuse. We describe a new language called Pig Latin that we have designed to fit in a sweet spot between the declarative style of {SQL}, and the low-level, procedural style of map-reduce. The accompanying system, Pig, is fully implemented, and compiles Pig Latin into physical plans that are executed over Hadoop, an open-source, map-reduce implementation. We give a few examples of how engineers at Yahoo! are using Pig to dramatically reduce the time required for the development and execution of their data analysis tasks, compared to using Hadoop directly. We also report on a novel debugging environment that comes integrated with Pig, that can lead to even higher productivity gains. Pig is an open-source, Apache-incubator project, and available for general use.},
   urldate = {2014-08-17},
   booktitle = {Proceedings of the 2008 {ACM} {SIGMOD} International Conference on Management of Data},
   publisher = {{ACM}},
@@ -222,14 +221,11 @@
 @inproceedings{thusoo_hive_2010,
   title = {Hive - a petabyte scale data warehouse using Hadoop},
   doi = {10.1109/ICDE.2010.5447738},
-  abstract = {The size of data sets being collected and analyzed in the industry for business intelligence is growing rapidly, making traditional warehousing solutions prohibitively expensive. Hadoop is a popular open-source map-reduce implementation which is being used in companies like Yahoo, Facebook etc. to store and process extremely large data sets on commodity hardware. However, the map-reduce programming model is very low level and requires developers to write custom programs which are hard to maintain and reuse. In this paper, we present Hive, an open-source data warehousing solution built on top of Hadoop. Hive supports queries expressed in a {SQL}-like declarative language - {HiveQL}, which are compiled into map-reduce jobs that are executed using Hadoop. In addition, {HiveQL} enables users to plug in custom map-reduce scripts into queries. The language includes a type system with support for tables containing primitive types, collections like arrays and maps, and nested compositions of the same. The underlying {IO} libraries can be extended to query data in custom formats. Hive also includes a system catalog - Metastore - that contains schemas and statistics, which are useful in data exploration, query optimization and query compilation. In Facebook, the Hive warehouse contains tens of thousands of tables and stores over 700TB of data and is being used extensively for both reporting and ad-hoc analyses by more than 200 users per month.},
   booktitle = {2010 {IEEE} 26th International Conference on Data Engineering ({ICDE})},
   author = {Thusoo, A and Sarma, J.S. and Jain, N. and Shao, Zheng and Chakka, P. and Zhang, Ning and Antony, S. and Liu, Hao and Murthy, R.},
   month = mar,
   year = {2010},
-  keywords = {arrays, business intelligence, Companies, competitive intelligence, data exploration, data warehouses, Facebook, Hadoop software, Hardware, {HiveQL} language, Libraries, map-reduce jobs, maps, Metastore system catalog, nested compositions, open-source map-reduce implementation, Open source software, petabyte scale data warehouse, Plugs, primitive types, public domain software, query compilation, query optimization, query processing, {SQL}, {SQL}-like declarative language, Statistics, Warehousing},
-  pages = {996--1005},
-  file = {IEEE Xplore Abstract Record:/Users/poltak/Library/Application Support/Zotero/Profiles/xrhso8df.default/zotero/storage/JNB3RPAD/abs_all.html:text/html;IEEE Xplore Full Text PDF:/Users/poltak/Library/Application Support/Zotero/Profiles/xrhso8df.default/zotero/storage/E5VJFX8C/Thusoo et al. - 2010 - Hive - a petabyte scale data warehouse using Hadoo.pdf:application/pdf}
+  pages = {996--1005}
 }
 
 
@@ -240,7 +236,6 @@
   shorttitle = {Building a High-level Dataflow System on Top of Map-Reduce},
   url = {http://dx.doi.org.ezproxy.lib.monash.edu.au/10.14778/1687553.1687568},
   doi = {10.14778/1687553.1687568},
-  abstract = {Increasingly, organizations capture, transform and analyze enormous data sets. Prominent examples include internet companies and e-science. The Map-Reduce scalable dataflow paradigm has become popular for these applications. Its simple, explicit dataflow programming model is favored by some over the traditional high-level declarative approach: {SQL}. On the other hand, the extreme simplicity of Map-Reduce leads to much low-level hacking to deal with the many-step, branching dataflows that arise in practice. Moreover, users must repeatedly code standard operations such as join by hand. These practices waste time, introduce bugs, harm readability, and impede optimizations. Pig is a high-level dataflow system that aims at a sweet spot between {SQL} and Map-Reduce. Pig offers {SQL}-style high-level data manipulation constructs, which can be assembled in an explicit dataflow and interleaved with custom Map- and Reduce-style functions or executables. Pig programs are compiled into sequences of Map-Reduce jobs, and executed in the Hadoop Map-Reduce environment. Both Pig and Hadoop are open-source projects administered by the Apache Software Foundation. This paper describes the challenges we faced in developing Pig, and reports performance comparisons between Pig execution and raw Map-Reduce execution.},
   number = {2},
   urldate = {2014-08-31},
   journal = {Proc. {VLDB} Endow.},
@@ -259,7 +254,6 @@
   shorttitle = {Apache Hadoop {YARN}},
   url = {http://doi.acm.org.ezproxy.lib.monash.edu.au/10.1145/2523616.2523633},
   doi = {10.1145/2523616.2523633},
-  abstract = {The initial design of Apache Hadoop [1] was tightly focused on running massive, {MapReduce} jobs to process a web crawl. For increasingly diverse companies, Hadoop has become the data and computational agorá---the de facto place where data and computational resources are shared and accessed. This broad adoption and ubiquitous usage has stretched the initial design well beyond its intended target, exposing two key shortcomings: 1) tight coupling of a specific programming model with the resource management infrastructure, forcing developers to abuse the {MapReduce} programming model, and 2) centralized handling of jobs' control flow, which resulted in endless scalability concerns for the scheduler. In this paper, we summarize the design, development, and current state of deployment of the next generation of Hadoop's compute platform: {YARN}. The new architecture we introduced decouples the programming model from the resource management infrastructure, and delegates many scheduling functions (e.g., task fault-tolerance) to per-application components. We provide experimental evidence demonstrating the improvements we made, confirm improved efficiency by reporting the experience of running {YARN} on production environments (including 100\% of Yahoo! grids), and confirm the flexibility claims by discussing the porting of several programming frameworks onto {YARN} viz. Dryad, Giraph, Hoya, Hadoop {MapReduce}, {REEF}, Spark, Storm, Tez.},
   urldate = {2014-08-14},
   booktitle = {Proceedings of the 4th Annual Symposium on Cloud Computing},
   publisher = {{ACM}},
@@ -275,9 +269,6 @@
   copyright = {Copyright Information Today, Inc. Dec 2012},
   issn = {1547-9897},
   url = {http://search.proquest.com.ezproxy.lib.monash.edu.au/docview/1265616176?accountid=12528},
-  abstract = {As the undisputed pioneer of big data, Google established most of the key technologies underlying Hadoop and many of the {NoSQL} databases. The Google File System ({GFS}) allowed dusters of commodity servers to present their internal disk storage as a unified file system and inspired the Hadoop Distributed File System ({HDFS}). Google's column-oriented key value store {BigTable} influenced many {NoSQL} systems such as Apache {HBase}, Cassandra and {HyperTable}. And, of course, the Google {MapReduce} algorithm became the foundation computing model for Hadoop and was widely implemented in other {NoSQL} systems such as {MongoDB}.
-{YARN} provides much more than just improved scalability, however; it treats traditional {MapReduce} as just one of the possible frameworks that can run on the cluster. {YARN}, therefore, will allow Hadoop clusters to execute non-{MapReduce} workloads. Work is underway on a number of such applications, including Spark, Storm, Giraph, and Hama.
-Only the very largest Hadoop users are likely to benefit from {YARN}'s scalability improvements. For the rest of us, the ability to extend the range of Hadoop analytics is far more significant. At the end of the day, a Hadoop cluster is only as valuable as the analytic insights it can provide. By extending the range of possible analytic models, {YARN} should contribute to the long-term success of Hadoop.},
   language = {English},
   number = {4},
   urldate = {2014-08-11},
@@ -294,7 +285,6 @@ Only the very largest Hadoop users are likely to benefit from {YARN}'s scalabili
   url = {http://www.sics.se/~amir/files/download/dic/2013%20-%20Survey%20of%20Distributed%20Stream%20Processing%20for%20Large%20Stream%20Sources.pdf},
   urldate = {2014-08-31},
   author = {Kamburugamuve, Supun and Fox, Geoffrey and Leake, David and Qiu, Judy},
-  file = {[PDF] from sics.se:/Users/poltak/Library/Application Support/Zotero/Profiles/xrhso8df.default/zotero/storage/92IIH8C2/Kamburugamuve et al. - Survey of Distributed Stream Processing for Large .pdf:application/pdf},
   year = {2014}
 }
 
@@ -308,14 +298,11 @@ Only the very largest Hadoop users are likely to benefit from {YARN}'s scalabili
 @book{islam_cloud_2014,
   title = {A Cloud Based Platform for Big Data Science},
   url = {http://www.diva-portal.org/smash/record.jsf?pid=diva2:690525},
-  abstract = {With the advent of cloud computing, resizable scalable infrastructures for data processing is now available to everyone. Software platforms and frameworks that support data intensive distributed ap ...},
   language = {eng},
   urldate = {2014-08-31},
   author = {Islam, Md Zahidul},
   year = {2014},
-  note = {With the advent of cloud computing, resizable scalable infrastructures for data processing is now available to everyone. Software platforms and frameworks that support data intensive distributed ap ...},
-  keywords = {Programvaruteknik, Software Engineering},
-  file = {Snapshot:/Users/poltak/Library/Application Support/Zotero/Profiles/xrhso8df.default/zotero/storage/J7Q6THMQ/record.html:text/html}
+  keywords = {Programvaruteknik, Software Engineering}
 }
 
 @article{DBLP:journals/corr/XinCDGFS14,
@@ -331,6 +318,7 @@ Only the very largest Hadoop users are likely to benefit from {YARN}'s scalabili
   year      = {2014},
   ee        = {http://arxiv.org/abs/1402.2394},
   bibsource = {DBLP, http://dblp.uni-trier.de}
+
 }@incollection{bohlouli_towards_2013,
   title = {Towards an integrated platform for big data analysis},
   url = {http://link.springer.com.ezproxy.lib.monash.edu.au/chapter/10.1007/978-3-642-34471-8_4},
@@ -577,7 +565,6 @@ Only the very largest Hadoop users are likely to benefit from {YARN}'s scalabili
   title = {{GraphX}: Unifying Data-Parallel and Graph-Parallel Analytics},
   shorttitle = {{GraphX}},
   url = {http://arxiv.org/abs/1402.2394},
-  abstract = {From social networks to language modeling, the growing scale and importance of graph data has driven the development of numerous new graph-parallel systems (e.g., Pregel, {GraphLab}). By restricting the computation that can be expressed and introducing new techniques to partition and distribute the graph, these systems can efficiently execute iterative graph algorithms orders of magnitude faster than more general data-parallel systems. However, the same restrictions that enable the performance gains also make it difficult to express many of the important stages in a typical graph-analytics pipeline: constructing the graph, modifying its structure, or expressing computation that spans multiple graphs. As a consequence, existing graph analytics pipelines compose graph-parallel and data-parallel systems using external storage systems, leading to extensive data movement and complicated programming model. To address these challenges we introduce {GraphX}, a distributed graph computation framework that unifies graph-parallel and data-parallel computation. {GraphX} provides a small, core set of graph-parallel operators expressive enough to implement the Pregel and {PowerGraph} abstractions, yet simple enough to be cast in relational algebra. {GraphX} uses a collection of query optimization techniques such as automatic join rewrites to efficiently implement these graph-parallel operators. We evaluate {GraphX} on real-world graphs and workloads and demonstrate that {GraphX} achieves comparable performance as specialized graph computation systems, while outperforming them in end-to-end graph pipelines. Moreover, {GraphX} achieves a balance between expressiveness, performance, and ease of use.},
   urldate = {2014-09-01},
   journal = {{arXiv}:1402.2394 [cs]},
   author = {Xin, Reynold S. and Crankshaw, Daniel and Dave, Ankur and Gonzalez, Joseph E. and Franklin, Michael J. and Stoica, Ion},
@@ -725,8 +712,7 @@ Only the very largest Hadoop users are likely to benefit from {YARN}'s scalabili
   publisher = {{IEEE}},
   author = {Sinnott, Richard O. and Galang, Gerson and Tomko, Martin and Stimson, Robert},
   year = {2011},
-  pages = {295--302},
-  file = {[PDF] from unimelb.edu.au:/Users/poltak/Library/Application Support/Zotero/Profiles/xrhso8df.default/zotero/storage/5HT2S9FW/Sinnott et al. - 2011 - Towards an e-infrastructure for urban research acr.pdf:application/pdf;Snapshot:/Users/poltak/Library/Application Support/Zotero/Profiles/xrhso8df.default/zotero/storage/TU6W5AK5/login.html:text/html}
+  pages = {295--302}
 }
 
 @inproceedings{pang_thumbs_2002,
@@ -736,7 +722,6 @@ Only the very largest Hadoop users are likely to benefit from {YARN}'s scalabili
   shorttitle = {Thumbs Up?},
   url = {http://dx.doi.org.ezproxy.lib.monash.edu.au/10.3115/1118693.1118704},
   doi = {10.3115/1118693.1118704},
-  abstract = {We consider the problem of classifying documents not by topic, but by overall sentiment, e.g., determining whether a review is positive or negative. Using movie reviews as data, we find that standard machine learning techniques definitively outperform human-produced baselines. However, the three machine learning methods we employed (Naive Bayes, maximum entropy classification, and support vector machines) do not perform as well on sentiment classification as on traditional topic-based categorization. We conclude by examining factors that make the sentiment classification problem more challenging.},
   urldate = {2014-08-20},
   booktitle = {Proceedings of the {ACL}-02 Conference on Empirical Methods in Natural Language Processing - Volume 10},
   publisher = {Association for Computational Linguistics},
@@ -1324,9 +1309,84 @@ note = {(Visited on 2015-05-09)}
   organization={ACM}
 }
 
-@book{halloway2009programming,
-  title={Programming Clojure},
-  author={Halloway, Stuart},
+@inproceedings{hickey2008clojure,
+  title={The clojure programming language},
+  author={Hickey, Rich},
+  booktitle={Proceedings of the 2008 symposium on Dynamic languages},
+  pages={1},
+  year={2008},
+  organization={ACM}
+}
+
+@inproceedings{condie2010online,
+  title={Online aggregation and continuous query support in mapreduce},
+  author={Condie, Tyson and Conway, Neil and Alvaro, Peter and Hellerstein, Joseph M and Gerth, John and Talbot, Justin and Elmeleegy, Khaled and Sears, Russell},
+  booktitle={Proceedings of the 2010 ACM SIGMOD International Conference on Management of data},
+  pages={1115--1118},
+  year={2010},
+  organization={ACM}
+}
+@inproceedings{pavlo2009comparison,
+  title={A comparison of approaches to large-scale data analysis},
+  author={Pavlo, Andrew and Paulson, Erik and Rasin, Alexander and Abadi, Daniel J and DeWitt, David J and Madden, Samuel and Stonebraker, Michael},
+  booktitle={Proceedings of the 2009 ACM SIGMOD International Conference on Management of data},
+  pages={165--178},
   year={2009},
-  publisher={Pragmatic Bookshelf}
+  organization={ACM}
+}
+@article{borthakur2008hdfs,
+  title={HDFS architecture guide},
+  author={Borthakur, Dhruba},
+  journal={Hadoop Apache Project},
+  pages={53},
+  year={2008}
+}
+
+@inproceedings{xin2013graphx,
+  title={Graphx: A resilient distributed graph system on spark},
+  author={Xin, Reynold S and Gonzalez, Joseph E and Franklin, Michael J and Stoica, Ion},
+  booktitle={First International Workshop on Graph Data Management Experiences and Systems},
+  pages={2},
+  year={2013},
+  organization={ACM}
+}
+
+@article{taylor2010overview,
+  title={An overview of the Hadoop/MapReduce/HBase framework and its current applications in bioinformatics},
+  author={Taylor, Ronald C},
+  journal={BMC bioinformatics},
+  volume={11},
+  number={Suppl 12},
+  pages={S1},
+  year={2010},
+  publisher={BioMed Central Ltd}
+}
+
+@inproceedings{yang2013big,
+  title={Big Data Real-Time Processing Based on Storm},
+  author={Yang, Wenjie and Liu, Xingang and Zhang, Lan and Yang, Laurence T},
+  booktitle={Trust, Security and Privacy in Computing and Communications (TrustCom), 2013 12th IEEE International Conference on},
+  pages={1784--1787},
+  year={2013},
+  organization={IEEE}
+}
+
+@inproceedings{thusoo2010data,
+  title={Data warehousing and analytics infrastructure at facebook},
+  author={Thusoo, Ashish and Shao, Zheng and Anthony, Suresh and Borthakur, Dhruba and Jain, Namit and Sen Sarma, Joydeep and Murthy, Raghotham and Liu, Hao},
+  booktitle={Proceedings of the 2010 ACM SIGMOD International Conference on Management of data},
+  pages={1013--1020},
+  year={2010},
+  organization={ACM}
+}
+
+@article{dean2010mapreduce,
+  title={MapReduce: a flexible data processing tool},
+  author={Dean, Jeffrey and Ghemawat, Sanjay},
+  journal={Communications of the ACM},
+  volume={53},
+  number={1},
+  pages={72--77},
+  year={2010},
+  publisher={ACM}
 }
