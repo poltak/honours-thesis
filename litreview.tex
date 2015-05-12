@@ -323,16 +323,32 @@ distributed operations being performed on this same dataset in parallel without 
 IO operations, which is noted by Spark as a performance limitation of MapReduce. Spark is designed with highly iterative
 computations in-mind.
 
-Spark has recently %TODO: mention about the new non-RDD stuff
+The Spark project has experienced a large growth in terms of project contributions over the past few years, now
+encompassing a number of subprojects running on top of the Spark engine, all suited for different use cases. These
+include:
 
-As stated earlier, Spark allows the processing of data in realtime and batch mode. Originally, Spark was released as a
-project that simply focused on in-memory batch processing, however after the need for realtime processing became apparent, an
-extension project, Spark Streaming, was initiated. Spark Streaming uses a different programming model that involves what
-is labelled as ``D-Streams'' (discretised streams), which essentially lets a series of deterministic batch computations
-be treated as a realtime data stream~\cite{zaharia2012discretized}. The D-Stream model is specific to the Spark Streaming
+\begin{itemize}
+  \item \textbf{Spark SQL}: An SQL-like engine that runs on top of Spark,
+  allowing Spark users to reap the benefits of using a declarative SQL-like language on top of Spark's functional
+  API~\cite{armbrustspark}. (Previously known as Shark~\cite{xin2013shark}).
+  \item \textbf{Spark GraphX}: A graph abstraction on top of the Spark engine, allowing for the efficient expression of
+  distributed graph structures and computations on those structures~\cite{xin2013graphx}.
+  \item \textbf{Spark MLlib}: A distributed scalable machine learning platform on top of Spark, allowing for efficient
+  machine learning capabilities~\cite{sparks2013mli}.
+  \item \textbf{Spark Streaming}: A DSPS platform built on top of the Spark engine, allowing for the processing of data
+  in realtime~\cite{zaharia2012discretized}.
+\end{itemize}
+
+Given these different platforms built on top of Spark's in-memory computation engine, Spark offers solutions for many
+different big data processing use cases. We are most interested in Spark Streaming, given its realtime DSPS offerings.
+Spark Streaming uses a different programming model than that which is offered in the base Spark platform, that involves what
+is labelled as ``D-Streams'' (discretised streams). D-streams essentially allows for a series of deterministic batch computations
+be treated as single a realtime data stream~\cite{zaharia2012discretized}. The D-Stream model is specific to the Spark Streaming
 system --- the original batch mode Spark system continues to use the previously mentioned RDD abstraction --- and the
-creators claim performance improvements of being $2-5\times$ faster than  other realtime data processing systems, such as S4
-and Storm~\cite{zaharia2013discretized}. However, this has since been disputed~\cite{web_slideshare_b}.
+creators claim performance improvements of being $2-5\times$ faster than other DSPS technologies, such as S4
+and Storm, given its use of in-memory stream computation~\cite{zaharia2013discretized}. However, this is a topic of debate,
+with opponents claiming that these Spark performance claims are very much dependent on external factors, such as
+available resources~\cite{web_slideshare_b}.
 
 Both Spark and Spark Streaming have started to gain notable usage in both industry and research projects in academia in
 the last few years. Online video distribution company, Conviva Inc., report to be using Spark for the processing of
@@ -342,7 +358,12 @@ cellular phones for traffic monitoring in the San Francisco Bay Area, has been u
 algorithm in use for the project: an expectation maximisation (EM) algorithm that has been parallelised by being run on
 Spark~\cite{hunter2011scaling}.
 
+Spark Streaming, while originally written in Scala, supports official APIs for Java, Scala, and Python. Note that the
+Python API for Spark has only recently been introduced and, as of yet (version 1.3.1), does have have support for all
+the data sources which Java and Scala offer~\cite{Spark5:online}.
+
 % subsubsection spark_streaming (end)
+
 
 \subsubsection{Samza} % (fold
 \label{ssub:samza}
@@ -400,6 +421,7 @@ focus on S4 when looking at the topics of DSPS technologies.
 
 % subsection realtime_data_processing (end)
 
+
 \subsection{Discussion and analysis} % (fold)
 \label{sub:processing_conclusion}
 
@@ -410,7 +432,7 @@ quantified fairly, as comparisons or tests have not been carried out relating to
 which can be used to given an impartial comparison of the previously covered projects. The requirements were defined a
 number of years prior to the creation of the four main realtime data processing systems that were covered (2005), however are highly
 cited as being the defining features that the current generation of realtime data processing systems have strived to meet.
-The requirements put forward by Stonebraker et al.\ are summarised as follows:
+The requirements, put forward by Stonebraker et al., are summarised as follows:
 
 \noindent \textbf{1: Keep the data moving -} This requirement relates to the high mobility of data and importance of low
 latency in the overall processing. Hence, processing should happen as data moves, rather than storing it first, then
@@ -448,7 +470,7 @@ The previously covered literature has been used to determine whether or not the 
 systems adhere to these requirements. The outcome of this is shown in~\tabref{tab:processing_systems_compare}.
 
 Note that in~\tabref{tab:processing_systems_compare}, those cells with ``N/A'' as the value simply mean that the literature
-is inconclusive on whether or not they adhere to the particular requirement. Further investigation is required.
+is inconclusive on whether or not they adhere to the particular requirement.
 
 \import{includes/tables/}{data_processing_compare}
 
@@ -460,18 +482,15 @@ is inconclusive on whether or not they adhere to the particular requirement. Fur
 \subsection{Conclusion} % (fold)
 \label{sec:conclusion_litrev}
 
-The choosing of appropriate realtime data processing frameworks for the processing of a given application and dataset
-is an important, and often confusing, problem. Most frameworks compare themselves in terms of performance with other
-frameworks, often which are disputed by members in other framework ``camps''~\cite{web_slideshare_b,web_slideshare_a}.
-Hence, providing an informed recommendation based on processing requirements and the class into which the dataset
-falls is a much needed and important contribution to address the gap shown to exist in current systems.
+The choosing of appropriate realtime data processing platforms for the processing of a given application and dataset
+is an important, and often confusing, problem. Most platforms compare themselves in terms of performance with other
+frameworks, often which are disputed by members in other platform ``camps''~\cite{web_slideshare_b,web_slideshare_a}.
+Hence, providing an informed recommendation based on the features each platform offers, and an impartial performance
+evaluation is a much needed and important contribution to address this gap in qualitative and quantitative evaluations
+of the available platforms.
 
-This taxonomy of realtime data processing technologies will be based off the literature relating to the realtime data
-processing frameworks, as presented in~\sectref{sub:realtime_data_processing}. This taxonomy will be used, along with the
-created taxonomy of data classes, to develop the previously stated processing recommendations.
-
-This research will further the field of realtime big data processing in addressing the shown gaps, and making the
-decision process far more streamlined for researchers and developers alike.
+This research will further the field of realtime big data processing in addressing these shown gaps, and making the
+decision process far more streamlined for researchers and developers of DSPS technologies alike.
 
 % section conclusion (end)
 
