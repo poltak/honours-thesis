@@ -15,19 +15,23 @@ thesis, is the automated monitoring of railway tracks and cars by the Institute 
 Out of all of these data that are faced in such projects, often only specific parts of the data are of particular use for given
 purposes. Hence, rather than attempting to store all the new data that is being generated, an increasingly popular method of
 dealing with such data, in both academia and industry associated with big data, is the processing and analysis of
-data in realtime as it is received.
+data in realtime as it is received. This is also known as online processing, or single pass processing, where data is
+processed in real time before being discarded. Further options also exist where data is stored after processing, depending
+on the specific use-case.
 
 There are currently numerous realtime data processing frameworks that are in development and in production use, both in
 industry and academia. Examples of these realtime data processing frameworks include the widely used Storm
 project~\cite{web:Storm}, developed at BackType and Twitter, Inc., and also the up-and-coming Spark Streaming
 project~\cite{web:SparkStreaming}, developed at UC Berkeley's AMPLab~\cite{web:UCBerkelyAMCLab}, both of which are
 open-source projects. While there are a growing number of these projects being developed, often these projects are designed
-with a particular type of data in mind, or to facilitate a particular type of data processing. For example, the before
+with a particular type of processing in mind. For example, the before
 mentioned Spark Streaming project, along with its mother project, Spark~\cite{web:Spark}, was originally designed for highly
 parallelisable data with the use-case in mind of processing data in-memory using highly iterative machine learning
 algorithms related to data analytics~\cite{liu_survey_2014}.
 
-What is proposed in this chapter is a realtime big data processing system for the aforementioned railway monitoring system by the IRT at Monash University given the possibility that data is able to be streamed in realtime from the railway in realtime.
+What is proposed in this chapter is a realtime big data processing pipeline for the aforementioned railway monitoring
+system by the IRT at Monash University. This processing pipeline will allow the possibility that data is able to be
+streamed in realtime from the railway and processed according to the team's given processing requirements.
 
 This chapter will be structured as follows:\\
 A brief outline of the domain on big data processing, both batch and realtime processing, will be given
@@ -49,12 +53,13 @@ concluding this chapter in~\sectref{sec:summary}.
 \label{sub:big_data}
 
 Big data, as explained previously, is becoming commonplace in both industry and academia. Everyday companies are finding
-that they are generating too much data and that their traditional relational database management system (RDMBS) solutions cannot
+that they are generating a large volume data and that their traditional relational database management system (RDMBS) solutions cannot
 scale to the epic proportions needed to handle this data in an efficient and robust manner~\cite{marz2013principles}.
 Hence, companies and academics alike have started looking at alternative solutions designed with the goal of handling
 these massive datasets.
 
-The most popular solution for this problem, up until recently, has been the MapReduce model of programming along with
+The most popular solution for this problem, up until recently, has been the MapReduce % TODO: Add reference to MR
+ model of programming along with
 some type of scalable distributed storage system~\cite{bifet_mining_2013}. The MapReduce model was started at Google,
 Inc.\@ with their own proprietary implementation along with their proprietary distributed file system, known as the Google
 File System (GFS)~\cite{ghemawat_google_2003}. Without going into the low-level details of MapReduce and GFS, the use of this solution at Google
@@ -67,8 +72,8 @@ processing operations that was needed at the time~\cite{ghemawat_google_2003}~\c
 \label{sub:apache hadoop}
 
 From the success of MapReduce usage combined with GFS at Google, the open-source community responded swiftly with the
-development of the Apache Hadoop framework. Hadoop originally offered an open-source implementation of MapReduce and
-their own open-source distributed file system known as the Hadoop Distributed File System
+development of the Apache Hadoop framework~\footnote{https://hadoop.apache.org}. Hadoop originally offered an open-source
+implementation of MapReduce and their own open-source distributed file system known as the Hadoop Distributed File System
 (HDFS)~\cite{shvachko_hadoop_2010}.
 
 Hadoop soon became the subject of mass-adoption in both industry and academia, being deployed at a fast rate.
@@ -78,12 +83,12 @@ systems in their own right. For example, Hadoop applications such as Apache Pig~
 Hive~\cite{thusoo_hive_2010} allow for easy querying and manipulation of data stored on HDFS, both coming with the
 addition of their own query languages~\cite{olston_pig_2008}.
 
-Additionally, as further non-MapReduce model applications became of interest to the Hadoop community, Hadoop soon
+As further non-MapReduce model applications became of interest to the Hadoop community, Hadoop soon
 developed a further abstraction on top of the underlying resources (in most cases, HDFS). The goal of this was to
 facilitate the development and deployment of many different applications, varying in use-case, which could be run on the
 Hadoop ecosystem, without forcing developers to fit their application into the MapReduce model. This development was
 known as Apache Hadoop YARN:\@ Yet Another Resource Negotiator, which can be thought of as an operating system-like abstraction sitting
-atop of the available Hadoop resources~\cite{vavilapalli_apache_2013}. The abstraction YARN provides facilitated the
+atop of the available Hadoop resources~\cite{vavilapalli_apache_2013}. The abstraction provided by YARN facilitated the
 development of much more advanced, and non-MapReduce technologies which have since become widely used parts of the
 Hadoop ecosystem~\cite{harrison_hadoops_2012}.
 
@@ -114,10 +119,11 @@ which is a recently open-sourced project, currently being used in production at 
 \subsubsection{Monash IRT Railway Project} % (fold)
 \label{sub:monash_irt_railway_project}
 
-The railway project that has been developed at Monash University's Institute of Railway Technology uses numerous sensor
+The railway project that has been developed at Monash University's Institute of Railway Technology~\footnote{https://platforms.monash.edu/irt/}
+uses numerous sensor
 technologies on certain train cars, such as the Track Geometry Recording Car (TGRC) and the Instrumented Ore Car (IOC),
-to monitor railway track conditions and detect track abnormalities~\cite{darby2003development}~\cite{darby2005track}.
-These train cars operate in the Pilbara region of Western Australia, continously performing round trips from a port
+to monitor railway track conditions and detect track abnormalities~\cite{darby2003development,darby2005track}.
+These train cars operate in the Pilbara region of Western Australia, continuously performing round trips from a port
 to a given loading point, where they are loaded with recently mined minerals and ores.
 
 As is currently the case, data is received and processed using batch data processing technologies. Due to limited coverage
@@ -135,7 +141,7 @@ implementation
 of the sensors, the data received is not consistently structured. In fact, the only sensor data guaranteed to be received
 in each batch is geographic location and time. Due to the highly structured nature of RDBMS technology, certain work-arounds
 need to be performed on the data so that it is compliant to RDBMS schemas, such as the insertions of default values in
-in the case of missing attributes. Furthermore, low query performance has been noted as a problem plaguing the IRT team
+the case of missing attributes. Furthermore, low query performance has been noted as a problem plaguing the IRT team
 working with the railway data. They wish to resolve these problems by looking into non-relational models for their data
 storage and processing systems.
 
@@ -144,10 +150,33 @@ storage and processing systems.
 % section research_context (end)
 
 
-\subsection{Research Objectives} % (fold)
+
+\subsection{Research Questions} % (fold)
+\label{sub:research_questions}
+
+The following research questions are the main focus points of this subproject:
+
+\begin{enumerate}
+  \item\label{item:dsps} How can existing DSPS technologies be used to fill this realtime processing gap in the Monash
+  University's IRT project?
+  \item\label{item:pipeline} What qualitative and quantitative tests can be performed to recommend a particular DSPS
+  technology for building the pipeline?
+  \item\label{item:recommendations} How can we design the DSPS processing pipeline to be extensible, allowing for the
+  addition of future realtime processing requirements?
+\end{enumerate}
+
+Additionally, after answering each of these preliminary research questions, we will want to properly implement the
+theoretical discoveries from each stage. We do this with the goal of achieving a deployable pipeline that can be then
+be used in the testing and overall evaluation stages.
+
+% subsection research_questions (end)
+
+
+
+\subsection{Research Aim} % (fold)
 \label{sec:objectives}
 
-The main aim or goal of this research project is to develop a fully automated, non-relational big data system to manage
+The main aim of this research project is to develop a fully automated, non-relational big data pipeline to manage
 the data received from railway car sensors as a part of Monash University's Institute of Railway Technology project. The
 intention is to replace their current relational solution, offering at least the same capabilities at a larger scale, and
 with higher performance. The scope of this project is relatively large, and the project, or subproject, outlined in this
@@ -171,26 +200,10 @@ technologies.
 % section objectives (end)
 
 
+\subsection{Significance and Contribution} % (fold)
+\label{sub:significance_and_contribution}
 
-\subsection{Research Questions} % (fold)
-\label{sub:research_questions}
-
-The following research questions are the main focus points of this subproject:
-
-\begin{enumerate}
-  \item\label{item:dsps} How can existing DSPS technologies be used to fill this realtime processing gap in the Monash
-  University's IRT project?
-  \item\label{item:pipeline} What qualitative and quantitative tests can be performed to recommend a particular DSPS
-  technology for building the pipeline?
-  \item\label{item:recommendations} How can we design the DSPS processing pipeline to be extensible, allowing for the
-  addition of future realtime processing requirements?
-\end{enumerate}
-
-Additionally, after answering each of these preliminary research questions, we will want to properly implement the
-theoretical discoveries from each stage. We do this with the goal of achieving some deployable pipeline that can be then
-be used in the testing and overall evaluation stages.
-
-% subsection research_questions (end)
+% subsection significance_and_contribution (end)
 
 
 \subsection{Thesis Structure} % (fold)
