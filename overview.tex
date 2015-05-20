@@ -2,19 +2,76 @@
 \section{DSPS Technology Overview}
 \label{sec:overview}
 
+
+
 \subsection{DSPS Technology Choices} % (fold)
 \label{sub:dsps_technology_choices}
 
+The choices to be focused on in this sub-project include the following DSPS technologies:
+
+\begin{itemize}
+  \item Samza
+  \item Storm
+  \item Spark Streaming
+\end{itemize}
+
+Literature concerning these DSPS technologies have been covered in~\sectref{sub:realtime_data_processing}, however
+we will look into more depth into the systems regarding their interfaces.
+
 % subsection dsps_technology_choices (end)
 
-
-\subsection{Testing Parameters} % (fold)
-\label{sub:testing_parameters}
-
-% subsection testing_parameters (end)
 
 
 \subsection{Evaluation Method \& Approach} % (fold)
 \label{sub:evaluation_method_approach}
 
+Evaluation will be performed using both qualitative and quantitative methods. The quantitative evaluation methods used will focus
+on the benchmarking of various features that are common to each of the technologies, and the comparison of the features that
+each technology supports. The qualitative evaluation methods will focus on looking at the differences in ease-of-use,
+support for different programming languages and features, and complexity of code written to implement the pipeline.
+
+With looking at the decision of giving a clear recommendation for a particular technology out of the ones we have chosen,
+we think it is import to look at both qualitative and quantitative aspects for comparison. These systems are significantly
+non-trivial and vastly different in design and usage, however, as they still afford the same possible functionality,
+it is very possible to give a properly constructed evaluation of them.
+
+
+\subsubsection{Quantitative methods} % (fold)
+\label{ssub:quantitative_methods}
+
+
+
+% subsubsection quantitative_methods (end)
+
+
+\subsubsection{Qualitative methods} % (fold)
+\label{ssub:qualitative_methods}
+
+The qualitative methods of evaluation will include the following:
+
+% subsubsection qualitative_methods (end)
+
 % subsection evaluation_method_approach (end)
+
+
+
+\subsection{Overview of the data} % (fold)
+\label{sub:overview_of_the_data}
+
+As this sub-project focuses on the realtime processing of streaming data, data streams will have to be simulated from
+datasets acquired from the Monash IRT team. An initial dataset has been given that includes the following layout of data:
+
+%TODO: table from my other paper
+
+The sample data acquired from the IRT team includes 99\,999 rows of data recorded from each of the mentioned sensors,
+organised in a CSV file with headers. This is a general example of how data is currently received and handled by the IRT
+team, however in the case of realtime data processing, data would be received in quite a different manner. Rather than
+being received in large batches of readings, such as the sample dataset acquired, streams of data may be created from
+each particular sensor, delivering data values to the DSPS systems a single value at a time along those streams. Data
+is streamed in an asynchronous fashion, and can be simply thought of as DSPS system listens on an incoming stream, and
+acts upon any data value whenever they may be received.
+
+Hence, to simulate this from the sample we have acquired, the DSPS pipeline is constructed to listen on a particular
+socket
+
+% subsection overview_of_the_data (end)
