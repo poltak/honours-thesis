@@ -2,11 +2,114 @@
 \section{Discussion and Evaluation}
 \label{sec:evaluation}
 
+In order to evaluate the three different data stream processing system technologies used to build the proposed pipeline,
+we compare them in terms of both quantitative and qualitative measures. The quantitative measures used to contrast
+each technology include aspects such as start-up time, data response time, data throughput allowance, and system resource
+usage. The qualitative measures used the contrast each technology will highlight different aspects such as ease-of-programmability,
+available features, ease-of-deployment, and ease-of-extensibility. Each of these measures will be expanded on in
+both~\sectref{sub:quantitative_evaluations} and~\sectref{seb:qualitative_evaluations}.
+
+The control for each of the evaluation measures will be the system on which the different technologies are deployed.
+Each identically-functioning pipeline built using different DSPS technologies will be deployed in the same NeCTAR cloud
+instance, as highlighted in%TODO: section reference
+The control NeCTAR cloud instance system is touched upon further in~\sectref{sub:testing_environment}.
+
+This chapter begins with an overview of the NeCTAR testing environment, in~\sectref{sub:testing_environment}, upon which
+all tests are performed. Quantitative evaluations and results are then described in~\sectref{sub:quantitative_evaluations},
+while qualitative evaluations and results are described in~\sectref{sub:qualitative_evaluations}. Discussion of the
+evaluations and subsequent DSPS technology recommendations will be given in~\sectref{sub:dsps_technology_recommendations},
+before concluding in~\sectref{sub:conclusion}.
+
+
+\subsection{Testing environment} % (fold)
+\label{sub:testing_environment}
+
+The testing environment upon which all needed tests will be performed also acts as the major control constant between
+each of the different DSPS systems that have been built. The environment is based on a single NeCTAR cloud instance, as detailed
+in%TODO: sectref to nectar stuff
+. The system details of the given instance are detailed in~\tabref{tab:control}.
+
+\begin{table}[h]
+\caption{Control system used for testing pipelines.}
+\label{tab:control}
+\centering
+\begin{tabular}{ll}
+\textbf{Distribution}         & Ubuntu GNU/Linux 14.04.2 LTS \\
+\textbf{Kernel}               & Linux 3.13.0-36-generic    \\
+\textbf{Architecture}         & x86\_64                    \\
+\textbf{Virtual CPUs}         & 16                         \\
+\textbf{Available RAM}        & 64 GB                      \\
+\textbf{Available Disk Space} & 490 GB
+\end{tabular}
+\end{table}
+
+The NeCTAR cloud instance utilises a single node upon which all processing is performed. In a real deployment, it is
+common to use a full cluster upon which the pipeline would be deployed, where processing is shared between nodes. Due to
+limited testing resources, all testing
+has been performed on a single node cluster, however this is still a constant feature between all tests, and the pipelines built upon
+each of the existing technologies are freely configurable to be deployed to run on arbitrarily sized clusters without
+needing changes to the underlying source code.
+
+% subsection testing_environment (end)
+
+
 \subsection{Quantitative Evaluations} % (fold)
 \label{sub:quantitative_evaluations}
 
+\subsubsection{Testing data} % (fold)
+\label{ssub:testing_data}
+
+The testing data for the quantitative stage of evaluation includes data sourced from actual readings from the speed
+sensors attached to train cars in the Monash University Institute of Railway Technology data project. We use a total
+of 99\,999 discrete speed readings, some of which are altered to give bad values. The base function of
+the built pipelines is to detect bad, or noisy, values and flag them before forwarding all values on for further processing
+in the pipeline, as explained in~\sectref{sec:implementation}. This is an example of actual realtime data processing that
+the Monash IRT team have indicated they would be interested in performing.
+
+Hence, the test data is all known. The majority of the test data readings are valid speed readings, however the pipelines
+built will detect all those which are not valid and flag them.
+
+% subsubsection testing_data (end)
+
+
+\subsubsection{Tests to be performed} % (fold)
+\label{ssub:tests_to_be_performed}
+
+The quantitative tests to be performed and contrasted will include the following:
+
+\begin{itemize}
+  \item System start-up time
+  \item Response time to streaming data
+  \item Data throughput allowance
+  \item System resource usage
+\end{itemize}
+
+Each of these can be quantified and compared easily via tracking various aspects of the system.
+
+Start-up time will
+be measured from the time each DSPS technology is started via the system shell until the time the DSPS technology is
+ready to accept incoming data streams.
+
+Response time will be measured by the amount of time a ready DSPS technology takes from the time a data value is pushed
+onto the input stream until the time that the result of that given data value is pushed onto the output stream.
+
+Data throughput allowance will be measured by comparing how many data values can be processed off the input stream in a
+constant amount of time.
+
+System resource usage will be measured by comparing the amount of system resources \textit{reserved} for use for each
+of the running DSPS technologies. These are expected to vary during runtime, so samples will be taken after each DSPS
+system is ready to accept incoming data for processing (after start-up). Measurements will be taken using the UNIX tool
+\texttt{ps} to collect readings for the amount of CPU usage and virtual memory reserved for use by the DSPS technology.
+Note that the amount of memory reported by \texttt{ps} is simply the amount of virtual memory reserved for use by the
+process, as opposed to the actual amount of memory being used.
+
+% subsubsection tests_to_be_performed (end)
+
+
 \subsubsection{Outcomes of Tests Performed} % (fold)
 \label{sub:outcomes_of_tests_performed}
+
+
 
 % subsection outcomes_of_tests_performed (end)
 
