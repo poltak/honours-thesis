@@ -88,17 +88,21 @@ Each of these can be quantified and compared easily via tracking various aspects
 
 Start-up time will
 be measured from the time each DSPS technology is started via the system shell until the time the DSPS technology is
-ready to accept incoming data streams.
+ready to accept incoming data streams. This can be measured using the UNIX \texttt{time} command, and allowing the
+DSPS technology terminate upon start-up, as well as the timestamps recorded in the output logs for each of the DSPS
+technologies.
 
 Response time will be measured by the amount of time a ready DSPS technology takes from the time a data value is pushed
-onto the input stream until the time that the result of that given data value is pushed onto the output stream.
+onto the input stream until the time that the result of that given data value is pushed onto the output stream. This
+can be measured using the output logs for each of the DSPS technologies.
 
-Data throughput allowance will be measured by comparing how many data values can be processed off the input stream in a
-constant amount of time.
+Data throughput allowance will be measured by comparing how much time it takes for the DSPS technology to process the
+entirety of our test data. This can be measured using the output logs for each of the DSPS technologies.
 
-System resource usage will be measured by comparing the amount of system resources \textit{reserved} for use for each
-of the running DSPS technologies. These are expected to vary during runtime, so samples will be taken after each DSPS
-system is ready to accept incoming data for processing (after start-up). Measurements will be taken using the UNIX tool
+System resource usage will be measured by comparing the amount of system memory \textit{reserved} for use for each
+of the running DSPS technologies. These are expected to vary during runtime, so samples will be taken at the peak system
+resource usage of each DSPS technology during the processing of our test data.
+Measurements will be taken using the UNIX tool
 \texttt{ps} to collect readings for the amount of CPU usage and virtual memory reserved for use by the DSPS technology.
 Note that the amount of memory reported by \texttt{ps} is simply the amount of virtual memory reserved for use by the
 process, as opposed to the actual amount of memory being used.
@@ -119,6 +123,22 @@ process, as opposed to the actual amount of memory being used.
 \subsection{Qualitative Evaluations} % (fold)
 \label{sub:qualitative_evaluations}
 
+
+\subsection{Tests to be performed} % (fold)
+\label{sub:tests_to_be_performed}
+
+The qualitative tests to be performed and contrasted will include the following:
+
+\begin{itemize}
+  \item Ease of programmability
+  \item Available DSPS features
+  \item Ease of deployment
+  \item Ease of extensibility
+\end{itemize}
+
+As each of the underlying systems are considerably different in
+
+% subsection tests_to_be_performed (end)
 
 % subsection qualitative_evaluations (end)
 

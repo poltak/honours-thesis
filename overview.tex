@@ -71,7 +71,11 @@ each particular sensor, delivering data values to the DSPS systems a single valu
 is streamed in an asynchronous fashion, and can be simply thought of as DSPS system listens on an incoming stream, and
 acts upon any data value whenever they may be received.
 
-Hence, to simulate this from the sample we have acquired, the DSPS pipeline is constructed to listen on a particular
-socket
+Hence, to simulate streaming data from the data samples we have acquired, the DSPS pipeline is constructed to listen on
+a particular socket connection for any incoming data. Once a data value is encountered on the connection, it is fed into
+the pipeline and processed accordingly while the pipeline continues to listen on the socket for further incoming data.
+As the pipeline is constructed in such a way, we can simulate the data being sent out from sensors using a program such
+as \texttt{netcat}~\footnote{http://nc110.sourceforge.net/}, where we can pipe data from a file to a particular
+socket over a connection.
 
 % subsection overview_of_the_data (end)
