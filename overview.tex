@@ -157,6 +157,35 @@ Spark, a big data batch processing system, which affords scalable, high-throughp
 live data streams. Data can be streamed into Spark Streaming using a variety of supported sources, from complicated data
 systems, such as Kafka, to low-level sources, such as TCP sockets.
 
+Internally, Spark Streaming processes data quite differently to Samza and Storm, due to being an extension to the base
+Spark batch processing system. Data streams are fed into Spark Streaming, which automatically partitions the streams into
+small batches which are then sent to the underlying Spark batch processing engine. The Spark batch processing engine then
+outputs a stream of results made up of multiple batches of data. A diagram illustrating this process is shown in~\figref{fig:spark_stream_batch}.
+
+This way of processing streams as a sequence of batches is all enabled through Spark Streaming's stream abstraction,
+discretised streams, or DStreams. It differs to how streams are conceptualised in Samza and Storm in the way that while
+streams are still, in essence, an unbounded sequence of data structures, being tuples in Storm, and message envelopes in
+Samza, these data structures are the same data structure which is used to represented data batches in Spark. These are,
+of course, the same resilient distributed dataset (RDD) data structure as explained in the previous chapter, in~\sectref{ssub:spark_streaming}.
+Hence, Spark Streaming DStreams can be decomposed into a sequence of RDDs, making them fully compatible with batch-mode Spark.
+
+For programming a Spark Streaming job, there are not a set of provided interfaces expected to be implemented, like in
+Samza or Storm. Instead, all of the computations to be performed on streams are performed on an instantiation of the
+\texttt{org.apache.spark.streaming.dstream.DStream} class returned from a DStream producing function from the
+\texttt{org.apache.spark.streaming.StreamingContext} class. Processing performed on DStreams are generally programmed in
+a dataflow fashion, with each function performed on the DStream returning a new DStream.
+
+This way of operating on DStreams in a Spark Streaming program leads to all processing being contained in a single file,
+whereas in Storm or Samza processing would be split between tasks or bolts written in different files. This leads to
+more straightforward control over DStream transformations when programming, however also leads to much more tightly
+coupled logic. This will be a topic of interest later when evaluating the different DSPS technologies.
+
+Spark Streaming programs are compiled and distributed in the same fashion in which Samza and Storm projects are. However,
+for Spark Streaming programs written in Python using their relatively new PySpark API, compilation is unnecessary and an entire Spark
+Streaming Python project can be distributed and submitted and run on different installations of Spark Streaming straight
+from the Python source file. This greatly eases the distribution and deployment aspects of Spark Streaming, when using
+PySpark, in relation to Storm topologies and Samza projects.
+
 % subsection spark_streaming_programming (end)
 
 % subsection dsps_technology_choices (end)
