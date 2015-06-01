@@ -35,7 +35,7 @@ development in the chapter, it has been decided to omit the use of the technolog
 \subsubsection{Samza Programming} % (fold)
 \label{ssub:samza_programming}
 
-\textit{Note that the majority of the content in this section is sourced from the official Samza 0.9 documentation.}~\cite{Samza6:online}
+\textit{Note that most of the content in this section is sourced from the official Samza 0.9 documentation.}~\cite{Samza:doc}
 
 Samza defines itself as a realtime data processing system which allows the processing of streams made up of immutable
 messages of similar type or category. Streams in Samza exist independently of other concepts, allowing themselves to be
@@ -98,11 +98,64 @@ through use of Java build automation tools, such as Maven or Gradle.
 \subsection{Storm Programming} % (fold)
 \label{sub:storm_programming}
 
+\textit{Note that most of the content in this section is sourced from the official Storm documentation.}~\cite{Storm:doc}
+
+Storm defines itself as a distributed realtime computation system that provides primitives for performing realtime
+computations. Storm compares itself to existing big data systems, such as Hadoop MapReduce, which similarly provides
+primitives for performing batch data computations.
+
+Like Samza, Storm also is built around the key concept of a stream, however Storm's definition of a stream slightly
+differs to that of Samza's. In Storm, a stream is defined as an unbounded sequence of immutable tuples, rather than a sequence
+of immutable messages as they are defined in Samza. A tuple is defined as a dynamically typed list of values, in which
+the values can be of any type. Rather than consuming and producing to streams, Storm approaches computations on streams
+through \textit{stream transformations} using the previously mentioned realtime computation primitives.
+
+The realtime computation primitives that Storm offers are the components of Storm that are of most interest to the programmer.
+These primitives are known as the \textbf{spout} and \textbf{bolt}, previously looked at in~\sectref{ssub:storm}. To compare
+these components to those present in Samza, the spout acts as a source of streams, much like Samza's systems, while the
+bolts acts as consumers of streams, which process and emit new streams, much like Samza's tasks. Storm offers interfaces
+for implementation of custom spouts and bolts through the \texttt{backtype.storm.spout.ISpout} and \texttt{backtype.storm.task.IBolt}
+interfaces, respectively.
+
+As explained in~\sectref{ssub:storm}, spouts and bolts are arranged in a particular way to make up an overall Storm topology,
+which is used to transform streams in some specified manner. A simple example of such a topology is shown in the previous
+chapter, in~\figref{fig:storm_topology}.
+
+Basic spouts require implementation of multiple methods, \texttt{open}, \texttt{nextTuple}, and \texttt{declareOutputFields},
+which act as a spout initialiser, handler for each tuple to be emitted to a stream, and a tuple type declaration, respectively.
+Implementation of a simple spout is a much easier task in Storm than a system in Samza, due to different provided interfaces
+depending on the type of configuration needed for a particular spout. For example, a very basic spout can be made, using
+a lot of default configuration options, by implementing the \texttt{backtype.storm.topology.base.BaseRichSpout} interface.
+
+Bolts also require implementation of three main methods, \texttt{prepare}, \texttt{execute}, and \texttt{declareOutputFields},
+allowing bolts to be initialised, process received tuples in a specified manner, and declare tuple value types, respectively.
+
+One major point of different with this components, to their analogous components in Samza, is that the spout and bolt
+implements are completely independent to the overall Storm topology layout. In Samza, systems and tasks require the output
+streams to be hardcoded within their respective implementations, however Storm has a further separate source file for
+defining the topology layout. This topology layout is generally defined in a separate file to all spout and bolt implementations
+using the provided \texttt{backtype.storm.topology.ToplogyBuilder} class. This class exposes methods for defining the
+topology layout, in terms of spout and bolt placement, along with inputs and outputs for each spout and bolt implementation,
+as well as overall topology configuration. An obvious downside to this over Samza configuration files is that it requires
+a recompilation in the case that configuration options need to be tweaked, while Samza configuration files are not part
+of the compiled source code.
+
+Storm topologies are generally compiled and distributed in the same way as Samza projects; as JAR files containing compiled
+bytecode, assembled using Java build automation tools.
+
 % subsection storm_programming (end)
 
 
 \subsection{Spark Streaming Programming} % (fold)
 \label{sub:spark_streaming_programming}
+
+\textit{Note that most of the content in this section is sourced from the official Spark Streaming 1.3.1 documentation.}~\cite{Spark:doc}
+
+While many analogies can be made between the key components of Storm and Samza, due to their similarities in design and
+usage, Spark Streaming presents itself differently. Spark Streaming defines itself as an extension of its parent project,
+Spark, a big data batch processing system, which affords scalable, high-throughput, fault-tolerant stream processing of
+live data streams. Data can be streamed into Spark Streaming using a variety of supported sources, from complicated data
+systems, such as Kafka, to low-level sources, such as TCP sockets.
 
 % subsection spark_streaming_programming (end)
 
