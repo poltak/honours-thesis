@@ -195,21 +195,71 @@ PySpark, in relation to Storm topologies and Samza projects.
 \subsection{Evaluation Method \& Approach} % (fold)
 \label{sub:evaluation_method_approach}
 
-Evaluation will be performed using both qualitative and quantitative methods. The quantitative evaluation methods used will focus
+Evaluation of each of the chosen DSPS technologies will be performed using both qualitative and quantitative testing methods
+of evaluation. The quantitative evaluation methods used will focus
 on the benchmarking of various features that are common to each of the technologies, and the comparison of the features that
 each technology supports. The qualitative evaluation methods will focus on looking at the differences in ease-of-use,
-support for different programming languages and features, and complexity of code written to implement the pipeline.
+support for different programming languages and features, and complexity of code written to implement the pipeline on
+each of the different DSPS technologies.
 
-With looking at the decision of giving a clear recommendation for a particular technology out of the ones we have chosen,
+With looking at the decision of giving a clear recommendation for a particular technology out of the choices stated,
 we think it is import to look at both qualitative and quantitative aspects for comparison. These systems are significantly
-non-trivial and vastly different in design and usage, however, as they still afford the same possible functionality,
-it is very possible to give a properly constructed evaluation of them.
+non-trivial and vastly different in design and usage. However, as they still afford the same possible functionality,
+it is very possible to give a properly constructed evaluation of them. Not only is a factor such as performance a critical
+factor in forming a recommendation, but also are the possibilities each technology affords, in terms of programming and
+extensibility, when recommending a technology for use in such a large, and long production-life project.
 
 
 \subsubsection{Quantitative methods} % (fold)
 \label{ssub:quantitative_methods}
 
+The quantitative methods to be used to evaluate the candidate DSPS technologies include mostly performance-based
+metrics. Each of the metrics that will be used is as follows:
 
+\begin{itemize}
+  \item DSPS start-up time
+  \item Response time to single data value
+  \item Throughput time for large amounts of streamed data
+  \item System resource usage
+  \item Available DSPS features
+\end{itemize}
+
+DSPS start-up time refers to the amount of time between submitting a ready job to a DSPS technology to the time when
+the system is at a ready state to begin processing incoming data streams. We consider this to be a less important performance
+metric to assess, however it is still of interest to see the differences present in each candidate technology. It is less
+important as, for the most part, it will not affect overall performance of each processing system as they will generally
+be running at all times, waiting for data to be streamed in. This metric will be consistently measured using the internal
+logs for each DSPS technology.
+
+Response time to a single data value refers to the amount of time taken for each given DSPS technology to completely
+process a given value sent onto the processing stream through the entire implemented pipeline. The same data value of
+``42'' will be sent onto the stream, and we will be expecting a result of \texttt{(42, true)}. This result will be
+further explained in the next chapter as we look at the design and implementation of the processing pipeline and simple
+task it will need to perform. Response time to a single data value is quite an important performance metric to consider
+as in the real use of the pipeline, as, most of the time, single data values, representing sensor readings, will be placed
+onto the respective DSPS technology's processing pipeline. The speed at which each technology can process these data
+values is important to the overall performance of the system as it will enable more data to be processed without forcing
+large queues of pending data.
+
+Throughput time for large amounts of streamed data refers to the amount of time taken to process large batches of data
+delivered at once. While this is less of a realistic use-case for testing in relation to the Monash IRT project, as data
+is not expected to be delivered in such large amounts, it is aimed at looking to stress-test each of the candidate DSPS
+technologies to see how they perform and scale to deal with different high-stress data loads. For this stress-test, we
+will look at five different ranks of tests, using data sets containing 100,\@000, 500,\@000, 1,\@000,\@000, 5,\@000,\@000, and
+10,\@000,\@000 data values. These data sets will be generated using sample data, received from the Monash IRT team, of
+prior sensor readings in the IRT project. Throughput time will be measured from the time processing begins on the incoming
+data, to the time in which all data values in the datasets have finished being processed.
+
+System resource usage refers to the peak amount of resident system memory that is being used by each of the candidate DSPS
+technologies during processing. We are to measure the peak resident memory usage as this gives an accurate overall indication of
+how stressful each DSPS technology is to host the operating system. Other system resource metrics, such as CPU usage, have
+been omitted from tests as each system uses all available CPU processing power to process its data. Resident memory usage
+will be measured using the built-in UNIX \texttt{ps} system utility\footnote{http://unixhelp.ed.ac.uk/CGI/man-cgi?ps}.
+
+Available DSPS features refers to the features each candidate DSPS technology supports as they relate to Stonebraker,
+\c{C}\~entintemel, and Zdonik's eight requirements for realtime data processing systems, as looked at in the previous
+chapter in~\sectref{sub:processing_conclusion}. The supported features for each technology will be compared to show the
+processing possibilities available in each technology.
 
 % subsubsection quantitative_methods (end)
 
@@ -217,11 +267,31 @@ it is very possible to give a properly constructed evaluation of them.
 \subsubsection{Qualitative methods} % (fold)
 \label{ssub:qualitative_methods}
 
-The qualitative methods used to evaluate the DSPS systems for the pipeline will include the following:
+The qualitative methods used to evaluate the candidate DSPS systems include mostly programmer-centric metrics, showing the
+programming possibilities for each technology. Each of the metrics that will be compared is as follows:
 
 \begin{itemize}
-  \item
+  \item Ease of programmability
+  \item Ease of deployment
+  \item Ease of pipeline extensibility
 \end{itemize}
+
+Ease of programmability refers to a number of different features including official programming language support, complexity
+of required interfaces to be implemented, and complexity of required system configuration. To summarise, we will look at
+the difficulty and learning-curve that may need to be overcome to program each candidate DSPS technology. Measuring this
+presents a more difficult, and somewhat subjective, task compared to the metrics used in the quantitative metrics, however
+these will be measured using impartial comparisons of the methods which each technology affords to be programmed.
+
+Ease of deployment refers to the methods each candidate technology affords its projects to be deployed and distributed.
+Similar to with ease of programmability, this metric will be measured by an impartial comparison of each possible
+method of project deployment and distribution.
+
+Ease of pipeline extensibility refers to the methods used to extend an existing pipeline, or project, existing in each
+of the candidate technologies. For example, if an existing project is already in production, we will be measuring the
+ease of which each technology allows that project to be extended in the ways of adding further processing tasks to the
+existing system, or restructuring an existing project processing layout (for example, a Storm topology layout). Parameters
+we will be looking at include whether or not an entire project needs to be recompiled and deployed to be extended, and the
+ease of modifying overall system configurations.
 
 % subsubsection qualitative_methods (end)
 
