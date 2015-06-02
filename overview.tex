@@ -298,33 +298,48 @@ ease of modifying overall system configurations.
 % subsection evaluation_method_approach (end)
 
 
-
 \subsection{Overview of the data} % (fold)
 \label{sub:overview_of_the_data}
 
 As this sub-project focuses on the realtime processing of streaming data, data streams will have to be simulated from
-datasets acquired from the Monash IRT team. An initial dataset has been given that includes the following layout of data:
+datasets acquired from the Monash IRT team. An initial dataset has been given that consists of sensor data in the
+categories as shown in~\tabref{tab:irt_data}.
 
-%TODO: table from my other paper
+\import{includes/tables/}{data_table}
 
-The sample data acquired from the IRT team includes 99\,999 rows of data recorded from each of the mentioned sensors,
+The sample data acquired from the IRT team includes 99\,999 rows of data recorded from each of the shown sensors,
 organised in a CSV file with headers. This is a general example of how data is currently received and handled by the IRT
 team, however in the case of realtime data processing, data would be received in quite a different manner. Rather than
 being received in large batches of readings, such as the sample dataset acquired, streams of data may be created from
-each particular sensor, delivering data values to the DSPS systems a single value at a time along those streams. Data
-is streamed in an asynchronous fashion, and can be simply thought of as DSPS system listens on an incoming stream, and
-acts upon any data value whenever they may be received.
+each particular sensor, delivering data values to the DSPS systems along input streams a single value at a time. Data
+is streamed in an asynchronous fashion, and can be simply thought of as a given DSPS system listens on an incoming stream, and
+acts upon any data value in a specified fashion whenever they may be received.
 
 Hence, to simulate streaming data from the data samples we have acquired, the DSPS pipeline is constructed to listen on
-a particular socket connection for any incoming data. Once a data value is encountered on the connection, it is fed into
+a particular TCP socket connection for any incoming data. Once a data value is encountered on the connection, it is fed into
 the pipeline and processed accordingly while the pipeline continues to listen on the socket for further incoming data.
 As the pipeline is constructed in such a way, we can simulate the data being sent out from sensors using a program such
-as \texttt{netcat}~\footnote{http://nc110.sourceforge.net/}, where we can pipe data from a file to a particular
-socket over a connection.
+as \texttt{netcat}\footnote{http://nc110.sourceforge.net/}, where we can pipe data from a file to a particular
+socket over a connection. We can also have time intervals between each data value, simulating time between sensor readings.
+
+For the test data for the quantitative tests, as each sensor's data reading values are of the same format (a floating point
+number), the specific sensor data to be used in the tests is not of major concern. Instead, we have chosen to focus on
+generating data based of the values from the speed sensor. As specified in~\tabref{tab:irt_data}, each value represents
+a speed reading formatted in kilometres per hour as a floating point number. To generate the different datasets for the
+data batches for the throughput time quantitative test, we have extracted the speed readings from the provided sample dataset
+and replicated them a number of times to generate the large batches. Finally, this leaves us with five datasets containing
+speed readings of sizes 100,\@000, 500,\@000, 1,\@000,\@000, 5,\@000,\@000, and 10,\@000,\@000 data values, respectively.
 
 % subsection overview_of_the_data (end)
 
-\subsection{conclusion} % (fold)
+
+\subsection{Conclusion} % (fold)
 \label{sub:conclusion}
+
+In conclusion, we have examined the three chosen candidate DSPS technologies in detail in terms of the possibilities they
+afford for the programmer, outlined the testing parameters which will be used in the overall evaluation of candidate
+technologies, and the data in which will be used in the highlighted tests. These components lay down a framework for
+implementation and testing which will be looked at in the following two chapters, respectively.
+
 
 % subsection conclusion (end)
