@@ -79,7 +79,8 @@ will be used in the evaluation parts of the project, we need to implement concre
 have chosen to go with a fairly simple implementation that simulates sensor data on a TCP socket connection, and filters
 it depending on a condition in realtime. Hence, the \textbf{Input Component} will be implemented as a TCP socket connection,
 and the \textbf{Processing Component} as a filtering task. Speed sensor readings will be passed in along the socket connection
-using \texttt{netcat}, and filtered to make sure they are valid speed values, between the limits of 0 and 90. Any speeds
+using a tool, such as \texttt{netcat}\footnote{http://nc110.sourceforge.net/}, and filtered to make sure they are valid
+speed values, between the limits of 0 and 90. Any speeds
 outside of these limits can safely be deemed to be either bad, or noisy, sensor readings. This results in a concrete design as shown
 in~\figref{fig:pipeline_concrete}.
 

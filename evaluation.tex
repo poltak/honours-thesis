@@ -2,16 +2,22 @@
 \section{Discussion and Evaluation}
 \label{sec:evaluation}
 
-In order to evaluate the three different data stream processing system technologies used to build the proposed pipeline,
-we compare them in terms of both quantitative and qualitative measures. The quantitative measures used to contrast
-each technology include aspects such as start-up time, data response time, data throughput allowance, and system resource
-usage. The qualitative measures used the contrast each technology will highlight different aspects such as ease-of-programmability,
-available features, ease-of-deployment, and ease-of-extensibility.
+Evaluation of each of the chosen DSPS technologies will be performed using both qualitative and quantitative testing methods
+of evaluation. The quantitative evaluation methods used will focus on the benchmarking of various features that are common
+to each of the technologies, using the pipelines implemented, as described in the previous chapter.
+The qualitative evaluation methods will focus on looking at the differences in ease-of-use,
+support for different programming languages and features, and complexity of code written to implement the pipelines on
+each of the different DSPS technologies.
 
-The control for each of the evaluation measures will be the system on which the different technologies are deployed.
-Each identically-functioning pipeline built using different DSPS technologies will be deployed in the same NeCTAR cloud
-instance, as highlighted in the previous chapter in~\sectref{sub:testing_environment_details}.
-The control NeCTAR cloud instance system is touched upon further in~\sectref{sub:testing_environment}.
+With looking at the decision of giving a clear recommendation for a particular technology out of the choices stated,
+we think it is import to look at both qualitative and quantitative aspects for comparison. These systems are significantly
+non-trivial and vastly different in design and usage. However, as they still afford the same possible functionality,
+it is very possible to give a properly constructed evaluation of them. Not only is a factor such as performance a critical
+factor in forming a recommendation, but also are the possibilities each technology affords, in terms of programming and
+extensibility, when recommending a technology for use in such a large, and long production-life project.
+
+The control for each of the evaluation measures will be the host system on which the different technologies are deployed,
+and the test data which is used for the relevant quantitative tests.
 
 This chapter begins with an overview of the NeCTAR testing environment, in~\sectref{sub:testing_environment}, upon which
 all tests are performed. Quantitative evaluations and results are then described in~\sectref{sub:quantitative_evaluations},
@@ -20,30 +26,18 @@ evaluations and subsequent DSPS technology recommendations will be given in~\sec
 before concluding in~\sectref{sub:conclusion}.
 
 
-\subsection{Testing environment} % (fold)
+\subsection{Testing Environment} % (fold)
 \label{sub:testing_environment}
 
-The testing environment upon which all needed tests will be performed also acts as the major control constant between
-each of the different DSPS systems that have been built. The environment is based on a single NeCTAR cloud instance, as detailed
-in%TODO: sectref to nectar stuff
-. The system details of the given instance are detailed in~\tabref{tab:control}.
+Each identically functioning pipeline built using the different candidate DSPS technologies are to be deployed in the
+same NeCTAR cloud instance as touched on in detail in the previous chapter, in~\sectref{sub:testing_environment_details}.
+This testing environment also acts as the major control constant between each of the different pipelines that have been
+built, along with the test data that has been used for testing input.
 
-\begin{table}[h]
-\caption{Control system used for testing pipelines.}
-\label{tab:control}
-\centering
-\begin{tabular}{ll}
-\textbf{Distribution}         & Ubuntu GNU/Linux 14.04.2 LTS \\
-\textbf{Kernel}               & Linux 3.13.0-36-generic    \\
-\textbf{Architecture}         & x86\_64                    \\
-\textbf{Virtual CPUs}         & 16                         \\
-\textbf{Available RAM}        & 64 GB                      \\
-\textbf{Available Disk Space} & 490 GB
-\end{tabular}
-\end{table}
+The system details of the given instance are detailed in~\tabref{tab:control}.
 
-The NeCTAR cloud instance utilises a single node upon which all processing is performed. In a real deployment, it is
-common to use a full cluster upon which the pipeline would be deployed, where processing is shared between nodes. Due to
+The NeCTAR cloud instance used utilises a single node upon which all processing is performed. In a real deployment, it is
+common to use a full cluster upon which the pipeline would be deployed, where processing is distributed between nodes. Due to
 limited testing resources, all testing
 has been performed on a single node cluster, however this is still a constant feature between all tests, and the pipelines built upon
 each of the existing technologies are freely configurable to be deployed to run on arbitrarily sized clusters without
@@ -52,97 +46,212 @@ needing changes to the underlying source code.
 % subsection testing_environment (end)
 
 
-\subsection{Quantitative Evaluations} % (fold)
-\label{sub:quantitative_evaluations}
+\subsection{Overview of Testing Data} % (fold)
+\label{sub:overview_of_test_data}
 
-\subsubsection{Testing data} % (fold)
-\label{ssub:testing_data}
+As this sub-project focuses on the realtime processing of streaming data, data streams will have to be simulated from
+batch datasets acquired from the Monash IRT team. An initial dataset has been given that consists of sensor data in the
+categories as shown in~\tabref{tab:irt_data}.
 
-The testing data for the quantitative stage of evaluation includes data sourced from actual readings from the speed
-sensors attached to train cars in the Monash University Institute of Railway Technology data project. We use a total
-of 99\,999 discrete speed readings, some of which are altered to give bad values. The base function of
-the built pipelines is to detect bad, or noisy, values and flag them before forwarding all values on for further processing
-in the pipeline, as explained in~\sectref{sec:implementation}. This is an example of actual realtime data processing that
-the Monash IRT team have indicated they would be interested in performing.
+\import{includes/tables/}{data_table}
 
-Hence, the test data is all known. The majority of the test data readings are valid speed readings, however the pipelines
-built will detect all those which are not valid and flag them.
+The sample data batch acquired from the IRT team includes 99\,999 rows of data recorded from each of the shown sensors,
+organised in a CSV file with headers. This is a general example of how data is currently received and handled by the IRT
+team, however in the case of realtime data processing, data would be received in quite a different manner. Rather than
+being received in large batches of readings, such as the sample dataset acquired, streams of data may be created from
+each particular sensor, delivering data values to the DSPS systems along input streams at infrequent intervals. Data
+is streamed in an asynchronous fashion, and can be simply thought of as a given DSPS system listens in on an incoming stream, and
+acts upon any data value in a specified fashion whenever they may be received.
 
-% subsubsection testing_data (end)
+Hence, to simulate streaming data from the data samples we have acquired, the DSPS pipeline is constructed to listen on
+a particular TCP socket connection for any incoming data. Once a data value is encountered on the connection, it is fed into
+the pipeline and processed accordingly, while the pipeline continues to listen on the socket for further incoming data.
+As the pipeline is constructed in such a way, we can simulate the data being sent out from sensors using a program, such
+as \texttt{netcat}\footnote{http://nc110.sourceforge.net/}, where we can pipe data from a file to a particular
+socket over a connection. We can also specify time intervals between each data value, simulating time between sensor readings.
+
+As each sensor's data reading values are of the same format of floating point numbers,
+the specific sensor data to be used in the quantitative tests is not of major concern. Instead, we have chosen to focus on
+generating data based of the values from the speed sensor. As specified in~\tabref{tab:irt_data}, each value represents
+a speed reading formatted in kilometres per hour as a floating point number. For example, the data value \texttt{42.002}
+is equivalent to 42.002 kilometres per hour.
+
+For the test data throughput time test, it requires multiple differently-sized large batches of test data for input
+to the pipelines. To generate these different data batches, we have extracted the speed readings from the provided sample dataset
+and replicated them a number of times to generate the large batches. Finally, this leaves us with five datasets containing
+speed readings of sizes 100,\@000, 500,\@000, 1,\@000,\@000, 5,\@000,\@000, and 10,\@000,\@000 data values, respectively.
+
+For a response time to streaming data test, it only requires a single data value from a sensor reading for input to the
+pipelines. Hence a single floating point value of \texttt{42.002} has been used.
+
+% subsection overview_of_the_data (end)
 
 
-\subsubsection{Tests to be performed} % (fold)
-\label{ssub:tests_to_be_performed}
+\subsection{Quantitative Tests} % (fold)
+\label{sub:quantitative_tests}
 
-The quantitative tests to be performed and contrasted will include the following:
+\subsubsection{Tests Performed} % (fold)
+\label{ssub:quan_tests_performed}
+
+The quantitative methods to be used to evaluate the candidate DSPS technologies include mostly performance-based
+metrics. Each of the metrics that will be used is as follows:
 
 \begin{itemize}
-  \item System start-up time
   \item Response time to streaming data
-  \item Data throughput allowance
-  \item System resource usage
+  \item Test data throughput time
+  \item Peak system resource usage
+  \item System start-up time
 \end{itemize}
 
-Each of these can be quantified and compared easily via tracking various aspects of the system.
+Each of these can be quantified and compared easily between the different DSPS technologies via tracking various aspects
+of the systems.
 
-Start-up time will
-be measured from the time each DSPS technology is started via the system shell until the time the DSPS technology is
-ready to accept incoming data streams. This can be measured using the UNIX \texttt{time} command, and allowing the
-DSPS technology terminate upon start-up, as well as the timestamps recorded in the output logs for each of the DSPS
-technologies.
+\paragraph{Response time to streaming data}
 
-Response time will be measured by the amount of time a ready DSPS technology takes from the time a data value is pushed
-onto the input stream until the time that the result of that given data value is pushed onto the output stream. This
-can be measured using the output logs for each of the DSPS technologies.
+Response time to streaming data refers to the amount of time it takes for each DSPS pipeline to fully process a single
+value of sensor reading data. This time is defined from the time that value is sent along the TCP socket connection, to the time
+the given data value is pushed onto the pipeline's output stream. This can be measured using the runtime logs provided
+for each of the DSPS technologies. The purpose of this test is to look at how fast a given pipeline can respond to a
+sensor's reading. This is a highly realistic test for the sort of processing being looked at in the IRT project, as
+sensor readings are expected to arrive for processing at infrequent intervals, generally with a lot of time between
+each reading.
 
-Data throughput allowance will be measured by comparing how much time it takes for the DSPS technology to process the
-entirety of our test data. This can be measured using the output logs for each of the DSPS technologies.
+\paragraph{Test data throughput time}
 
-System resource usage will be measured by comparing the amount of system memory \textit{reserved} for use for each
-of the running DSPS technologies. These are expected to vary during runtime, so samples will be taken at the peak system
-resource usage of each DSPS technology during the processing of our test data.
-Measurements will be taken using the UNIX tool
-\texttt{ps} to collect readings for the amount of CPU usage and virtual memory reserved for use by the DSPS technology.
-Note that the amount of memory reported by \texttt{ps} is simply the amount of virtual memory reserved for use by the
-process, as opposed to the actual amount of memory being used.
+Test data throughput time refers to the amount of time it takes for each DSPS pipeline to fully process large batches
+of sensor readings. These data batches have been defined in~\sectref{sub:overview_of_test_data}. This is a less realistic
+test of the pipelines in relation to the IRT project, however it will be a stress-test of sorts, with the purpose of
+seeing how each candidate DSPS pipeline scales with larger amount of data being streamed in at the same time. Five different
+tests will take place, each with data batches of readings of size 100,\@000, 500,\@000, 1,\@000,\@000, 5,\@000,\@000,
+and 10,\@000,\@000, respectively. The throughput time is defined as the time from when the batches are piped along the TCP
+socket connection, to the time the pipelines have finished processing. These times are measured using the internal DSPS
+technology runtime logs.
+
+\paragraph{Peak system resource usage}
+
+Peak system resource usage refers to the amount of resident system memory in-use while each of the pipelines are running.
+These values are expected to vary considerably during runtime, so samples will be taken at the peak system resource usage of each DSPS
+technology during the processing of our test data throughput time tests.
+Measurements will be taken using the UNIX tool \texttt{top} to collect readings for the amount of resident memory being used
+by the DSPS technology.
+
+\paragraph{System start-up time}
+
+System start-up time relates to the amount of time taken for each candidate DSPS pipeline to start-up. This time is
+defined from the time each DSPS technology is started via the system shell, to the time the DSPS technology is
+ready to accept incoming data streams. This will be measured using the UNIX \texttt{time} command, and allowing the
+DSPS technology to terminate upon readiness. This is considered to be a less important test, as these systems are expected
+to be deployed and run for long continuous periods of time. Start-up is generally not an important consideration, however
+we are interested to see how each DSPS technology compares, and how these values relate to the results from other tests.
 
 % subsubsection tests_to_be_performed (end)
 
 
-\subsubsection{Outcomes of Tests Performed} % (fold)
-\label{sub:outcomes_of_tests_performed}
+\subsubsection{Test Results} % (fold)
+\label{sub:test_results}
+
+\paragraph{Response time to streaming data}
 
 
-
-% subsection outcomes_of_tests_performed (end)
-
-% subsection quantitative_evaluations (end)
+\paragraph{Test data throughput time}
 
 
-\subsection{Qualitative Evaluations} % (fold)
-\label{sub:qualitative_evaluations}
+\paragraph{Peak system resource usage}
 
 
-\subsection{Tests to be performed} % (fold)
-\label{sub:tests_to_be_performed}
+\paragraph{System start-up time}
 
-The qualitative tests to be performed and contrasted will include the following:
+
+% subsection test_results (end)
+
+% subsection quantitative_tests (end)
+
+
+\subsection{Qualitative Tests} % (fold)
+\label{sub:qualitative_tests}
+
+\subsubsection{Tests Performed} % (fold)
+\label{ssub:tests_performed}
+
+The qualitative methods used to evaluate the candidate DSPS systems include mostly programmer-centric metrics, showing the
+programming possibilities for each technology. Each of the metrics that will be compared is as follows:
 
 \begin{itemize}
-  \item Ease of programmability
-  \item Available DSPS features
-  \item Ease of deployment
   \item Ease of extensibility
+  \item Available DSPS features
+  \item Ease of programmability
+  \item Ease of deployment
 \end{itemize}
 
-As each of the underlying systems are considerably different in
+As each of the underlying DSPS technologies are considerably different in design and usage, it is important to see how
+they contrast in terms of factors that they allow.
 
-% subsection tests_to_be_performed (end)
+\paragraph{Ease of extensibility}
+
+Ease of pipeline extensibility refers to the methods used to extend an existing pipeline, or project, existing in each
+of the candidate DSPS technologies. For example, if an existing project is already in use in production, we will be measuring the
+ease that each technology allows that project to be extended in the ways of adding further processing tasks to the
+existing system, or restructuring an existing project processing layout (for example, a Storm topology layout). Parameters
+we will be looking at include whether or not an entire project needs to be recompiled and deployed to be extended, and the
+ease of modifying overall system configurations.
+
+\paragraph{Available DSPS features}
+
+Available DSPS features refers to the features each candidate DSPS technology supports as they relate to Stonebraker,
+\c{C}\~entintemel, and Zdonik's eight requirements for realtime data processing systems~\cite{stonebraker_8_2005}, as looked at
+in the literature review chapter in~\sectref{sub:processing_conclusion}. The supported features for each technology will be compared to show the
+processing possibilities natively available in each technology.
+
+\paragraph{Ease of programmability}
+
+Ease of programmability refers to a number of different features including official programming language support, complexity
+of required interfaces to be implemented, and complexity of required system configuration. To summarise, we will look at
+the difficulty and learning-curve that may need to be overcome to program each candidate DSPS technology. Measuring this
+presents a more difficult, and somewhat subjective, task compared to the metrics used in the quantitative tests, however
+these will be measured using impartial comparisons of the methods which each DSPS technology affords to be programmed.
+
+\paragraph{Ease of deployment}
+
+Ease of deployment refers to the methods in which each candidate DSPS technology affords its projects to be deployed and distributed.
+Similar to the ease of programmability test, this metric will be measured by an impartial comparison of each possible
+method of project deployment and distribution.
+
+% subsection tests_performed (end)
+
+
+\subsubsection{Test Results} % (fold)
+\label{ssub:qual_test_results}
+
+\paragraph{Ease of extensibility}
+
+
+\paragraph{Available DSPS features}
+
+
+\paragraph{Ease of programmability}
+
+
+\paragraph{Ease of deployment}
+
+
+% subsection test_results (end)
 
 % subsection qualitative_evaluations (end)
+
+
+\subsection{Discussion} % (fold)
+\label{sub:eval_discussion}
+
+% subsection discussion (end)
 
 
 \subsection{DSPS Technology Recommendations} % (fold)
 \label{sub:dsps_technology_recommendations}
 
 % subsection dsps_technology_recommendations (end)
+
+
+\subsection{Conclusion} % (fold)
+\label{sub:evaluation_conclusion}
+
+% subsection conclusion (end)
