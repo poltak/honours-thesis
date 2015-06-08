@@ -152,15 +152,93 @@ we are interested to see how each DSPS technology compares, and how these values
 
 \paragraph{Response time to streaming data}
 
+The results to the response time to streaming data test are shown in~\figref{fig:response_time_res}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{includes/figures/fig_response_time_res}
+  \caption{Results of our response time to streaming data test.}
+  \label{fig:response_time_res}
+\end{figure}
+
+Essentially, what can be can be seen from these results is that both Spark Streaming APIs exhibit relatively good performance
+compared to both Storm and Samza. In particular, Spark Streaming running on the Spark JVM API exhibited over $3x$ the
+performance of the next big system, Storm, and nearly $5x$ the performance of the slowest contender, Samza. Further of
+note is that at this size of data, a single sensor reading, both Spark Streaming APIs exhibit very similar performance
+in relation to the other DSPS technologies.
+
+As Spark Streaming is essentially an extension built on top of a batch processing system, the fact that it outperformed
+both Samza and Storm, two technologies built from the ground up with the aim of processing data in realtime, is quite a
+surprising find.
 
 \paragraph{Test data throughput time}
 
+The results to the test data throughput time tests are shown in~\figref{fig:throughput_time_res}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{includes/figures/fig_throughput_res}
+  \caption{Results of our test data throughput time tests.}
+  \label{fig:throughput_time_res}
+\end{figure}
+
+The first fact to note with these results relates to the performance of Spark Streaming, running on the PySpark API, as the
+input data increases. Compared to the other technologies, Spark Streaming (PySpark) exhibits very poor scaling performance
+when dealing with much larger amounts of input data, particularly with 5,\@000,\@000 data points and greater. This drop in
+performance is so much of an issue that the scale at which the results are shown, it is hard to make out differences in
+performance for the other systems. Hence, to better analyse the results of the other systems, a chart from the same
+data was created with the Spark Streaming (PySpark) results omitted. This can be viewed in~\figref{fig:throughput_time_res_nopyspark}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{includes/figures/fig_throughput_nopyspark_res}
+  \caption{Results of our test data throughput time tests (PySpark omitted).}
+  \label{fig:throughput_time_res_nopyspark}
+\end{figure}
+
+Looking the results of Spark Streaming (Spark JVM), Storm, and Samza, for the most part they show a mostly similar performance
+at scale, relative to what was seen with Spark Streaming (PySpark). Spark Streaming shows the greatest performance, with
+greater performance than both Storm and Samza in all tests, while Storm generally is not too far off Spark Streaming's
+performance, showing a similar growth for all tests apart from the 10,\@000,\@000 data points test.
+
+Again, Samza shows the worst overall performer out of the three candidates (not counting PySpark here), with less than
+half the performance of Spark Streaming on the 10,\@000,\@000 data points test.
 
 \paragraph{Peak system resource usage}
 
+The results for the peak system resource usage test can be seen in~\figref{fig:resource_usage_res}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{includes/figures/fig_peak_resource_res}
+  \caption{Results of our peak system resource usage test.}
+  \label{fig:resource_usage_res}
+\end{figure}
+
+Interestingly, Spark Streaming excels again here, with JVM Spark having over double the performance from the next major
+contender, Storm. Samza, at peak usage, takes up over $5x$ the amount of resident memory that Spark Streaming does, and
+nearly $3x$ the amount that Storm is shown to use. A lot of this resident memory usage may be caused by a lot of the
+software dependencies that Samza and Storm rely on, which Spark Streaming generally does not. Spark, the base project,
+not the realtime processing extension, was designed to be an entire software ecosystem in itself, hence a lot of external
+dependencies that Storm and Samza may have are not needed, possibly leading to this extreme reduction in resident memory
+usage shown here.
 
 \paragraph{System start-up time}
 
+The results for the system start-up time test can be seen in~\figref{fig:pipeline_whole}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{includes/figures/fig_startup_time_res}
+  \caption{Results of our system start-up time test.}
+  \label{fig:pipeline_whole}
+\end{figure}
+
+Again, we emphasise that this test is of much less importance than the previously covered quantitative tests, due to real-life usage
+of the DSPS technologies. However, it is interesting of note here that Spark Streaming, the overall best performing
+DSPS technology in all other performance-based tests, shows the worst performance in-terms of start-up time, particularly
+the PySpark version of Spark Streaming. Samza, the overall worst performing technology, here shows the best performance
+with being able to be ready for processing from start-up in just over 4 seconds.
 
 % subsection test_results (end)
 
@@ -199,8 +277,10 @@ ease of modifying overall system configurations.
 
 Available DSPS features refers to the features each candidate DSPS technology supports as they relate to Stonebraker,
 \c{C}\~entintemel, and Zdonik's eight requirements for realtime data processing systems~\cite{stonebraker_8_2005}, as looked at
-in the literature review chapter in~\sectref{sub:processing_conclusion}. The supported features for each technology will be compared to show the
-processing possibilities natively available in each technology.
+in the literature review chapter in~\sectref{sub:processing_conclusion}. These requirements are based on research performed
+many years prior to the release of each of our candidate DSPS technologies, and most realtime data processing technologies
+in general. The supported features for each technology will be compared to show the functional possibilities natively
+available in each technology.
 
 \paragraph{Ease of programmability}
 
@@ -224,15 +304,117 @@ method of project deployment and distribution.
 
 \paragraph{Ease of extensibility}
 
+Spark Streaming is noted as the worst performing technology in terms of extensibility, overall. This is mostly due to
+the fact that, by design, a Spark Streaming program is generally very tightly coupled in terms of processing modules.
+All processing logic revolves around the StreamingContext object in a Spark Streaming program, hence everything is
+tightly integrated to the placement of this object. Of course, this object can be passed around different modules, however
+it is a rather na\"{\i}ve solution considering the other projects exhibit loose coupling by design.
+
+This tight coupling of logic in Spark Streaming leads to any extensions written to an existing Spark Streaming project to
+be written as modifications of the original source code. This means that previously written source code need to be made
+aware of the changes, and recompiled.
+
+Likewise, in Spark Streaming, configuration is tightly coupled with the programming logic, through use of the SparkConf
+object, on which the StreamingContext object is instantiated. This leads to any future changed in configuration to be
+written to the original source code, thus leading to project recompilation.
+
+Samza is noted to be far more loosely coupled than that of Spark Streaming, with any extensions of an existing project
+being able to be written separately of the original code. Essentially, a Samza project's processing tasks will output
+their results to specific Samza streams. On these streams, a new extension can be written to listen on, without the
+existing processing tasks needing to be aware of this new extension task. This loose coupling of processing tasks is
+by design in Samza, with tasks existing in a dataflow-like sequence, where tasks can be added and removed with ease.
+
+For configuration in Samza, processing tasks and systems are configured separately to the underlying logic, using a
+non-compilation necessary medium. Effectively, this means that Samza projects can be reconfigured on-the-fly without
+recompilation of the entire project. This is an important factor which Spark Streaming lacks native support for.
+
+Storm is very similar to Samza in the way that extensions can be written to extend an existing Storm topology without
+modification of the existing source code being necessary. However, extensions written to an existing Storm topology do not
+require knowledge of output streams from existing Storm processing tasks (bolts), which is a necessity when extending a
+Samza project.
+
+Configuration in Storm is also kept separate of the logic written in source code, hence also does not require recompilation
+to reconfigure. However, to reconfigure an existing Storm topology layout, this is generally written in source code using
+the TopologyBuilder class, hence does require a recompilation step.
+
+To summarise, Spark Streaming has shown to lack in extensibility, compared to the other candidate DSPS technologies, mainly
+due to being tightly coupled by design, while Storm and Samza exhibit similar ease in terms of extensibility. Samza and
+Storm extensions can be written separate of existing logic, without the existing logic being aware of the extensions.
+This is, unfortunately, not the case with Spark Streaming.
+
 
 \paragraph{Available DSPS features}
+
+As these features were looked at previously in the literature review chapter, in~\sectref{sub:processing_conclusion},
+this table has been reconstructed in~\tabref{tab:dsps_features}, with S4 omitted due to being omitted from our candidate
+DSPS systems.
+
+\import{includes/tables/}{data_processing_compare_nos4}
+
+One obvious point of note, at first glance of the results, is that Spark Streaming lacks many of the realtime processing
+features that are present in both Storm and Samza. However, in relation to the IRT project, arguably the most important
+functional requirements are in relation to
 
 
 \paragraph{Ease of programmability}
 
+Spark Streaming has been noted as being the most accessible of the candidate DSPS technologies in terms of programmability.
+Spark Streaming, as of version 1.2.0, has official support for Java, Scala, and Python (however some of the functionality deemed
+less important is yet to be implemented in the Python API). Storm has native support for Java and Clojure, and essentially
+any programming language through use of a Thrift definition file\footnote{https://thrift.apache.org/}, however official
+documentation is only provided for Java and Clojure. Samza only has native support for Java.
+
+Writing Spark Streaming projects, and also Storm and Samza projects,
+in JVM languages of course require compilation to JVM bytecode before they are to be run, and also having the requirement
+that the compiled bytecode be packaged as a distributable JAR archive. Python use with PySpark, being an
+interpreted language, allows for Spark Streaming projects to be written and run directly from the Python source files
+deployed to a Spark installation. This has been noted to greatly ease the aspect of getting a new Spark Streaming project
+up and running, without many compilation and assembly steps that are required in the JVM language DSPS technologies.
+
+Storm and Samza have been noted as having a far higher learning curve to that of Spark Streaming, due to the number of
+interfaces which are required to be implemented to make even the most simple of projects, and the required configuration
+that is necessary for the project to run properly. Spark Streaming does away with these interfaces, and instead all processing
+logic surrounds the StreamingContext class, meaning that as long as this class is instantiated, all the possible processing
+functions are available to be used. Thus, a simple processing pipeline based on simple processing logic implemented in each
+system would require a number of different files, each implementing required interfaces, in Storm and Samza, while the
+same logic in Spark Streaming could be done in a number of lines in any supported programming language.
+
+Samza, in particular, has been noted as having the most steep of the learning curves, in terms of programmability, due
+to a required knowledge of many of the underlying software dependencies, such as Kafka, Zookeeper, and various serialisers
+and deserialisers for Samza messages. Required configuration of a Samza project requires an understanding of these systems for
+even the most simple of processing tasks, while most of the underlying systems in Storm and Spark Streaming are abstracted
+away from the programmer, who generally does not need to worry about these unless performing more advanced tasks.
+
+In terms of required configuration, Spark Streaming allows for the most ease in configuring, due to a low level understanding
+of Spark configuration not being needed for most tasks. Storm also has somewhat of a easy required configuration knowledge,
+mostly due to having the complicated configuration being abstracted away from the programmer unless neccessary, and the
+majority of configuration being defined in the topology file. Samza, however, requires separate, and particularly verbose,
+configuration files for every task and system within a Samza project, as well as many configuration options not having
+defaults. Again, this leads to a good understanding of Samza being needed to configure even a simple project, and a lot
+of configuration to be thought about, particularly if a Samza system expands to be greater than a small number of different
+processing tasks.
+
+In summary, Spark Streaming has been noted as the most simple of the candidate DSPS technologies in terms of programmability
+and overall learning curve. Simple projects are able to be configured and written in a small amount of lines of code.
+Storm presents the next most simple technology with a lot of the configuration and software dependencies being abstracted
+away from the programmer. Samza comes in last, with the largest learning curve, due to a good understanding of the overall
+Samza project, along with Samza software dependencies needed to implement even a simple Samza project.
+
 
 \paragraph{Ease of deployment}
 
+Projects written for each of the DSPS technologies are expected to be deployed and distributed in similar ways. As each
+of the technologies are built on JVM technologies, they require compiled JVM bytecode to be packaged as a JAR file, generally
+using a build automation tool, such as Maven\footnote{https://maven.apache.org/} or Gradle\footnote{https://gradle.org/}.
+However, for deployment and distribution of Spark Streaming projects written in Python, these compilation and build
+assembly steps are not necessary, with Python and Scala Spark Streaming projects affording deployment simply as the Python
+or Scala source files themselves. This greatly eases overall deployment, and distribution of Spark Streaming projects between
+different Spark Stremaing installations residing on different clusters.
+
+Furthermore, Storm and Samza require the set-up of external technology dependencies, such as Kafka or Zookeeper, on the
+cluster on which they will be run, if the implemented project requires such dependencies. Spark Streaming can be deployed
+without external technology dependencies as the Spark project provides Spark distributions with all such dependencies built-in
+and pre-configured.
 
 % subsection test_results (end)
 
