@@ -351,9 +351,30 @@ DSPS systems.
 
 \import{includes/tables/}{data_processing_compare_nos4}
 
-One obvious point of note, at first glance of the results, is that Spark Streaming lacks many of the realtime processing
-features that are present in both Storm and Samza. However, in relation to the IRT project, arguably the most important
-functional requirements are in relation to
+One obvious point of note, at first glance of the results, is that both Spark Streaming and Samza lack many of the realtime processing
+features that are present in Storm. This may be put down to the fact that both Spark Streaming, as an extension
+of the greater project Spark, and Samza are still relatively immature projects. In fact, Samza only became accepted as a
+top-level project at the Apache Software Foundation in January of 2015~\cite{web:apache-top-samza}, after spending years
+as an Apache Incubator project. It may also be attributed to design choices of developers of both projects.
+
+Furthermore, of note is that many features that are supported in Samza actually depend on the integration of Kafka with
+Samza. If Samza is run standalone, without Kafka, certain features may not be available unless replaced with a similar
+Samza-compatible pluggable system. Due to the nature of Samza and Kafka's tight coupling in most installations, a lot
+of the time, the availability of these features off-loaded to Kafka can be taken for granted.
+
+In relation to the IRT project, the most important features that these DSPS systems support are arguably \textbf{SQL on
+streams} and \textbf{Stored and streaming data}. These features refer to the possibility of running more traditional
+batch processing functions, such as aggregate functions like map reduce, on the data streams that are being processed
+otherwise in realtime. As the IRT project at current uses a lot of batch processing applied to their data, it would be
+much more ideal if the DSPS technology to be used also had the possibility of affording this type of processing in
+conjunction with realtime processing.
+
+From the results, it is shown that both Storm and Spark afford these features.
+Storm, via the Trident extension, allows both batched data processing through aggregate functions, and an SQL-like query
+language~\cite{web:storm-trident}. Spark Streaming, being built on top of the batch processing project, Spark, natively
+supports batch processing by off-loading to Spark, and an SQL-like query language through the new Spark SQL extension~\cite{web:sparksql}.
+Conversely, Samza does not afford any native type of batch processing functionality, or any SQL-like query language at
+the time of writing.
 
 
 \paragraph{Ease of programmability}
@@ -414,7 +435,7 @@ different Spark Stremaing installations residing on different clusters.
 Furthermore, Storm and Samza require the set-up of external technology dependencies, such as Kafka or Zookeeper, on the
 cluster on which they will be run, if the implemented project requires such dependencies. Spark Streaming can be deployed
 without external technology dependencies as the Spark project provides Spark distributions with all such dependencies built-in
-and pre-configured.
+and pre-configured~\cite{web:spark-downloads}.
 
 % subsection test_results (end)
 
@@ -423,6 +444,30 @@ and pre-configured.
 
 \subsection{Discussion} % (fold)
 \label{sub:eval_discussion}
+
+Looking over the results of both the quantitative performance-based results, and the qualitative feature-based results,
+a few points are of note in regards to each of the candidate DSPS technologies. First, Spark Streaming has shown the
+overall greatest performance while managing to have the lowest resident memory footprint. Both the Spark JVM and PySpark
+based Spark Streaming versions show great performance, however the Spark JVM version shows the best performance overall
+given that the PySpark version does not scale well when dealing with larger amounts of data being streamed in.
+Spark Streaming also showed the lowest learning curve and was the overall easiest technology to write realtime processing
+logic in.
+
+However, while Spark Streaming has been shown to have the greatest performance through the results of the quantitative
+tests, it very much falls short in relation to ease of extensibility due to the tightly coupled nature of Spark Streaming
+projects. As all realtime processing logic is focused around a single class which affords the DStream functionality,
+any extensions written to alter an existing project require the modification of the original project, tightly integrating the
+extension logic into the existing logic.
+
+Storm, on the other hand, showed the next best performance and resident memory footprint after Spark Streaming, through
+the results of the quantitative tests. The performance of Storm has been shown to be closer to that of Spark Streaming,
+JVM version, rather than that of Samza. Furthermore, Storm affords the next best option in terms of learning curve and
+ease of writing realtime processing logic to that of Spark Streaming, and it has shown to be a much more mature project
+to Samza, with a lot more available documentation.
+
+Samza has shown to perform badly in almost all the tests, apart from ease of extensibility where it beat Spark Streaming.
+This is an unfortunate result from the most immature of all the candidate DSPS technologies, however it is not an overly
+surprising outcome.
 
 % subsection discussion (end)
 
