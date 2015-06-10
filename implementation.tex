@@ -75,11 +75,26 @@ This leaves us with a final pipeline design as illustrated in~\figref{fig:pipeli
 \end{figure}
 
 Note that this diagram illustrates an overall abstract pipeline design. However, for implementation of the pipeline which
-will be used in the evaluation parts of the project, we need to implement concrete components for testing. Hence, we
-have chosen to go with a fairly simple implementation that simulates sensor data on a TCP socket connection, and filters
-it depending on a condition in realtime. Hence, the \textbf{Input Component} will be implemented as a TCP socket connection,
+will be used in the evaluation parts of the project, we need to implement concrete components for testing. In this project,
+we do not have access to any sensors, or any such hardware, for sending readings to the pipeline for processing. Hence, for evaluation
+we have had to simulate the sensor component of the overall pipeline design in some way. Note that this does not affect
+the pipeline in any way, since the actual sensor hardware part of the design is abstracted away from the software pipeline
+itself. The function of the sensors is to send data to the pipeline to the pipeline at any arbitrarily specified interval,
+hence to simulate this functionality multiple methods exist. The most basic of such is arguably reading data from a file
+and placing that onto a stream for the pipeline to process. However, this very much mimics batch processing methods, and
+hence is not ideal for simulating realtime data. Furthermore, placing data from a file onto the pipeline does not accurately
+reflect the client-server networking functionality that will exist in a real sensor-pipeline connection.
+
+A better way to simulate this sensor-pipeline realtime data connection is to develop a data entry interface to the pipeline upon which data can be sent to
+at any time. This data entry interface then can then be used to simulate that arbitrarily specified intervals upon which data can be sent
+to, thus mimicking the functionality of a sensor. To do this while still adhering to the client-server connection design,
+we can use a socket connection, allowing data to be sent over a specified port to be placed upon the pipeline. Each
+candidate DSPS technology either has native support for server socket connections, given their commonplace as mediums upon
+which data can be sent over, or support from the programming language standard libraries used to implement realtime processing logic.
+
+Hence, the \textbf{Input Component} will be implemented as a server socket connection,
 and the \textbf{Processing Component} as a filtering task. Speed sensor readings will be passed in along the socket connection
-using a tool, such as \texttt{netcat}\footnote{http://nc110.sourceforge.net/}, and filtered to make sure they are valid
+using a tool allowing interface to network ports, such as \texttt{netcat}\footnote{http://nc110.sourceforge.net/}, and filtered to make sure they are valid
 speed values, between the limits of 0 and 90. Any speeds
 outside of these limits can safely be deemed to be either bad, or noisy, sensor readings. This results in a concrete design as shown
 in~\figref{fig:pipeline_concrete}.
@@ -196,8 +211,9 @@ Kafka, a popular distributed messaging queueing system, is often used to consume
 ``plugged'' into a Samza project to work with the same streams which native Samza applications are written to work with~\cite{Samza:doc}.
 
 For a Samza programmer, the most important concepts of the overall Samza project to understand are the concepts of the
-\textbf{system} and \textbf{task}. In a Samza project, a system exists to produce a particular stream which then can
-be processed by a task which consumes it. A task will always then produce output to another stream. Systems and tasks
+\textbf{system} and \textbf{task}. In a Samza project, a system exists to produce a particular stream from some source
+of data which then can
+be processed by a task which consumes it. A task will always perform some processing before producing the results as output to another stream. Systems and tasks
 can then be arranged in a pipeline-like structure allowing a specified type of processing on the messages which travel
 on those streams. Hence, it is easy to think of a system as the source of data for an overall Samza project. A very
 simple example of such a Samza project is shown in~\figref{fig:samza_overview}.
@@ -205,7 +221,7 @@ simple example of such a Samza project is shown in~\figref{fig:samza_overview}.
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.8\textwidth]{includes/figures/fig_samza_overview}
-  \caption{A simple Samza pipeline showing the roles of the system, task, and stream concepts. Streams are represented
+  \caption{A simple Samza pipeline showing the roles of the system (handling input data), task (handling data processing), and stream concepts. Streams are represented
   as arrows.}
   \label{fig:samza_overview}
 \end{figure}
@@ -243,13 +259,13 @@ a key factor that will be touched upon in the next chapter on evaluating the DSP
 \paragraph{Input Component}
 
 For implementation of the input component design in Samza, this revolves around the \texttt{SystemConsumer} interface.
-As we want the Samza system to produce to a stream based on values received over a TCP socket connection, we can use
+As we want the Samza system to produce to a stream based on values received over a server socket connection, we can use
 an instantiation of the \texttt{java.net.ServerSocket} class to do this. This can be set up in the system's constructor
 and then, in the system's \texttt{start} method, attempt to poll any incoming values using a \texttt{java.io.InputStream} generated
 from that connection. If any values are encountered on that connection, we can produce them to the default speed value
 stream, which will consumed by the filtering task.
 
-The system's \texttt{stop} method simply will be used to close the TCP connection, while the \texttt{register} method will
+The system's \texttt{stop} method simply will be used to close the server connection, while the \texttt{register} method will
 be used to register the system with the previously mentioned default speed value stream.
 
 \paragraph{Processing Component}
@@ -327,8 +343,8 @@ of the compiled source code.
 
 For the implementation of the input component design in Storm, this revolves around the \texttt{BaseRichSpout} interface.
 Much like the Samza implementation, this implementation also uses \texttt{java.net.ServerSocket} and \texttt{java.io.InputStream}
-for listening on a TCP socket connection for incoming speed values. The \texttt{open} method is used for the creation
-of such a TCP socket connection, while the \texttt{nextTuple} method is used for attempted to read any values off the
+for listening on a server socket connection for incoming speed values. The \texttt{open} method is used for the creation
+of such a server socket connection, while the \texttt{nextTuple} method is used for attempted to read any values off the
 connection. If a value is encountered, it is constructed into a Storm tuple containing the speed value, and emitted onto
 the configured stream. The \texttt{declareOutputFields} method is then used to declare the speed value type as single
 type of value to be expected to make up a valid tuple.
@@ -371,14 +387,21 @@ While many analogies can be made between the key components of Storm and Samza, 
 usage, Spark Streaming presents itself differently. Spark Streaming defines itself as an extension of its parent project,
 Spark, a big data batch processing system, which affords scalable, high-throughput, fault-tolerant stream processing of
 live data streams. Data can be streamed into Spark Streaming using a variety of supported sources, from complicated data
-systems, such as Kafka, to low-level sources, such as TCP sockets.
+systems, such as Kafka, to low-level sources, such as server sockets.
 
 \paragraph{Programming Overview}
 
 Internally, Spark Streaming processes data quite differently to Samza and Storm, due to being an extension to the base
-Spark batch processing system. Data streams are fed into Spark Streaming, which automatically partitions the streams into
+Spark batch processing engine. Data streams are fed into Spark Streaming, which automatically partitions the streams into
 small batches which are then sent to the underlying Spark batch processing engine. The Spark batch processing engine then
 outputs a stream of results made up of multiple batches of data. A diagram illustrating this process is shown in~\figref{fig:spark_stream_batch}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{includes/figures/fig_spark_layout}
+  \caption{Illustration~\cite{Spark_doc_fig} depicting how Spark Streaming runs on-top of the Spark batch engine.}
+  \label{fig:spark_stream_batch}
+\end{figure}
 
 This way of processing streams as a sequence of batches is all enabled through Spark Streaming's stream abstraction,
 discretised streams, or DStreams. It differs to how streams are conceptualised in Samza and Storm in the way that while
@@ -400,9 +423,9 @@ coupled logic. This will be a topic of interest later when evaluating the differ
 
 \paragraph{Input Component}
 
-For the implementation of the input component design in Spark Streaming, Spark Streaming provides a native TCP socket input
+For the implementation of the input component design in Spark Streaming, Spark Streaming provides a native server socket input
 system built-in on the \texttt{StreamingContext} class, available through the \texttt{socketTextStream} method. Hence
-this has been used to open a connection on a particular TCP socket for inputting of speed data in the same manner as in the
+this has been used to open a connection on a particular server socket for inputting of speed data in the same manner as in the
 Samza and Storm implementations.
 
 \paragraph{Processing Component}

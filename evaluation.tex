@@ -465,7 +465,7 @@ JVM version, rather than that of Samza. Furthermore, Storm affords the next best
 ease of writing realtime processing logic to that of Spark Streaming, and it has shown to be a much more mature project
 to Samza, with a lot more available documentation.
 
-Samza has shown to perform badly in almost all the tests, apart from ease of extensibility where it beat Spark Streaming.
+Samza has shown to perform badly in almost all the tests, both qualitative and quantitative, apart from ease of extensibility where it beat Spark Streaming.
 This is an unfortunate result from the most immature of all the candidate DSPS technologies, however it is not an overly
 surprising outcome.
 
@@ -475,10 +475,42 @@ surprising outcome.
 \subsection{DSPS Technology Recommendations} % (fold)
 \label{sub:dsps_technology_recommendations}
 
+As discussed, while Spark Streaming has been shown to have the overall greatest performance of the three candidate DSPS
+technologies, due to its failing, in terms of extensibility, we cannot recommend it for use in the Monash University IRT
+project. This stems back to our third research questions for this project, looking at the possibility of extending projects
+developed in each of the candidate DSPS technologies.
+
+As Storm has shown the second best performance to Spark Streaming, the second best outcome in most qualitative tests,
+and shown to be the overall most extensible of the three technologies, it is a much better contender for use in the Monash
+University IRT project.
+
+We cannot recommend the use of Samza, in light of its performance in relation to the other two technologies in all tests.
+Both of the other candidate technologies provide better outcomes overall in most areas.
+
+Hence, we are recommending the use of Storm in the Monash University IRT project. We believe that it exhibits all the
+characteristics required for a DSPS technology in the IRT project, and exhibits relatively positive performance. It affords
+use in an advanced project, subject to many changes, such as the IRT project, and it is
+also the most mature of the three candidate technologies, allowing for much documentation and support available to be found on the
+Internet.
+
+Spark Streaming is our runner-up recommendation, showing great performance, and a low learning curve. We recommend
+Spark Streaming to be used in simple realtime processing projects, where change and extension may be unnecessary or not
+required often.
+
 % subsection dsps_technology_recommendations (end)
 
 
 \subsection{Conclusion} % (fold)
 \label{sub:evaluation_conclusion}
+
+In conclusion, we have nominated Storm as our recommended data stream processing system technology for use in the Monash
+University Institute of Railway Technology project. Overall, we have shown it to exhibit great performance and features
+in terms of programmability and extensibility. It has shown to have a steeper learning curve to that of Spark Streaming,
+however Spark Streaming has shown to be a less viable option for large, and constantly changing projects, such as the IRT
+project.
+
+This nomination as our recommended DSPS technology comes after performing many suitable tests, using both quantitative performance-based
+metrics and qualitative use-based metrics, and evaluating it in comparison to our other candidate DSPS technologies, Samza and Spark Streaming.
+
 
 % subsection conclusion (end)
