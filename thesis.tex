@@ -1,51 +1,75 @@
-%\documentclass[a4paper,12pt,times,authoryear,print,index]{PhDThesisPSnPDF}
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,12pt,times,authoryear,print,index]{PhDThesisPSnPDF}
+%\documentclass[a4paper,11pt]{article}
 
 % set up sensible margins (same as for cssethesis)
 
-\usepackage[paper=a4paper,left=30mm,width=150mm,top=25mm,bottom=25mm]{geometry}
-\usepackage{setspace}               % This is used in the title page
-\usepackage{graphicx}               % This is used to load the crest in the title page
+%\usepackage[paper=a4paper,left=30mm,width=150mm,top=25mm,bottom=25mm]{geometry}
+%\usepackage{setspace}               % This is used in the title page
+%\usepackage{graphicx}               % This is used to load the crest in the title page
 \usepackage{poltakmacros}           % Personal macros included in file 'poltakmacros.sty'
-\usepackage{enumitem}               % For nested enum lists
-\edef\restoreparindent{\parindent=\the\parindent\relax}
-\usepackage{parskip}
-\restoreparindent
-\usepackage{pdflscape}
+%\usepackage{enumitem}               % For nested enum lists
+%\edef\restoreparindent{\parindent=\the\parindent\relax}
+%\usepackage{parskip}
+%\restoreparindent
+%\usepackage{pdflscape}
 \usepackage[table]{xcolor}
-\usepackage{colortbl}
+%\usepackage{colortbl}
 \usepackage{float}
-\usepackage[hidelinks]{hyperref}
-\usepackage{url}
-\usepackage[font={small}]{caption}
-\usepackage[hidelinks]{hyperref}
+%%\usepackage[hidelinks]{hyperref}
+%\usepackage{url}
+%\usepackage[font={small}]{caption}
+%\usepackage[hidelinks]{hyperref}
 \usepackage{import}
-\usepackage{titlesec}
-\usepackage{float}
+\usepackage{adjustbox}
 
-\setcounter{secnumdepth}{4}
+%\usepackage{titlesec}
+%
+%\setcounter{secnumdepth}{4}
+%
+%\titleformat{\paragraph}
+%{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+%\titlespacing*{\paragraph}
+%{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
-\titleformat{\paragraph}
-{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
-\titlespacing*{\paragraph}
-{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+% ********************************** Preamble **********************************
+\input{Preamble/preamble}
 
+% ************************ Thesis Information & Meta-data **********************
+\input{thesis-info}
+
+\ifdefineAbstract
+ \pagestyle{empty}
+ \includeonly{Declaration/declaration, Abstract/abstract}
+\fi
+
+% ******************************** Front Matter ********************************
 \begin{document}
 
-% Cover page + TOC
-\include{includes/cover/cover}
+\frontmatter
 
-\pagenumbering{Roman}
+\begin{titlepage}
+  \maketitle
+\end{titlepage}
+
+\include{Dedication/dedication}
+\include{Declaration/declaration}
+\include{Acknowledgement/acknowledgement}
+\include{Abstract/abstract}
+
+% *********************** Adding TOC and List of Figures ***********************
+\tableofcontents
+
+\listoffigures
+
+\listoftables
+
+\printnomencl
 
 
-% Abstract
-\include{abstract}
-
-\pagenumbering{arabic}
-
+% ******************************** Main Matter *********************************
+\mainmatter
 % Section 1: Intro/proposal
 \include{introduction}
-
 
 % Section 2: Lit review
 \include{litreview}
@@ -63,8 +87,23 @@
 \include{conclusion}
 
 
-% Bibliography
+% ********************************** Bibliography ******************************
+\begin{spacing}{0.9}
+
+% To use the conventional natbib style referencing
+% Bibliography style previews: http://nodonn.tipido.net/bibstyle.php
+% Reference styles: http://sites.stat.psu.edu/~surajit/present/bib.htm
+
+%\bibliographystyle{plainnat} % use this to have URLs listed in References
+%\bibliographystyle{apalike}
 \bibliographystyle{acm}
-\bibliography{thesis.bib}
+\cleardoublepage
+\bibliography{thesis.bib} % Path to your References.bib file
+
+\end{spacing}
+
+
+% *************************************** Index ********************************
+\printthesisindex % If index is present
 
 \end{document}

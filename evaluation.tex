@@ -1,5 +1,5 @@
 %!TEX root = thesis.tex
-\section{Discussion and Evaluation}
+\chapter{Discussion and Evaluation}
 \label{sec:evaluation}
 
 Evaluation of each of the chosen DSPS technologies will be performed using both qualitative and quantitative testing methods
@@ -20,13 +20,14 @@ The control for each of the evaluation measures will be the host system on which
 and the test data which is used for the relevant quantitative tests.
 
 This chapter begins with an overview of the NeCTAR testing environment, in~\sectref{sub:testing_environment}, upon which
-all tests are performed. Quantitative evaluations and results are then described in~\sectref{sub:quantitative_evaluations},
-while qualitative evaluations and results are described in~\sectref{sub:qualitative_evaluations}. Discussion of the
-evaluations and subsequent DSPS technology recommendations will be given in~\sectref{sub:dsps_technology_recommendations},
-before concluding in~\sectref{sub:conclusion}.
+all tests are performed. An overview of all testing data to be used in quantitative tests will be given in~\sectref{sub:overview_of_test_data}.
+Quantitative tests and results are then described in~\sectref{sub:quantitative_tests},
+while qualitative tests and results are described in~\sectref{sub:qualitative_tests}. Discussion of the
+overall test results and evaluation will then be given in~\sectref{sub:eval_discussion}. Subsequent DSPS technology recommendations will then be given in~\sectref{sub:dsps_technology_recommendations},
+based upon those results and discussion highlighted in previous sections, before concluding in~\sectref{sub:evaluation_conclusion}.
 
 
-\subsection{Testing Environment} % (fold)
+\section{Testing Environment} % (fold)
 \label{sub:testing_environment}
 
 Each identically functioning pipeline built using the different candidate DSPS technologies are to be deployed in the
@@ -46,7 +47,7 @@ needing changes to the underlying source code.
 % subsection testing_environment (end)
 
 
-\subsection{Overview of Testing Data} % (fold)
+\section{Overview of Testing Data} % (fold)
 \label{sub:overview_of_test_data}
 
 As this sub-project focuses on the realtime processing of streaming data, data streams will have to be simulated from
@@ -87,10 +88,10 @@ pipelines. Hence a single floating point value of \texttt{42.002} has been used.
 % subsection overview_of_the_data (end)
 
 
-\subsection{Quantitative Tests} % (fold)
+\section{Quantitative Tests} % (fold)
 \label{sub:quantitative_tests}
 
-\subsubsection{Tests Performed} % (fold)
+\subsection{Tests Performed} % (fold)
 \label{ssub:quan_tests_performed}
 
 The quantitative methods to be used to evaluate the candidate DSPS technologies include mostly performance-based
@@ -106,7 +107,7 @@ metrics. Each of the metrics that will be used is as follows:
 Each of these can be quantified and compared easily between the different DSPS technologies via tracking various aspects
 of the systems.
 
-\paragraph{Response time to streaming data}
+\subsubsection{Response time to streaming data}
 
 Response time to streaming data refers to the amount of time it takes for each DSPS pipeline to fully process a single
 value of sensor reading data. This time is defined from the time that value is sent along the TCP socket connection, to the time
@@ -116,7 +117,7 @@ sensor's reading. This is a highly realistic test for the sort of processing bei
 sensor readings are expected to arrive for processing at infrequent intervals, generally with a lot of time between
 each reading.
 
-\paragraph{Test data throughput time}
+\subsubsection{Test data throughput time}
 
 Test data throughput time refers to the amount of time it takes for each DSPS pipeline to fully process large batches
 of sensor readings. These data batches have been defined in~\sectref{sub:overview_of_test_data}. This is a less realistic
@@ -127,7 +128,7 @@ and 10,\@000,\@000, respectively. The throughput time is defined as the time fro
 socket connection, to the time the pipelines have finished processing. These times are measured using the internal DSPS
 technology runtime logs.
 
-\paragraph{Peak system resource usage}
+\subsubsection{Peak system resource usage}
 
 Peak system resource usage refers to the amount of resident system memory in-use while each of the pipelines are running.
 These values are expected to vary considerably during runtime, so samples will be taken at the peak system resource usage of each DSPS
@@ -135,7 +136,7 @@ technology during the processing of our test data throughput time tests.
 Measurements will be taken using the UNIX tool \texttt{top} to collect readings for the amount of resident memory being used
 by the DSPS technology.
 
-\paragraph{System start-up time}
+\subsubsection{System start-up time}
 
 System start-up time relates to the amount of time taken for each candidate DSPS pipeline to start-up. This time is
 defined from the time each DSPS technology is started via the system shell, to the time the DSPS technology is
@@ -147,10 +148,10 @@ we are interested to see how each DSPS technology compares, and how these values
 % subsubsection tests_to_be_performed (end)
 
 
-\subsubsection{Test Results} % (fold)
+\subsection{Test Results} % (fold)
 \label{sub:test_results}
 
-\paragraph{Response time to streaming data}
+\subsubsection{Response time to streaming data}
 
 The results to the response time to streaming data test are shown in~\figref{fig:response_time_res}.
 
@@ -171,7 +172,7 @@ As Spark Streaming is essentially an extension built on top of a batch processin
 both Samza and Storm, two technologies built from the ground up with the aim of processing data in realtime, is quite a
 surprising find.
 
-\paragraph{Test data throughput time}
+\subsubsection{Test data throughput time}
 
 The results to the test data throughput time tests are shown in~\figref{fig:throughput_time_res}.
 
@@ -204,7 +205,7 @@ performance, showing a similar growth for all tests apart from the 10,\@000,\@00
 Again, Samza shows the worst overall performer out of the three candidates (not counting PySpark here), with less than
 half the performance of Spark Streaming on the 10,\@000,\@000 data points test.
 
-\paragraph{Peak system resource usage}
+\subsubsection{Peak system resource usage}
 
 The results for the peak system resource usage test can be seen in~\figref{fig:resource_usage_res}.
 
@@ -223,15 +224,15 @@ not the realtime processing extension, was designed to be an entire software eco
 dependencies that Storm and Samza may have are not needed, possibly leading to this extreme reduction in resident memory
 usage shown here.
 
-\paragraph{System start-up time}
+\subsubsection{System start-up time}
 
-The results for the system start-up time test can be seen in~\figref{fig:pipeline_whole}.
+The results for the system start-up time test can be seen in~\figref{fig:startup_time}.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{includes/figures/fig_startup_time_res}
   \caption{Results of our system start-up time test.}
-  \label{fig:pipeline_whole}
+  \label{fig:startup_time}
 \end{figure}
 
 Again, we emphasise that this test is of much less importance than the previously covered quantitative tests, due to real-life usage
@@ -245,10 +246,10 @@ with being able to be ready for processing from start-up in just over 4 seconds.
 % subsection quantitative_tests (end)
 
 
-\subsection{Qualitative Tests} % (fold)
+\section{Qualitative Tests} % (fold)
 \label{sub:qualitative_tests}
 
-\subsubsection{Tests Performed} % (fold)
+\subsection{Tests Performed} % (fold)
 \label{ssub:tests_performed}
 
 The qualitative methods used to evaluate the candidate DSPS systems include mostly programmer-centric metrics, showing the
@@ -264,7 +265,7 @@ programming possibilities for each technology. Each of the metrics that will be 
 As each of the underlying DSPS technologies are considerably different in design and usage, it is important to see how
 they contrast in terms of factors that they allow.
 
-\paragraph{Ease of extensibility}
+\subsubsection{Ease of extensibility}
 
 Ease of pipeline extensibility refers to the methods used to extend an existing pipeline, or project, existing in each
 of the candidate DSPS technologies. For example, if an existing project is already in use in production, we will be measuring the
@@ -273,7 +274,7 @@ existing system, or restructuring an existing project processing layout (for exa
 we will be looking at include whether or not an entire project needs to be recompiled and deployed to be extended, and the
 ease of modifying overall system configurations.
 
-\paragraph{Available DSPS features}
+\subsubsection{Available DSPS features}
 
 Available DSPS features refers to the features each candidate DSPS technology supports as they relate to Stonebraker,
 \c{C}\~entintemel, and Zdonik's eight requirements for realtime data processing systems~\cite{stonebraker_8_2005}, as looked at
@@ -282,7 +283,7 @@ many years prior to the release of each of our candidate DSPS technologies, and 
 in general. The supported features for each technology will be compared to show the functional possibilities natively
 available in each technology.
 
-\paragraph{Ease of programmability}
+\subsubsection{Ease of programmability}
 
 Ease of programmability refers to a number of different features including official programming language support, complexity
 of required interfaces to be implemented, and complexity of required system configuration. To summarise, we will look at
@@ -290,7 +291,7 @@ the difficulty and learning-curve that may need to be overcome to program each c
 presents a more difficult, and somewhat subjective, task compared to the metrics used in the quantitative tests, however
 these will be measured using impartial comparisons of the methods which each DSPS technology affords to be programmed.
 
-\paragraph{Ease of deployment}
+\subsubsection{Ease of deployment}
 
 Ease of deployment refers to the methods in which each candidate DSPS technology affords its projects to be deployed and distributed.
 Similar to the ease of programmability test, this metric will be measured by an impartial comparison of each possible
@@ -299,10 +300,10 @@ method of project deployment and distribution.
 % subsection tests_performed (end)
 
 
-\subsubsection{Test Results} % (fold)
+\subsection{Test Results} % (fold)
 \label{ssub:qual_test_results}
 
-\paragraph{Ease of extensibility}
+\subsubsection{Ease of extensibility}
 
 Spark Streaming is noted as the worst performing technology in terms of extensibility, overall. This is mostly due to
 the fact that, by design, a Spark Streaming program is generally very tightly coupled in terms of processing modules.
@@ -343,7 +344,7 @@ Storm extensions can be written separate of existing logic, without the existing
 This is, unfortunately, not the case with Spark Streaming.
 
 
-\paragraph{Available DSPS features}
+\subsubsection{Available DSPS features}
 
 As these features were looked at previously in the literature review chapter, in~\sectref{sub:processing_conclusion},
 this table has been reconstructed in~\tabref{tab:dsps_features}, with S4 omitted due to being omitted from our candidate
@@ -377,7 +378,7 @@ Conversely, Samza does not afford any native type of batch processing functional
 the time of writing.
 
 
-\paragraph{Ease of programmability}
+\subsubsection{Ease of programmability}
 
 Spark Streaming has been noted as being the most accessible of the candidate DSPS technologies in terms of programmability.
 Spark Streaming, as of version 1.2.0, has official support for Java, Scala, and Python (however some of the functionality deemed
@@ -422,7 +423,7 @@ away from the programmer. Samza comes in last, with the largest learning curve, 
 Samza project, along with Samza software dependencies needed to implement even a simple Samza project.
 
 
-\paragraph{Ease of deployment}
+\subsubsection{Ease of deployment}
 
 Projects written for each of the DSPS technologies are expected to be deployed and distributed in similar ways. As each
 of the technologies are built on JVM technologies, they require compiled JVM bytecode to be packaged as a JAR file, generally
@@ -442,7 +443,7 @@ and pre-configured~\cite{web:spark-downloads}.
 % subsection qualitative_evaluations (end)
 
 
-\subsection{Discussion} % (fold)
+\section{Discussion} % (fold)
 \label{sub:eval_discussion}
 
 Looking over the results of both the quantitative performance-based results, and the qualitative feature-based results,
@@ -472,7 +473,7 @@ surprising outcome.
 % subsection discussion (end)
 
 
-\subsection{DSPS Technology Recommendations} % (fold)
+\section{DSPS Technology Recommendations} % (fold)
 \label{sub:dsps_technology_recommendations}
 
 As discussed, while Spark Streaming has been shown to have the overall greatest performance of the three candidate DSPS
@@ -500,7 +501,7 @@ required often.
 % subsection dsps_technology_recommendations (end)
 
 
-\subsection{Conclusion} % (fold)
+\section{Conclusion} % (fold)
 \label{sub:evaluation_conclusion}
 
 In conclusion, we have nominated Storm as our recommended data stream processing system technology for use in the Monash

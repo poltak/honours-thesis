@@ -1,14 +1,89 @@
 %!TEX root = thesis.tex
-\section{Conclusions}
+\chapter{Conclusions}
 \label{sec:conclusion}
 
-\subsection{Research Contribution} % (fold)
+This final chapter concludes this thesis by looking at a summary of the contributions made from our research in this
+project, along with identifying possible areas of interest for any future work relating to this project. As this project
+has a large overall scope, and the research discussed in this thesis only relates to a small part, many further opportunities
+will present themselves for future work with the overall Monash University Institute of Railway Technology project.
+
+This chapter begins with a summary of our research contribution, in~\sectref{sub:research_contribution}, before identifying
+possible future work, in~\sectref{sub:future_work}.
+
+\section{Research Contribution} % (fold)
 \label{sub:research_contribution}
+
+In this research, we gave a recommendation of a data stream processing system (DSPS) for realtime data processing use in the
+Monash University Institute of Railway Technology (IRT) project. This project focuses around railway track condition monitoring
+through the use of sensors placed on train cars. At inception of this research, the project had no realtime data processing
+functionality integrated with it, however the engineering team working on the project expressed interest in using realtime
+data processing for use with numerous functions required in their use-case; mostly pre-processing of sensor readings. Hence,
+the aim of recommending an appropriate DSPS for use in the IRT project is to address these usage requirements, allowing
+for such realtime processing to be used.
+
+In the case of the IRT project, the DSPS technologies act as a pipeline through which data flows, all the way from the
+sensor source to the destination. The destination is not specified, in the case of the IRT project, hence is left abstract for later extension. Suitable
+destinations for data processed in realtime are data stores, such as a database management system or distributed file system,
+or further processing, in the way of another DSPS pipeline or even batch processing systems. This pipeline requires design,
+which often differs between different DSPS technologies, to adhere to the processing requirements of the use-case, and
+consequently implementation.
+
+In this research project, a very basic prototype pipeline has been designed and implemented to filter speed sensor readings.
+This prototype pipeline has been designed in such a way that it is extensible and re-usable for different use-cases in the
+IRT project. This pipeline has been implemented for use of evaluating different candidate DSPS technologies, however it is
+also possible to use as a base-line for the design and implementation of the real pipeline to be used in production in the
+IRT project.
+
+This prototype pipeline implemented in this research has been used for testing and consequently evaluation of the different
+candidate DSPS technologies, allowing us to arrive at the recommendation of the Storm DSPS for use in the IRT project.
+Storm shows great overall performance in processing data in realtime, and also allows for extensible projects to be created,
+suitable for large projects, intended to be in production for long periods of time, and subject to change. Furthermore,
+Storm affords a great number of possible realtime and batch processing features, while exhibiting a relatively low
+footprint on system resources.
+
+Apart from the IRT project, which Storm is now intended to be used in production for, Storm has been in use for a number of years
+for a range of different applications in numerous companies such as Twitter, Yahoo!, Baidu, and Spotify~\cite{storm_users}.
+
+In summary, in relation to our original research questions, this research has answered all questions and met the aims of
+the project. We have identified existing DSPS technologies for use in the IRT project through a review of existing literature
+in the area of realtime data processing. These technologies include Storm, Samza, Spark Streaming, and S4. We have identified
+a number of qualitative and quantitative metrics to evaluate each of the technologies based on the implementation of a
+prototype realtime data processing pipeline in each of the technologies. For implementation, the candidate technologies
+were narrowed to focus on Storm, Samza, and Spark Streaming due to the finding of S4 being effectively an abandoned project
+in our review of existing literature. Finally, the prototype realtime data processing pipeline that was implemented was
+designed to be extensible, allowing the addition of further realtime processing logic to be implemented as changes to the
+IRT project become apparent.
 
 % subsection research_contribution (end)
 
 
-\subsection{Future Work} % (fold)
+\section{Future Work} % (fold)
 \label{sub:future_work}
+
+During this research, potential areas for future work and research have been identified. These focus around looking at
+the batch processing of data on the candidate DSPS technologies that support it, the evaluation of different DSPS technologies on different
+cluster set-ups, and the evaluation of the use of the prototype pipeline in the overall IRT project. We discus these briefly.
+
+Given that this research was focused solely around the realtime processing features of each of the candidate DSPS technologies,
+it would be of further interest to look at both Spark Streaming and Storm's handling of batch data processing. As noted
+in the evaluation chapter, both Spark Streaming, through the Spark batch processing engine, and Storm, through its
+Trident extension, support batch processing performed on streaming data. As batch processing remains an important task
+in many data-intensive applications, it would be of interest to evaluate these technologies based upon this factor, and also in relation
+to existing batch processing systems, such as those that are categorised under the Hadoop ecosystem. Of course, this would
+be of interest to users of a different processing use-case to that which was focused on in this research, hence would
+not be appropriate for making a \textit{realtime} processing DSPS technology recommendation.
+
+In relation to realtime data processing, further work of interest, building upon our evaluation of DSPS technologies, would
+be to evaluate each of the DSPS processing technologies running across differently configured clusters of different node size.
+The research performed in this project revolved around a single cluster set-up, being a single node cluster, used as a constant factor between all
+tests. Looking at further cluster set-ups, this would allow an informed evaluation on how each technology scales in different environment.
+Of interest would be the differences in performance, and the ease of distributed and parallel programming, afforded by the different DSPS technologies across
+different cluster set-ups.
+
+Lastly, it would be of interest to evaluate the prototype pipeline designed and implemented in this research, running on our recommended
+DSPS technology, Storm, while in use with the entire IRT project ecosystem. Hence, it would be needed to be put in place,
+between the sensors located on train cars, and the data storage layer, allowing the performance of it to be evaluated.
+It may be of interest to evaluate the pipeline against those pipelines implemented in the other candidate DSPS technologies,
+that were also a result of this research.
 
 % subsection future_work (end)

@@ -1,5 +1,5 @@
 %!TEX root = thesis.tex
-\section{Pipeline Design and Implementation}
+\chapter{Pipeline Design and Implementation}
 \label{sec:implementation}
 
 This chapter describes the design and implementation of the prototype data filtering pipelines to be built for testing
@@ -15,7 +15,7 @@ detailed for each of the candidate DSPS technologies, as well as looking at the 
 each technology. Finally, the chapter will be concluded in~\sectref{sub:implement_conclusion}.
 
 
-\subsection{Data Filtering Pipeline Design} % (fold)
+\section{Data Filtering Pipeline Design} % (fold)
 \label{sub:pipeline_design}
 
 The overall design of the data filtering pipeline will be designed in such a way that readings from sensors can be fed
@@ -34,7 +34,7 @@ in order of their precedence of their role in the pipeline. Hence, the first com
 the second component, of which the output would be the input to the third component. This creates the dataflow behaviour
 exhibited in pipelines. This basic design that we have so far is illustrated in~\figref{fig:pipeline_simple}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=0.8\textwidth]{includes/figures/fig_pipeline_simple}
   \caption{A simplistic overview of our pipeline design. Note the dataflow behaviour exhibited with each component output
@@ -67,7 +67,7 @@ the contents will consist of a task-like component tasked with passing data onto
 
 This leaves us with a final pipeline design as illustrated in~\figref{fig:pipeline_whole}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=0.8\textwidth]{includes/figures/fig_pipeline_whole}
   \caption{A complete overview of our pipeline design.}
@@ -99,7 +99,7 @@ speed values, between the limits of 0 and 90. Any speeds
 outside of these limits can safely be deemed to be either bad, or noisy, sensor readings. This results in a concrete design as shown
 in~\figref{fig:pipeline_concrete}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=0.8\textwidth]{includes/figures/fig_pipeline_concrete}
   \caption{A concrete implementation of our pipeline design.}
@@ -109,10 +109,10 @@ in~\figref{fig:pipeline_concrete}.
 % subsection pipeline_design (end)
 
 
-\subsection{Testing Environment Details} % (fold)
+\section{Testing Environment Details} % (fold)
 \label{sub:testing_environment_details}
 
-\subsubsection{Details on Host System} % (fold)
+\subsection{Details on Host System} % (fold)
 \label{ssub:host_system}
 
 The testing environment on which the prototype pipelines were implemented using each of the candidate DSPS technologies
@@ -122,7 +122,7 @@ that require the infrastructure\footnote{https://www.nectar.org.au/about-nectar}
 
 Our environment consists of a single NeCTAR cloud instance of which the details are specified in~\tabref{tab:control}.
 
-\begin{table}[h]
+\begin{table}[ht]
 \caption{Control system used for testing pipelines.}
 \label{tab:control}
 \centering
@@ -147,7 +147,7 @@ requiring changes to the underlying source code.
 % subsubsection host_system (end)
 
 
-\subsubsection{Details on Data Stream Processing System Technologies} % (fold)
+\subsection{Details on Data Stream Processing System Technologies} % (fold)
 \label{sub:setting_up_of_dsps_technologies}
 
 The DSPS technologies that have been chosen to be focused on in this sub-project include the following:
@@ -184,7 +184,7 @@ distribution of Ubuntu 14.04.2 LTS.
 % subsection testing_environment_details (end)
 
 
-\subsection{Implementation of Pipelines in Data Stream Processing System Technologies} % (fold)
+\section{Implementation of Pipelines in Data Stream Processing System Technologies} % (fold)
 \label{sub:implementation_of_pipelines_in_dsps_technol}
 
 Here, we will look at how the each of the candidate DSPS technologies were used for implementation in relation to our testing
@@ -199,7 +199,7 @@ For each DSPS technology, we will look at what was needed to be implemented for 
   \item Output component
 \end{itemize}
 
-\subsubsection{Samza} % (fold)
+\subsection{Samza} % (fold)
 \label{ssub:impl_samza}
 
 Samza defines itself as a realtime data processing system, which allows the processing of streams made up of immutable
@@ -218,7 +218,7 @@ can then be arranged in a pipeline-like structure allowing a specified type of p
 on those streams. Hence, it is easy to think of a system as the source of data for an overall Samza project. A very
 simple example of such a Samza project is shown in~\figref{fig:samza_overview}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=0.8\textwidth]{includes/figures/fig_samza_overview}
   \caption{A simple Samza pipeline showing the roles of the system (handling input data), task (handling data processing), and stream concepts. Streams are represented
@@ -226,7 +226,7 @@ simple example of such a Samza project is shown in~\figref{fig:samza_overview}.
   \label{fig:samza_overview}
 \end{figure}
 
-\paragraph{Programming Overview}
+\subsubsection{Programming Overview}
 
 When programming a Samza project, interfaces exist for both the system and task concepts through the \texttt{org.apache.samza.system.SystemConsumer}
 and \texttt{org.apache.samza.task.StreamTask} Java interfaces. Default systems exist in the Samza project, and may be
@@ -256,7 +256,7 @@ Note that, due to Samza's relative infancy to other DSPS technologies, many of t
 or offer insufficient documentation. Furthermore, for the same reason, example Samza projects are hard to find. This is
 a key factor that will be touched upon in the next chapter on evaluating the DSPS technologies.
 
-\paragraph{Input Component}
+\subsubsection{Input Component}
 
 For implementation of the input component design in Samza, this revolves around the \texttt{SystemConsumer} interface.
 As we want the Samza system to produce to a stream based on values received over a server socket connection, we can use
@@ -268,7 +268,7 @@ stream, which will consumed by the filtering task.
 The system's \texttt{stop} method simply will be used to close the server connection, while the \texttt{register} method will
 be used to register the system with the previously mentioned default speed value stream.
 
-\paragraph{Processing Component}
+\subsubsection{Processing Component}
 
 For the implementation of the processing component design in Samza, this revolves around the \texttt{StreamTask} interface.
 This Samza task will get its input by consuming from the same stream on which the previously detailed Samza system implementation
@@ -277,12 +277,12 @@ received is between the acceptable speed limits. Depending on the outcome of thi
 being noisy, or not, and then produced to a stream for valid values, or a stream for noisy data. This allows the filtering
 of data, with flagged data being produced to a separate stream to those data that are deemed to be valid.
 
-\paragraph{Output Component}
+\subsubsection{Output Component}
 
 For the output component of our designed pipeline, no implementation needs to be done. Samza, by design, affords extension
 by implementing a new \texttt{StreamTask} that is configured to consume from an existing stream in the Samza project.
 
-\paragraph{Deployment}
+\subsubsection{Deployment}
 
 Samza projects are generally compiled and distributed as JAR files, which may or may not contain project dependencies,
 which then can be run directly on installed Samza distributions. Assembly of these JAR files are conventionally performed
@@ -294,7 +294,7 @@ Samza installations.
 % subsubsection samza (end)
 
 
-\subsubsection{Storm} % (fold)
+\subsection{Storm} % (fold)
 \label{ssub:impl_storm}
 
 Storm defines itself as a distributed realtime computation system that provides primitives for performing realtime
@@ -307,7 +307,7 @@ of immutable messages as they are defined in Samza. A tuple is defined as a dyna
 the values can be of any type. Rather than consuming and producing to streams, Storm approaches computations on streams
 through \textit{stream transformations} using the previously mentioned realtime computation primitives.
 
-\paragraph{Programming Overview}
+\subsubsection{Programming Overview}
 
 The realtime computation primitives that Storm offers are the components of Storm that are of most interest to the programmer.
 These primitives are known as the \textbf{spout} and \textbf{bolt}, previously looked at in~\sectref{ssub:storm}. To compare
@@ -339,7 +339,7 @@ as well as overall topology configuration. An obvious downside to this over Samz
 a recompilation in the case that configuration options need to be tweaked, while Samza configuration files are not part
 of the compiled source code.
 
-\paragraph{Input Component}
+\subsubsection{Input Component}
 
 For the implementation of the input component design in Storm, this revolves around the \texttt{BaseRichSpout} interface.
 Much like the Samza implementation, this implementation also uses \texttt{java.net.ServerSocket} and \texttt{java.io.InputStream}
@@ -349,7 +349,7 @@ connection. If a value is encountered, it is constructed into a Storm tuple cont
 the configured stream. The \texttt{declareOutputFields} method is then used to declare the speed value type as single
 type of value to be expected to make up a valid tuple.
 
-\paragraph{Processing Component}
+\subsubsection{Processing Component}
 
 For the implementation of the processing component design in Storm, this revolves around the \texttt{BaseRichBolt} interface.
 The \texttt{execute} method is used to test the data value in the received tuple in the same way as tested in the Samza
@@ -357,13 +357,13 @@ implementation. Based on the outcome of the test, a new tuple is made with two v
 noise flag, being flagged if the speed value fails the test, unflagged otherwise. The newly constructed tuple is then
 emitted to the output stream for further processing.
 
-\paragraph{Output Component}
+\subsubsection{Output Component}
 
 As with the Samza implementation, the Storm implementation of the designed pipeline does not require any concrete implementation
 of the output component. This is as Storm, by design, allows any extension to be made to a topology simply by implementing
 a further bolt which receives its tuples from an existing stream.
 
-\paragraph{Deployment}
+\subsubsection{Deployment}
 
 Storm topologies are generally compiled and distributed in the same way as Samza projects; as JAR files containing compiled
 bytecode, assembled using Java build automation tools.
@@ -374,7 +374,7 @@ is free to be deployed on different Storm installations.
 % subsubsection storm (end)
 
 
-\subsubsection{Spark Streaming} % (fold)
+\subsection{Spark Streaming} % (fold)
 \label{ssub:impl_spark_streaming}
 
 For Spark Streaming, we have implemented the designed pipeline in both Python and Scala, running on the PySpark and Spark
@@ -389,7 +389,7 @@ Spark, a big data batch processing system, which affords scalable, high-throughp
 live data streams. Data can be streamed into Spark Streaming using a variety of supported sources, from complicated data
 systems, such as Kafka, to low-level sources, such as server sockets.
 
-\paragraph{Programming Overview}
+\subsubsection{Programming Overview}
 
 Internally, Spark Streaming processes data quite differently to Samza and Storm, due to being an extension to the base
 Spark batch processing engine. Data streams are fed into Spark Streaming, which automatically partitions the streams into
@@ -421,14 +421,14 @@ whereas in Storm or Samza processing would be split between tasks or bolts writt
 more straightforward control over DStream transformations when programming, however also leads to much more tightly
 coupled logic. This will be a topic of interest later when evaluating the different DSPS technologies.
 
-\paragraph{Input Component}
+\subsubsection{Input Component}
 
 For the implementation of the input component design in Spark Streaming, Spark Streaming provides a native server socket input
 system built-in on the \texttt{StreamingContext} class, available through the \texttt{socketTextStream} method. Hence
 this has been used to open a connection on a particular server socket for inputting of speed data in the same manner as in the
 Samza and Storm implementations.
 
-\paragraph{Processing Component}
+\subsubsection{Processing Component}
 
 For the implementation of the processing component design in Spark Streaming, a function has been written to test a single
 speed value, testing whether or not it is between the specified speed limits. Depending on the outcome of the test,
@@ -438,14 +438,14 @@ of the speed limit.
 This speed test function then gets mapped to the existing socket connection DStream, effectively running the function
 for every speed value that is received over the connection.
 
-\paragraph{Output Component}
+\subsubsection{Output Component}
 
 Unlike the Storm or Samza implementations, Spark Streaming offers no simple way to extend an existing streaming processing
 project through means of extra processing tasks that operate on existing streams. However, it does afford extensibility
 in the way of adding further processing on the DStream that is produced from previously performed operations, such
 as the previously mentioned speed test function mapping.
 
-\paragraph{Deployment}
+\subsubsection{Deployment}
 
 Spark Streaming programs are compiled and distributed in the same fashion in which Samza and Storm projects are. However,
 for Spark Streaming programs written in Python using their relatively new PySpark API, compilation is unnecessary and an entire Spark
@@ -463,7 +463,7 @@ different Spark installations.
 
 
 
-\subsection{Conclusion} % (fold)
+\section{Conclusion} % (fold)
 \label{sub:implement_conclusion}
 
 In conclusion this chapter has touched upon all details of implementation for each of the prototype pipelines.

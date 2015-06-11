@@ -1,6 +1,6 @@
 %!TEX root = thesis.tex
 % Start of content
-\section{Literature Review}
+\chapter{Literature Review}
 \label{sec:litrev}
 
 To lay the ground work and context of this research project, this chapter goes into detail on existing
@@ -36,7 +36,7 @@ before concluding in~\sectref{sec:conclusion}.
 % section introduction (end)
 
 
-\subsection{Big data processing background} % (fold)
+\section{Big data processing background} % (fold)
 \label{sec:big_data_processing_background}
 
 Much work has been done in the area of big data processing in the past decade, given the rise of large
@@ -60,7 +60,7 @@ processing''. This term should be assumed to encompass the meanings that are als
 use of terms such as ``data stream processing'', ``realtime stream processing'', and ``stream processing''.
 
 
-\subsection{Batch data processing} % (fold)
+\section{Batch data processing} % (fold)
 \label{sub:batch_data_processing}
 
 Over the last decade, the main ``go-to'' solution for any sort of processing needed on datasets falling under
@@ -77,7 +77,7 @@ before processing then begins on those batches. Once ready, those batches get fe
 and handled accordingly~\cite{condie2010online}.
 
 
-\subsubsection{MapReduce and GFS} % (fold)
+\subsection{MapReduce and GFS} % (fold)
 \label{ssub:mapreduce_and_gfs}
 
 Dean and Ghemawat, in~\cite{dean_mapreduce:_2008}, originally presented MapReduce as a technology that had been
@@ -111,7 +111,7 @@ relating to their many web-oriented applications rely on GFS.
 % subsubsection mapreduce_and_gfs (end)
 
 
-\subsubsection{Hadoop MapReduce and HDFS} % (fold)
+\subsection{Hadoop MapReduce and HDFS} % (fold)
 \label{ssub:hadoop_mapreduce_and_hdfs}
 
 While MapReduce paired with GFS proved to be very successful solution for big data processing at Google, Inc., and
@@ -152,7 +152,7 @@ its potential advantages~\cite{borthakur2008hdfs}.
 % subsubsection hadoop_mapreduce_and_hdfs (end)
 
 
-\subsubsection{Pig and Hive} % (fold)
+\subsection{Pig and Hive} % (fold)
 \label{ssub:pig_and_hive}
 
 Given the popularity of Hadoop, there were several early attempts at building further abstractions on top of the
@@ -194,7 +194,7 @@ optimisations, familiar to programmers familiar with query optimisations from SQ
 
 
 
-\subsection{Realtime data processing} % (fold)
+\section{Realtime data processing} % (fold)
 \label{sub:realtime_data_processing}
 
 With HDFS being an open source project with a large range of users~\cite{hadoop_users} and code
@@ -218,7 +218,7 @@ any other intermediate step. From there, the DSPS will process the data accordin
 send it on to further systems, or store it for later batch use.
 
 
-\subsubsection{Hadoop YARN} % (fold)
+\subsection{Hadoop YARN} % (fold)
 \label{ssub:apache_hadoop_yarn_}
 
 As previously looked at, the focus of the MapReduce model was performing distributed and highly parallelised computations
@@ -269,7 +269,7 @@ processing solutions that was often looked over by previous Hadoop batch users.
 % subsubsection apache_hadoop_yarn_ (end)
 
 
-\subsubsection{Storm} % (fold)
+\subsection{Storm} % (fold)
 \label{ssub:storm}
 
 One very notable DSPS technology developed independently of Hadoop, and that is gaining immense popularity and growth in its
@@ -296,7 +296,7 @@ the topology~\cite{jones2013process}. An example Storm topology is shown in~\fig
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.8\textwidth]{includes/figures/fig_storm_topology1}
-  \caption{An example Storm topology showing the source of the tuple stream from spouts A and B, gotten from an array
+  \caption{An example Storm topology showing the source of the tuple stream from spouts A and B, received from an array
   of sensors, which then forwards the stream on for processing at bolts A and B. Note that bolts can forward streams
   onto other bolts.}
   \label{fig:storm_topology}
@@ -311,7 +311,7 @@ and Python, however most official Storm documentation, at present, use Java.
 % subsubsection storm (end)
 
 
-\subsubsection{Spark Streaming} % (fold)
+\subsection{Spark Streaming} % (fold)
 \label{ssub:spark_streaming}
 
 Spark is another popular big data distributed processing framework, offering of both realtime data processing
@@ -365,7 +365,7 @@ the data sources which Java and Scala offer~\cite{Spark5:online}.
 % subsubsection spark_streaming (end)
 
 
-\subsubsection{Samza} % (fold
+\subsection{Samza} % (fold
 \label{ssub:samza}
 
 Samza is a relatively new realtime big data processing framework originally developed in-house at LinkedIn, which has since been
@@ -394,7 +394,7 @@ would also be possible to implement the provided interfaces using any JVM langua
 % subsubsection samza (end)
 
 
-\subsubsection{S4} % (fold)
+\subsection{S4} % (fold)
 \label{ssub:s4}
 
 S4 (Simple Scalable Streaming System) is another realtime big data processing framework that originated at Yahoo!, Inc.\
@@ -422,7 +422,7 @@ focus on S4 when looking at the topics of DSPS technologies.
 % subsection realtime_data_processing (end)
 
 
-\subsection{Discussion and analysis} % (fold)
+\section{Discussion and analysis} % (fold)
 \label{sub:processing_conclusion}
 
 From the previously covered literature, it is rather difficult to provide a reasonable comparison for all the different
@@ -479,7 +479,7 @@ is inconclusive on whether or not they adhere to the particular requirement.
 % section big_data_processing_background (end)
 
 
-\subsection{Conclusion} % (fold)
+\section{Conclusion} % (fold)
 \label{sec:conclusion_litrev}
 
 The choosing of appropriate realtime data processing platforms for the processing of a given application and dataset
