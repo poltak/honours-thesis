@@ -69,7 +69,7 @@ This leaves us with a final pipeline design as illustrated in~\figref{fig:pipeli
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.8\textwidth]{includes/figures/fig_pipeline_whole}
+  \includegraphics[width=1\textwidth]{includes/figures/fig_pipeline_whole}
   \caption{A complete overview of our pipeline design.}
   \label{fig:pipeline_whole}
 \end{figure}
@@ -228,8 +228,8 @@ simple example of such a Samza project is shown in~\figref{fig:samza_overview}.
 
 \subsubsection{Programming Overview}
 
-When programming a Samza project, interfaces exist for both the system and task concepts through the \texttt{org.apache.samza.system.SystemConsumer}
-and \texttt{org.apache.samza.task.StreamTask} Java interfaces. Default systems exist in the Samza project, and may be
+When programming a Samza project, interfaces exist for both the system and task concepts through the \path{org.apache.samza.system.SystemConsumer}
+and \path{org.apache.samza.task.StreamTask} Java interfaces. Default systems exist in the Samza project, and may be
 used to produce streams which can then be processed by an implemented \texttt{StreamTask}.
 
 The \texttt{StreamTask} interface is arguably the main interface in which the most important processing will be done in
@@ -260,8 +260,8 @@ a key factor that will be touched upon in the next chapter on evaluating the DSP
 
 For implementation of the input component design in Samza, this revolves around the \texttt{SystemConsumer} interface.
 As we want the Samza system to produce to a stream based on values received over a server socket connection, we can use
-an instantiation of the \texttt{java.net.ServerSocket} class to do this. This can be set up in the system's constructor
-and then, in the system's \texttt{start} method, attempt to poll any incoming values using a \texttt{java.io.InputStream} generated
+an instantiation of the \path{java.net.ServerSocket} class to do this. This can be set up in the system's constructor
+and then, in the system's \texttt{start} method, attempt to poll any incoming values using a \path{java.io.InputStream} generated
 from that connection. If any values are encountered on that connection, we can produce them to the default speed value
 stream, which will consumed by the filtering task.
 
@@ -313,7 +313,7 @@ The realtime computation primitives that Storm offers are the components of Stor
 These primitives are known as the \textbf{spout} and \textbf{bolt}, previously looked at in~\sectref{ssub:storm}. To compare
 these components to those present in Samza, the spout acts as a source of streams, much like Samza's systems, while the
 bolts acts as consumers of streams, which process and emit new streams, much like Samza's tasks. Storm offers interfaces
-for implementation of custom spouts and bolts through the \texttt{backtype.storm.spout.ISpout} and \texttt{backtype.storm.task.IBolt}
+for implementation of custom spouts and bolts through the \path{backtype.storm.spout.ISpout} and \path{backtype.storm.task.IBolt}
 interfaces, respectively.
 
 As explained in~\sectref{ssub:storm}, spouts and bolts are arranged in a particular way to make up an overall Storm topology,
@@ -324,7 +324,7 @@ Basic spouts require implementation of multiple methods, \texttt{open}, \texttt{
 which act as a spout initialiser, handler for each tuple to be emitted to a stream, and a tuple type declaration, respectively.
 Implementation of a simple spout is a much easier task in Storm than a system in Samza, due to different provided interfaces
 depending on the type of configuration needed for a particular spout. For example, a very basic spout can be made, using
-a lot of default configuration options, by implementing the \texttt{backtype.storm.topology.base.BaseRichSpout} interface.
+a lot of default configuration options, by implementing the \path{backtype.storm.topology.base.BaseRichSpout} interface.
 
 Bolts also require implementation of three main methods, \texttt{prepare}, \texttt{execute}, and \texttt{declareOutputFields},
 allowing bolts to be initialised, process received tuples in a specified manner, and declare tuple value types, respectively.
@@ -333,7 +333,7 @@ One major point of difference with this components, to their analogous component
 implements are completely independent to the overall Storm topology layout. In Samza, systems and tasks require the output
 streams to be hardcoded within their respective implementations, however Storm has a further separate source file for
 defining the topology layout. This topology layout is generally defined in a separate file to all spout and bolt implementations
-using the provided \texttt{backtype.storm.topology.ToplogyBuilder} class. This class exposes methods for defining the
+using the provided \path{backtype.storm.topology.ToplogyBuilder} class. This class exposes methods for defining the
 topology layout, in terms of spout and bolt placement, along with inputs and outputs for each spout and bolt implementation,
 as well as overall topology configuration. An obvious downside to this over Samza configuration files is that it requires
 a recompilation in the case that configuration options need to be tweaked, while Samza configuration files are not part
@@ -342,7 +342,7 @@ of the compiled source code.
 \subsubsection{Input Component}
 
 For the implementation of the input component design in Storm, this revolves around the \texttt{BaseRichSpout} interface.
-Much like the Samza implementation, this implementation also uses \texttt{java.net.ServerSocket} and \texttt{java.io.InputStream}
+Much like the Samza implementation, this implementation also uses \path{java.net.ServerSocket} and \path{java.io.InputStream}
 for listening on a server socket connection for incoming speed values. The \texttt{open} method is used for the creation
 of such a server socket connection, while the \texttt{nextTuple} method is used for attempted to read any values off the
 connection. If a value is encountered, it is constructed into a Storm tuple containing the speed value, and emitted onto
@@ -412,8 +412,8 @@ Hence, Spark Streaming DStreams can be decomposed into a sequence of RDDs, makin
 
 For programming a Spark Streaming job, there are not a set of provided interfaces expected to be implemented, like in
 Samza or Storm. Instead, all of the computations to be performed on streams are performed on an instantiation of the
-\texttt{org.apache.spark.streaming.dstream.DStream} class returned from a DStream producing function from the
-\texttt{org.apache.spark.streaming.StreamingContext} class. Processing performed on DStreams are generally programmed in
+\path{org.apache.spark.streaming.dstream.DStream} class returned from a DStream producing function from the
+\path{org.apache.spark.streaming.StreamingContext} class. Processing performed on DStreams are generally programmed in
 a dataflow fashion, with each function performed on the DStream returning a new DStream.
 
 This way of operating on DStreams in a Spark Streaming program leads to all processing being contained in a single file,
@@ -453,7 +453,7 @@ Streaming Python project can be distributed and submitted and run on different i
 from the Python source file. This greatly eases the distribution and deployment aspects of Spark Streaming, when using
 PySpark, in relation to Storm topologies and Samza projects.
 
-For our Spark Streaming pipeline implementation written in Scala, SBT was used to assemble a JAR file containing compiled
+For our Spark Streaming pipeline implementation written in Scala, SBT\footnote{http://www.scala-sbt.org/} was used to assemble a JAR file containing compiled
 bytecode, for ease of use over Maven with Scala projects. For the Spark Streaming pipeline implemented in Python, the
 Python source files were simply used for deployment, both methods enabling the deployment of the Spark Streaming pipelines on
 different Spark installations.

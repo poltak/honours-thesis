@@ -66,7 +66,7 @@ use of terms such as ``data stream processing'', ``realtime stream processing'',
 Over the last decade, the main ``go-to'' solution for any sort of processing needed on datasets falling under
 the umbrella of big data has been the MapReduce programming model on top of some sort of scalable distributed
 storage system~\cite{bifet_mining_2013}. From a overly simplified functional standpoint, the MapReduce
-programming model essentially combines the common \textbf{Map} and \textbf{Reduce} functions (among others),
+programming model essentially combines the common \textbf{map} and \textbf{reduce} functions (among others),
 often found in the standard libraries of many functional programming languages, such as
 Haskell~\cite{lammel2008google}, Clojure~\cite{hickey2008clojure}, or even Java 8~\cite{su2014changing}, to
 apply a specified type of processing in a highly parallelised and distributed fashion~\cite{yang2007map}.
@@ -121,7 +121,7 @@ open-source software community responded in turn with their own implementation o
 distributed file system on which it runs,
 analogous to the role GFS played. The file system is known as the Hadoop Distributed File System (HDFS). Both of these
 projects, along with many others to date, make up the Apache Hadoop
-big data ecosystem~\footnote{https://hadoop.apache.org}. The Apache Hadoop ecosystem, being a top level Apache Software
+big data ecosystem. The Apache Hadoop ecosystem, being a top level Apache Software
 Foundation open-source project, has been developed by a number of joint contributors from various organisations and
 institutions such as Yahoo!, Inc., Intel, IBM, UC Berkeley, among others~\cite{hadoop_committers}.
 
@@ -248,7 +248,7 @@ applications and use cases include:
 
 \begin{itemize}
   \item Dryad, a general-purpose distributed execution system from Microsoft Research~\cite{isard2007dryad}. Dryad is
-  aimed at being high level enough to make it ``easy'' for developers to write highly distributed and parallel applications.
+  aimed at being high level enough to make it easy for developers to write highly distributed and parallel applications.
   \item Spark, a data processing system, from researchers at UC Berkeley, that focuses on computations that reuse the
   same working data set in-memory over multiple parallel operations~\cite{zaharia2010spark}. Spark, and in particular Spark
   Streaming, will be looked at further in~\sectref{ssub:spark_streaming}.
@@ -282,9 +282,9 @@ adoption in industry, including among some of the biggest names, such as Twitter
 Baidu~\cite{storm_users}.
 
 While Storm does not run on top of YARN, there is currently a large effort from engineers at Yahoo!, Inc.\ being put
-into a YARN port for Storm, named ``storm-yarn''~\cite{web_storm_yarn,kumar2014architectural}. This YARN port will
+into a YARN port for Storm, named \textit{storm-yarn}~\cite{web_storm_yarn,kumar2014architectural}. This YARN port will
 allow applications written for Storm to take advantage of the resources managed in a Hadoop cluster by YARN. While still
-in early stages of development, ``storm-yarn'' has begun to gain attention in the developer community, through focus from
+in early stages of development, storm-yarn has begun to gain attention in the developer community, through focus from
 channels such as the Yahoo Developer Network~\cite{web_yahoo_blog} and Hortonworks~\cite{web_hortonworks_blog}.
 
 The programming model for storm consists of a Storm topology. This topology is made up of various components, which
@@ -342,8 +342,8 @@ include:
 Given these different platforms built on top of Spark's in-memory computation engine, Spark offers solutions for many
 different big data processing use cases. We are most interested in Spark Streaming, given its realtime DSPS offerings.
 Spark Streaming uses a different programming model than that which is offered in the base Spark platform, that involves what
-is labelled as ``D-Streams'' (discretised streams). D-streams essentially allows for a series of deterministic batch computations
-be treated as single a realtime data stream~\cite{zaharia2012discretized}. The D-Stream model is specific to the Spark Streaming
+is labelled as \textit{DStreams} (discretised streams). DStreams essentially allows for a series of deterministic batch computations
+be treated as single a realtime data stream~\cite{zaharia2012discretized}. The DStream model is specific to the Spark Streaming
 system --- the original batch mode Spark system continues to use the previously mentioned RDD abstraction --- and the
 creators claim performance improvements of being $2-5\times$ faster than other DSPS technologies, such as S4
 and Storm, given its use of in-memory stream computation~\cite{zaharia2013discretized}. However, this is a topic of debate,

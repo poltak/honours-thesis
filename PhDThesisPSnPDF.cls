@@ -43,7 +43,7 @@
 \DeclareOption{times}{
   \ifsetFont
     \ClassWarning{PhDThesisPSnPDF}{Font selection conflict: A font package was
-      aleady specified. Please check the document class options in case you 
+      aleady specified. Please check the document class options in case you
       have defined two fonts.}
   \else
     \PHD@timestrue
@@ -55,7 +55,7 @@
 \DeclareOption{fourier}{
   \ifsetFont
     \ClassWarning{PhDThesisPSnPDF}{Font selection conflict: A font package was
-      aleady specified. Please check the document class options in case you 
+      aleady specified. Please check the document class options in case you
       have defined two fonts.}
   \else
     \PHD@fouriertrue
@@ -67,7 +67,7 @@
 \DeclareOption{customfont}{
   \ifsetFont
     \ClassWarning{PhDThesisPSnPDF}{Font selection conflict: A font package was
-      aleady specified. Please check the document class options in case you 
+      aleady specified. Please check the document class options in case you
       have defined two fonts.}
   \else
     \setCustomFonttrue
@@ -169,7 +169,7 @@
 \newif\ifPHD@chapter\PHD@chapterfalse % Enable Separate Abstract
 \DeclareOption{chapter}{
   \PHD@chaptertrue
-  \ClassWarning{PhDThesisPSnPDF}{You have chosen an option that generates only 
+  \ClassWarning{PhDThesisPSnPDF}{You have chosen an option that generates only
     selected chapters with references, if this was intentional, ignore this
     warning. If not, please remove the option `chapter' from the document class
     and recompile. Good luck with your writing!}
@@ -216,13 +216,13 @@ footnotes.}
   \setDraftClassictrue
   \ClassWarning{PhDThesisPSnPDF}{Draft is ON. Don't forget to turn it
     off in your final version. This is the classic version of draft.
-    Use `draft' for enhanced mode, which adds watermark with timestamp, 
+    Use `draft' for enhanced mode, which adds watermark with timestamp,
     line numbering, and version number.}}%
 
 \DeclareOption{draft}{\PassOptionsToClass{\CurrentOption}{book}
-  \setDrafttrue 
+  \setDrafttrue
   \ClassWarning{PhDThesisPSnPDF}{Draft is ON. Don't forget to turn it
-    off in your final version. This enhanced `draft' mode adds watermark 
+    off in your final version. This enhanced `draft' mode adds watermark
     with timestamp, line numbering, and version number. Use `draftclassic'
     if you prefer the \cite{} lassic draft mode. To tweak options see
     `preamble.tex'}}%
@@ -230,10 +230,10 @@ footnotes.}
 
 % Deprecated option - use draft instead
 \DeclareOption{draftmode}{
-\ClassError{PhDThesisPSnPDF}{This option is deprecated. Use `draft' 
+\ClassError{PhDThesisPSnPDF}{This option is deprecated. Use `draft'
   instead this option replaces `draftmode'. To use the classic version
   of draft use `draftclassic`}
-\stop}% 
+\stop}%
 
 
 % Line Numbers
@@ -375,7 +375,7 @@ supported!}
   \renewenvironment{#1}%
      {\linenomath\csname old#1\endcsname}%
      {\csname oldend#1\endcsname\endlinenomath}%
-}% 
+}%
 
 \newcommand*\patchBothAmsMathEnvironmentsForLineno[1]{%
   \patchAmsMathEnvironmentForLineno{#1}%
@@ -448,10 +448,10 @@ supported!}
 }
 
 % If NOT Draft Mode
-\else 
+\else
 
 \renewcommand\SetDraftText[1]{\ClassWarning{PhDThesisPSnPDF}{DraftMode is
-    inactive, to use SetDraftText include `draftmode' in the document 
+    inactive, to use SetDraftText include `draftmode' in the document
     class options.}}
 % Draft Version
 \renewcommand\SetDraftVersion[1]{\ClassWarning{PhDThesisPSnPDF}{DraftMode is
@@ -473,7 +473,7 @@ supported!}
 % ******************************* Bibliography *********************************
 \ifPHD@authoryear
   \ifPHD@biblatex
-    \RequirePackage[backend=biber, style=authoryear, citestyle=alphabetic, 
+    \RequirePackage[backend=biber, style=authoryear, citestyle=alphabetic,
       sorting=nty, natbib=true]{biblatex}
     \setBiBLaTeXtrue
   \else
@@ -482,7 +482,7 @@ supported!}
 \else
   \ifPHD@numbered
     \ifPHD@biblatex
-      \RequirePackage[backend=biber, style=numeric-comp, 
+      \RequirePackage[backend=biber, style=numeric-comp,
         citestyle=numeric, sorting=none, natbib=true]{biblatex}
       \setBiBLaTeXtrue
     \else
@@ -494,7 +494,7 @@ supported!}
           \@ifpackageloaded{natbib}{}{
             \@ifpackageloaded{biblatex}{}{
               \ClassWarning{PhDThesisPSnPDF}{%
-                You chose custom bibliography, but no corresponding package 
+                You chose custom bibliography, but no corresponding package
                 (biblatex/natbib) has been loaded. Please load the
                 appropriate bibliography package in the preamble.}
             }
@@ -506,7 +506,7 @@ supported!}
           citestyle=numeric, sorting=none, natbib=true]{biblatex}
         \setBiBLaTeXfalse
       \else
-        \RequirePackage[numbers,sort&compress]{natbib} 
+        \RequirePackage[numbers,sort&compress]{natbib}
       \fi % default
       \setBibfalse
     \fi % custombib
@@ -516,7 +516,7 @@ supported!}
 \ifsetBib
 \else
 \ClassWarning{PhDThesisPSnPDF}{No bibliography style was specified.
-  Default numbered style is used. If you would like to use a 
+  Default numbered style is used. If you would like to use a
   different style, use `authoryear' or `numbered' in the options in
   documentclass or use `custombib` and define the natbib package or
   biblatex package with required style in the Preamble.tex file}
@@ -549,9 +549,9 @@ supported!}
 \ifsetFont
 \else
   \ClassWarning{PhDThesisPSnPDF}{Using default font Latin Modern. If you
-    would like to use other pre-defined fonts use `times' (The Cambridge 
+    would like to use other pre-defined fonts use `times' (The Cambridge
     University PhD thesis guidelines recommend using Times font)  or `fourier'
-    or load a custom font in the preamble.tex file by specifying `customfont' 
+    or load a custom font in the preamble.tex file by specifying `customfont'
     in the class options}
   \RequirePackage{lmodern}
 \fi
@@ -711,7 +711,7 @@ supported!}
 % ******************************** Justification *******************************
 % Left aligned as per University identity guidelines
 \ifPHD@textJustify
-\message{PhDThesisPSnPDF: The University identity guidelines recommend using 
+\message{PhDThesisPSnPDF: The University identity guidelines recommend using
 left aligned text. Please use `flushleft' in the documentclass option, if you
 wish to left align your text}
 \else
@@ -745,9 +745,9 @@ wish to left align your text}
 \renewcommand{\chaptermark}[1]{\markboth{##1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection\ ##1\ }}
 \fancyhf{}
-\fancyhead[RO]{\nouppercase \rightmark\hspace{0.25em} | 
+\fancyhead[RO]{\nouppercase \rightmark\hspace{0.25em} |
   \hspace{0.25em} \bfseries{\thepage}}
-\fancyhead[LE]{ {\bfseries\thepage} \hspace{0.25em} | 
+\fancyhead[LE]{ {\bfseries\thepage} \hspace{0.25em} |
   \hspace{0.25em} \nouppercase \leftmark}
 
 
@@ -834,7 +834,7 @@ wish to left align your text}
 \newcommand{\subtitle}[1]{\renewcommand{\@subtitle}{#1}}
 
 % The year and term the degree will be officially conferred
-\newcommand{\@degreedate}{\monthname[\the\month]\space\the\year}
+\newcommand{\@degreedate}{\the\day\space\monthname[\the\month]\space\the\year}
 \newcommand{\degreedate}[1]{\renewcommand{\@degreedate}{#1}}
 
 % The full (unabbreviated) name of the degree
@@ -910,9 +910,9 @@ wish to left align your text}
 {
 \if@restonecol
     \twocolumn
-\else 
-    \newpage 
-\fi 
+\else
+    \newpage
+\fi
 \endgroup
 \clearpage
 \addtocounter{page}{1}
@@ -946,7 +946,7 @@ wish to left align your text}
 \vspace{.2\PHD@titlepagespacing}
 
 % Author
-{\Large \bfseries{\@author} \par}
+{\large \bfseries{\@author} \par}
 \vspace*{1em}
 
 % Department and University
@@ -1009,7 +1009,7 @@ wish to left align your text}
 \thispagestyle{empty}
 }{
 \flushright
-\@author{}\\
+Jonathan Poltak Samosir\\
 \@degreedate{}
 \vfill
 }
@@ -1025,6 +1025,11 @@ wish to left align your text}
 \setsinglecolumn
 \chapter*{\centering \Large Acknowledgements}
 \thispagestyle{empty}
+}{
+\flushright
+Jonathan Poltak Samosir\\
+\@degreedate{}
+\vfill
 }
 
 
