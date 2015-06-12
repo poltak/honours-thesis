@@ -477,7 +477,7 @@ supported!}
       sorting=nty, natbib=true]{biblatex}
     \setBiBLaTeXtrue
   \else
-    \RequirePackage[round, sort, numbers, authoryear]{natbib} %author year
+    \RequirePackage[square, sort, numbers, authoryear]{natbib} %author year
   \fi
 \else
   \ifPHD@numbered
