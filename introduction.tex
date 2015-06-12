@@ -12,14 +12,14 @@ now as ``Big Data''. A further big data project, that will be looked into as the
 thesis, is the automated monitoring of railway tracks and cars by the Institute of Railway Technology at Monash University
 (IRT)~\cite{web:monash_irt}.
 
-Out of all of these data that are faced in such projects, often only specific parts of the data are of particular use for given
+Out of all of these data that we are faced with in such projects, often only specific parts of the data are of particular use for given
 purposes. Hence, rather than attempting to store all the new data that is being generated, an increasingly popular method of
 dealing with such data, in both academia and industry associated with big data, is the processing and analysis of
 data in realtime as it is received. This is also known as online processing, or single pass processing, where data is
 processed in real time before being discarded. Further options also exist where data is stored after processing, depending
 on the specific use-case.
 
-There are currently numerous realtime data processing frameworks that are in development and in production use, both in
+There are currently numerous realtime data processing systems that are in development and in production use, both in
 industry and academia. Examples of these realtime data processing frameworks include the widely used Storm
 project~\cite{web:Storm}, developed at BackType and Twitter, Inc., and also the up-and-coming Spark Streaming
 project~\cite{web:SparkStreaming}, developed at UC Berkeley's AMPLab~\cite{web:UCBerkelyAMCLab}, both of which are
@@ -31,14 +31,16 @@ algorithms related to data analytics~\cite{liu_survey_2014}.
 
 What is proposed in this chapter is a realtime big data processing pipeline for the aforementioned railway monitoring
 system by the IRT at Monash University. This processing pipeline will allow the possibility that data is able to be
-streamed in realtime from the railway and processed according to the team's given processing requirements.
+streamed in realtime from the railway, and processed according to the team's given processing requirements. Multiple
+technologies exist in which this pipeline can be implemented, so a technology recommendation will be formed through
+the testing and evaluation of different implementations in different technologies.
 
 This chapter will be structured as follows:\\
-A brief outline of the domain on big data processing, both batch and realtime processing, will be given
+A brief outline of the big data processing domain, both batch and realtime processing, will be given
 in~\sectref{sec:research_context}. Furthermore, an overview of the Monash University Institute of Railway Technology's
-project, upon which this project is based on, will be covered in the aforementioned chapter. In~\sectref{sec:objectives},
-the goals and aims of the project will be given, as well as more specific goals and aims relating to the subproject
-covered in this thesis. Research questions for this subproject will be given in~\sectref{sub:research_questions}.
+project, upon which this project is based on, will be covered in the aforementioned section. In~\sectref{sec:objectives},
+the aims of the entire project will be given, as well as more specific goals and aims relating to the sub-project
+covered in this thesis. Research questions for this sub-project will be given in~\sectref{sub:research_questions}.
 Finally, the structure of this overall thesis will be given in~\sectref{sub:proposed_thesis_chapter_headings}, before
 concluding this chapter in~\sectref{sec:summary}.
 
@@ -53,7 +55,7 @@ concluding this chapter in~\sectref{sec:summary}.
 \label{sub:big_data}
 
 Big data, as explained previously, is becoming commonplace in both industry and academia. Everyday companies are finding
-that they are generating a large volume data and that their traditional relational database management system (RDMBS) solutions cannot
+that they are generating large volumes of data and that their traditional relational database management system (RDMBS) solutions cannot
 scale to the epic proportions needed to handle this data in an efficient and robust manner~\cite{marz2013principles}.
 Hence, companies and academics alike have started looking at alternative solutions designed with the goal of handling
 these massive datasets.
@@ -63,15 +65,15 @@ The most popular solution for this problem, up until recently, has been the MapR
 some type of scalable distributed storage system~\cite{bifet_mining_2013}. The MapReduce model was started at Google,
 Inc.\@ with their own proprietary implementation along with their proprietary distributed file system, known as the Google
 File System (GFS)~\cite{ghemawat_google_2003}. Without going into the low-level details of MapReduce and GFS, the use of this solution at Google
-allowed the company to easily handle all the data that was coming into their servers, including that related to Google Search, and perform the necessary
+allowed the company to easily handle all the data that was coming into their servers, including those related to Google Search, and perform the necessary
 processing operations that was needed at the time~\cite{ghemawat_google_2003,dean_mapreduce:_2008}.
 
 % subsection big_data (end)
 
-\subsection{Batch data processing} % (fold)
+\subsection{Batch Data Processing} % (fold)
 \label{sub:apache hadoop}
 
-From the success of MapReduce usage combined with GFS at Google, the open-source community responded swiftly with the
+From the success of MapReduce usage combined with GFS, at Google, the open-source community responded swiftly with the
 development of the Apache Hadoop framework\footnote{https://hadoop.apache.org}. Hadoop originally offered an open-source
 implementation of MapReduce and their own open-source distributed file system known as the Hadoop Distributed File System
 (HDFS)~\cite{shvachko_hadoop_2010}.
@@ -79,8 +81,8 @@ implementation of MapReduce and their own open-source distributed file system kn
 Hadoop soon became the subject of mass-adoption in both industry and academia, being deployed at a fast rate.
 Development of the Hadoop framework also grew at a fast rate, with new applications related to HDFS and MapReduce being
 built on top of Hadoop, greatly benefiting the ecosystem as a whole. Some of these applications grew into widely adopted
-systems in their own right. For example, Hadoop applications such as Apache Pig~\cite{gates_building_2009} and
-Hive~\cite{thusoo_hive_2010} allow for easy querying and manipulation of data stored on HDFS, both coming with the
+systems in their own right. For example, Hadoop applications such as Apache Pig~\cite{gates2009building} and
+Hive~\cite{thusoo2010hive} allow for easy querying and manipulation of data stored on HDFS, both coming with the
 addition of their own query languages~\cite{olston_pig_2008}.
 
 As further non-MapReduce model applications became of interest to the Hadoop community, Hadoop soon
@@ -94,7 +96,7 @@ Hadoop ecosystem~\cite{harrison_hadoops_2012}.
 
 % subsection apache_hadoop (end)
 
-\subsection{Realtime data processing} % (fold)
+\subsection{Realtime Data Processing} % (fold)
 \label{sub:prop_realtime_data_processing}
 
 One of the major limitations of Hadoop, and the MapReduce model in general, soon became obvious:\@ MapReduce was designed
@@ -154,26 +156,28 @@ storage and processing systems.
 \section{Research Aim} % (fold)
 \label{sec:objectives}
 
-The main aim of this research project is to develop a fully automated, non-relational big data pipeline to manage
+The main aim of the entire IRT research project is to develop a fully automated, non-relational big data pipeline to manage
 the data received from railway car sensors as a part of Monash University's Institute of Railway Technology project. The
-intention is to replace their current relational solution, offering at least the same capabilities at a larger scale, and
-with higher performance. The scope of this project is relatively large, and the project, or subproject, outlined in this
+intention is to replace their current relational solution, with a non-relational big data system, offering at least the same capabilities at a larger scale and
+with higher performance. The scope of this project is relatively large, and the project, or sub-project, outlined in this
 thesis only covers a portion of the greater aforementioned project.
 
-The main aim of this subproject is to investigate possible solutions of dealing with the railway sensor data being
-streamed and processed in realtime. This will also involve studying non-relational big data systems, however the details
-of such systems in the scope of the greater project will be left up to other individuals working on those subprojects.
+The main aim of this sub-project, outlined in this thesis, is to investigate possible solutions of dealing with the railway sensor data being
+streamed and processed in realtime. Based on identified candidate solutions, a recommendation will be formed which will be
+used by the IRT team to implement their required realtime processing logic.
 
-To allow the possibility of realtime data streaming from the railway sensors, appropriate data stream processing system
-(DSPS) technology needs to be looked at, tested, and evaluated. This makes up the core part of this subproject's work.
+To allow the possibility of realtime data streaming from the railway sensors, and forming a recommendation for the most
+suitable solution, appropriate data stream processing system
+(DSPS) technologies need to be looked at, tested, and evaluated. This makes up the core part of this sub-project's work.
 These DSPS technologies need to appropriately take, or accept, the data from some specified source, \eg the sensors, apply
 any realtime processing logic that is required, \eg pre-processing, then forward the data on for handling at
 another source, \eg long term storage, such as HDFS.
 
-This DSPS system will act as a filtering ``pipeline'' through which the sensor data flows.
-By the end of this subproject, we aim to have proof-of-concept implementations of the pipeline working on the National
-eResearch Collaboration Tools and Resources (NeCTAR) cloud services~\cite{web:Nectar}, making use of certain DSPS
-technologies.
+A data filtering ``pipeline'', through which the sensor data flows, will need to be implemented in each of the candidate
+DSPS technologies, which can then be used for the testing and evaluation.
+By the end of this sub-project, we aim to have proof-of-concept implementations of the pipeline working on the National
+eResearch Collaboration Tools and Resources (NeCTAR) cloud services~\cite{web:Nectar}, making use of the candidate DSPS
+technologies, along with our overall DSPS technology recommendation for use in the IRT project.
 
 % section objectives (end)
 
@@ -182,13 +186,13 @@ technologies.
 \section{Research Questions} % (fold)
 \label{sub:research_questions}
 
-The following research questions are the main focus points of this subproject:
+The following research questions are the main focus points of this sub-project:
 
 \begin{enumerate}
   \item\label{item:dsps} Which existing DSPS technologies can be used to build a data filtering pipeline for the Monash
   University IRT project?
   \item\label{item:pipeline} What criteria-based qualitative and performance-based quantitative tests can be performed
-  to recommend a particular DSPS technology for building the pipeline?
+  to \textbf{recommend} a particular DSPS technology for building the pipeline?
   \item\label{item:recommendations} Can the data filtering pipeline be designed to be extensible, allowing for the
   addition of future realtime processing requirements?
 \end{enumerate}
@@ -209,7 +213,7 @@ A clear overview of the DSPS technologies chosen for this project, along with th
 of the experimental systems to be used in the evaluation will be given in Chapter 3, in~\sectref{sec:implementation}.
 An overview of the testing metrics, environment, results, and an overall evaluation discussion will be given in Chapter 4, in~\sectref{sec:evaluation}.
 Finally, Chapter 5, in~\sectref{sec:conclusion} will conclude the thesis, highlighting the contribution made through this research project,
-along with highlighting any further work that have been made apparent as the result of this project.
+along with highlighting any future work that have been made apparent as the result of this project.
 
 % subsection proposed_thesis_chapter_headings (end)
 
@@ -217,19 +221,18 @@ along with highlighting any further work that have been made apparent as the res
 \section{Summary} % (fold)
 \label{sec:summary}
 
-This chapter has introduced the overall project, and in-turn the subproject upon which this thesis will be based. It
-has described the current state of the Monash University Institute of Railway Technology's project and the current
+This chapter has introduced the overall project, and in-turn the sub-project upon which this thesis will be based. It
+has briefly described the current state of the Monash University Institute of Railway Technology's project and the current
 problems that they are faced with, such as the need to deal with non-consistently structured data and low query
 performance. These problems are exacerbated given the non-realtime nature of the current data, where issues with sensors
-are only discovered much later after-the-fact. To overcome these issues, and look forward into the hypothetical,
+are only discovered much later after-the-fact. To overcome these issues, and to look forward into the hypothetical,
 but likely, possibility of having the technological infrastructure to support realtime data processing, this research
 aims to develop a realtime processing pipeline, taking the data straight from the railway sensors and perform any
-needed realtime processing.
+needed realtime processing, and come up with a DSPS technology recommendation for the implementation of this pipeline.
 
-This chapter also outlined a brief context of the research project and big data as a whole, the scope of this subproject,
-this subproject's research questions. Finally it was concluded with an overview of this thesis' entire structure. The
+This chapter also outlined a brief context of the research project and big data as a whole, the scope of this sub-project,
+and this sub-project's research questions. Finally it was concluded with an overview of the entire structure of this thesis. The
 following chapter will look into previous research that has been done on realtime big data processing and handling,
 along with going into more detail of the railway project's needs.
-
 
 % section summary (end)

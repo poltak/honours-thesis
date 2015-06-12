@@ -7,16 +7,16 @@ To lay the ground work and context of this research project, this chapter goes i
 research and work done in the areas of big data processing. Both more traditional batch processing of big
 data will be looked at, along with newer advances in the area of realtime stream processing. Different
 technologies enabling these processes will be discussed in detail, with the main focus being placed on the
-widely used open-source projects, such as those encompassed within the Hadoop ecosystem.
+widely used open-source big data projects, such as those encompassed within the Hadoop ecosystem.
 
-The realtime processing of big data is now of more great importance to both academia and industry than it has
+The realtime data processing of big data is now of more great importance to both academia and industry than it has
 ever been before. Advancements and progress in modern society can be directly attributed back to data and
 how we deal with it. The value of data has become increasingly more apparent, and data has become a sort of
 currency for the information economy~\cite{st2009examining}. Hence, those in society who realised the value of
 data early hold immense power over the entire economy, and in turn society,
-overall~\cite{lievesley1993increasing}. From seemingly inconsequential gains at the macro level, such as the
+overall~\cite{lievesley1993increasing}. From seemingly inconsequential gains at the micro level, such as the
 ability to more accurately predict the rise and fall of airline tickets~\cite{darlin2006airfares}, to those
-of utmost importance for society as a whole, such as predicting and tracking the spread of the Swine Flu
+of utmost importance for society as a whole, such as the prediction and tracking of the spread of the Swine Flu
 Pandemic in 2009 more accurately than the United States Centers for Disease Control and Prevention
 could using big data processing~\cite{ritterman2009using,mayer2013big}. It is applications of big data
 processing such as these that have been recognised by academics and organisations in industry alike, with the
@@ -27,23 +27,23 @@ This review will be structured in two main sections.
 In~\sectref{sub:batch_data_processing}, an overview and history for the existing major open-source batch
 processing systems for big data will be given. This will mostly surround the projects which fall under the
 umbrella of the Hadoop ecosystem. In~\sectref{sub:realtime_data_processing}, the current state of realtime
-data processing systems for big data will be discussed, including examples of the most widely used open-source
+data processing systems for big data will be discussed, including examples of the most widely used open-source realtime
 data stream processing systems (DSPS). Comparisons will be drawn between the DSPS technologies and outlined
 in how they differ. Further discussion and analysis will be given in~\sectref{sub:processing_conclusion},
-including identifying the gaps in existing literature to which this research project aims to fill,
+including identifying the gaps in existing literature of which this research project aims to fill,
 before concluding in~\sectref{sec:conclusion}.
 
 % section introduction (end)
 
 
-\section{Big data processing background} % (fold)
+\section{Big Data Processing Background} % (fold)
 \label{sec:big_data_processing_background}
 
 Much work has been done in the area of big data processing in the past decade, given the rise of large
 scale applications and services, a lot of the time involving large numbers of users and their given data.
 Data processing in general has been of large importance for many years, as no matter the business model,
 some sort of data has had to be dealt with. Traditionally, this has often been handled through the use of
-relational models, as introduced by Codd~\cite{codd1970relational}, through use of relational database
+the relational model, as introduced by Codd~\cite{codd1970relational}. This has been done through the use of relational database
 management systems (RDBMS), providing methods for the long term storage of
 data and functions for performing queries and manipulation on that data~\cite{astrahan1976system},
 such as through use of an implementation of structured query language (SQL)~\cite{chamberlin1974sequel}.
@@ -60,7 +60,7 @@ processing''. This term should be assumed to encompass the meanings that are als
 use of terms such as ``data stream processing'', ``realtime stream processing'', and ``stream processing''.
 
 
-\section{Batch data processing} % (fold)
+\section{Batch Data Processing} % (fold)
 \label{sub:batch_data_processing}
 
 Over the last decade, the main ``go-to'' solution for any sort of processing needed on datasets falling under
@@ -73,8 +73,7 @@ apply a specified type of processing in a highly parallelised and distributed fa
 
 The MapReduce data processing model specialises in batch mode processing on data which is already available.
 Batch data processing can be thought of where data needed to be processed is first queued up in ``batches''
-before processing then begins on those batches. Once ready, those batches get fed into the processing system
-and handled accordingly~\cite{condie2010online}.
+Once ready, those batches get fed into the processing system and handled accordingly~\cite{condie2010online}.
 
 
 \subsection{MapReduce and GFS} % (fold)
@@ -91,12 +90,12 @@ in a procedural language, such as Java. Furthermore, the MapReduce abstraction p
 differently sized clusters running on modest hardware.
 
 While MapReduce conceptually offers many features that may be found in parallel database technologies, Dean and
-Ghemawat, in~\cite{dean2010mapreduce} emphasise the differences, and specifically flawed assumptions made about MapReduce
+Ghemawat, in~\cite{dean2010mapreduce}, emphasise the differences, and specifically flawed assumptions made about MapReduce
 in light of parallel databases. Issues in parallel databases such as fault tolerance when it comes to job failure,
 difficulties with input data from heterogeneous sources, and performing more complicated functions than those supported
 in SQL, are all fully supported and taken into consideration with MapReduce. Notably, while the programming model
 allows for further complicated functions, it also remains to be simple with only two major functions that need to be
-implemented: Map and Reduce~\cite{pavlo2009comparison}.
+implemented: \textbf{map} and \textbf{reduce}~\cite{pavlo2009comparison}.
 
 As previously stated, the MapReduce programming model is generally used on top of some sort of distributed storage
 system. In the previous case at Google, Inc., in the original MapReduce implementation, it was implemented on top of
@@ -126,7 +125,7 @@ Foundation open-source project, has been developed by a number of joint contribu
 institutions such as Yahoo!, Inc., Intel, IBM, UC Berkeley, among others~\cite{hadoop_committers}.
 
 While Hadoop's MapReduce implementation very much was designed to be a complete functional replacement for Google's MapReduce, based upon published works by Google,
-HDFS is an entirely separate project in its own right. In the original paper from Yahoo!~\cite{shvachko2010hadoop},
+HDFS is an entirely separate project in its own right. In the original paper from Yahoo!~\cite{shvachko_hadoop_2010},
 Inc., Shvachko et al.\ present HDFS as ``the file system component of Hadoop'' with the intention of being similar to
 in external appearance to the UNIX file system, however they also state that ``faithfulness to standards was sacrificed
 in favour of improved performance''.
@@ -145,8 +144,8 @@ less low-level technical difference.
 
 HDFS, being designed as a standalone technology, is now used as a data storage component for many different big data
 technologies, not limited to only those within the Hadoop ecosystem~\cite{taylor2010overview} but also projects
-outside~\cite{xin2013graphx,yang2013big}. HDFS was designed with general usage in mind and adhered for horizontal
-scalability being a key asset, hence runs on inexpensive clusters using modest hardware, while still delivering all
+outside~\cite{xin2013graphx,yang2013big}. HDFS was designed with general usage in mind and designed with horizontal
+scalability being a key consideration, hence runs on inexpensive clusters using modest hardware, while still delivering all
 its potential advantages~\cite{borthakur2008hdfs}.
 
 % subsubsection hadoop_mapreduce_and_hdfs (end)
@@ -159,7 +158,7 @@ Given the popularity of Hadoop, there were several early attempts at building fu
 MapReduce model, which were met with a high level of success. As highlighted earlier, MapReduce was originally designed
 to be a nice abstraction on top of the underlying hardware, however according to Thusoo et al., in~\cite{thusoo2009hive},
 MapReduce was still too low level resulting in programmers writing programs that are considered to be ``hard to maintain
-and reuse''. Thus, Thusoo et al.\ at Facebook Inc.\ built the Hive abstraction on top of MapReduce. Hive allows
+and reuse''. Thus, Thusoo et al., at Facebook Inc., built the Hive abstraction on top of MapReduce. Hive allows
 programmers to write queries in a similarly declarative language to SQL --- known affectionately as \textit{HiveQL} ---
 which then get compiled down into MapReduce jobs to run on Hadoop~\cite{thusoo2010hive}.
 
@@ -169,16 +168,16 @@ constructed using Hive, along with several other analytics use cases at Facebook
 shown at Facebook from the use of Hive, over traditional MapReduce, was the users familiarity with SQL-like
 declarativeness in regards to querying and manipulating data~\cite{borthakur2011apache}.
 
-Another common abstraction that was developed prior to Hive was what is known simply as Pig. Like Hive, Pig attempts to
+Another commonly used abstraction, that was developed prior to Hive, was what is known simply as Pig. Like Hive, Pig attempts to
 be a further higher level abstraction on top of the MapReduce model, which ultimately compiles down into MapReduce jobs.
 what differentiates it more from Hive is that instead of offering a solely declarative SQL-like language for data
-manipulation and querying, it offers a language that takes more of a procedural and functional pipeline paradigm
+manipulation and querying, it offers a language that takes more of a procedural and functional dataflow paradigm
 influenced approach~\cite{olston2011nova}. This still allows for relational algebraic constraints to be specified on the data set in relation to defining the
-result~\cite{olston2008pig}. Olston et al.\ describe Pig's language --- known as \textit{Pig Latin} --- to be what they
+result~\cite{olston_pig_2008}. Olston et al.\ describe Pig's language --- known as \textit{Pig Latin} --- to be what they
 define as a ``dataflow language'', rather than a strictly procedural or declarative language.
 
 Pig works by having the program first parsed into a directed acyclic graph (DAG), which then can be be optimised using
-DAG-related graph theory, before having that DAG being compiled down into native MapReduce batch jobs. The MapReduce
+DAG-related graph theory operations, before having that DAG being compiled down into native MapReduce batch jobs. The MapReduce
 stage is also optimised through use of function ordering, before being submitted to run on a Hadoop
 cluster~\cite{stewart2011comparing}.
 
@@ -194,13 +193,13 @@ optimisations, familiar to programmers familiar with query optimisations from SQ
 
 
 
-\section{Realtime data processing} % (fold)
+\section{Realtime Data Processing} % (fold)
 \label{sub:realtime_data_processing}
 
-With HDFS being an open source project with a large range of users~\cite{hadoop_users} and code
+With HDFS being an open-source project, with a large range of users~\cite{hadoop_users} and code
 contributors~\cite{hadoop_committers}, it has grown as a project in the last few years for uses beyond what it was
 originally intended for: a backend storage system for Hadoop MapReduce. HDFS is now not only used with Hadoop's
-MapReduce but also with a variety of other technologies, a lot of which run as a part of the Hadoop ecosystem, but
+MapReduce, but also with a variety of other technologies, a lot of which run as a part of the Hadoop ecosystem, but
 also those which do not.
 Big data processing has moved on from the more ``traditional'' method of processing, involving MapReduce jobs, which
 were most suitable for the batch processing of data, to those methods which specialise in the realtime processing of
@@ -214,14 +213,14 @@ to the availability of data. With batch jobs, generally processing is done after
 collected from various sources and stored in a system, similar to HDFS. With realtime data processing, data can be
 processed as soon as it is received from sources, without using a storage system, such as HDFS, to first hold it.
 For example, an array of sensors can stream their data directly to the data stream processing system (DSPS), without
-any other intermediate step. From there, the DSPS will process the data according to how it is programmed, and either
-send it on to further systems, or store it for later batch use.
+any intermediate step. From there, the DSPS will process the data according to how it is programmed, and either
+send it on to further systems, or store it for later batch processing.
 
 
 \subsection{Hadoop YARN} % (fold)
 \label{ssub:apache_hadoop_yarn_}
 
-As previously looked at, the focus of the MapReduce model was performing distributed and highly parallelised computations
+As previously looked at, the aim of the MapReduce model was performing distributed and highly parallelised computations
 on distributed batches of data. This suited a lot of the big data audience, and hence Hadoop became the dominant
 method of big data processing for many years~\cite{liu_survey_2014}. However for some more specialised applications, such as
 the realtime monitoring of sensors, as touched on earlier, stock trading, and realtime web traffic analytics, the high
@@ -238,13 +237,13 @@ the ``next generation'' of Hadoop so that it could be properly extensible and us
 the rigidity of the MapReduce model. This change in Hadoop became known officially known as YARN (Yet Another Resource Negotiator). According to
 the original developers of YARN, Vavilapalli et al.\ state that YARN enables Hadoop to become more modular, decoupling
 the resource management functionality of Hadoop from the programming model (traditionally,
-MapReduce)~\cite{vavilapalli2013apache}.
+MapReduce)~\cite{vavilapalli_apache_2013}.
 For Hadoop end-users, this decoupling essentially allowed for non-MapReduce technologies to be built on top of the Hadoop
 ecosystem, which was traditionally a part of MapReduce, allowing for much more flexible applications of big data
 processing on top of the existing robust framework Hadoop provides.
 
 Examples of such systems now built, or in some cases ported, to run on top of Hadoop, providing alternative processing
-applications and use cases include:
+applications and use cases, include:
 
 \begin{itemize}
   \item Dryad, a general-purpose distributed execution system from Microsoft Research~\cite{isard2007dryad}. Dryad is
@@ -275,19 +274,19 @@ processing solutions that was often looked over by previous Hadoop batch users.
 One very notable DSPS technology developed independently of Hadoop, and that is gaining immense popularity and growth in its
 user base, is the Storm project. Storm was originally developed by a team of engineers lead by Nathan Marz at
 BackType~\cite{web_storm}. BackType has since been acquired by Twitter, Inc.\ where development has
-continued. Toshniwal et al.~\cite{toshniwal2014storm}\ describe Storm, in the context of its use at Twitter, as ``a
+continued. Toshniwal et al.~\cite{toshniwal_stormtwitter_2014}\ describe Storm, in the context of its use at Twitter, as ``a
 realtime distributed stream data processing engine'' that ``powers the real-time stream data management tasks that are
-crucial to provide Twitter services''~\cite[p.\ 147]{toshniwal2014storm}. Since the project's inception, Storm has seen mass
-adoption in industry, including among some of the biggest names, such as Twitter, Yahoo!, Alibaba, and
+crucial to provide Twitter services''~\cite[p.\ 147]{toshniwal_stormtwitter_2014}. Since the project's inception, Storm has seen mass
+adoption in industry, including amongst some of the biggest names, such as Twitter, Yahoo!, Alibaba, and
 Baidu~\cite{storm_users}.
 
 While Storm does not run on top of YARN, there is currently a large effort from engineers at Yahoo!, Inc.\ being put
-into a YARN port for Storm, named \textit{storm-yarn}~\cite{web_storm_yarn,kumar2014architectural}. This YARN port will
+into a YARN port for Storm, aptly named \textit{storm-yarn}~\cite{web_storm_yarn,kumar2014architectural}. This YARN port will
 allow applications written for Storm to take advantage of the resources managed in a Hadoop cluster by YARN. While still
 in early stages of development, storm-yarn has begun to gain attention in the developer community, through focus from
 channels such as the Yahoo Developer Network~\cite{web_yahoo_blog} and Hortonworks~\cite{web_hortonworks_blog}.
 
-The programming model for storm consists of a Storm topology. This topology is made up of various components, which
+The programming model for Storm consists of a Storm topology. This topology is made up of various components, which
 either ``transform'' the data in some specified way (known as a \textit{bolt}), or input the data from a specified source
 before outputting it to one of the given bolts (known as a \textit{spout}). The layout of spouts and bolts are then
 constructed in a separate topology definition, defining the way the data streams (represented as tuples) flow through
@@ -311,7 +310,7 @@ and Python, however most official Storm documentation, at present, use Java.
 % subsubsection storm (end)
 
 
-\subsection{Spark Streaming} % (fold)
+\subsection{Spark StreaminS} % (fold)
 \label{ssub:spark_streaming}
 
 Spark is another popular big data distributed processing framework, offering of both realtime data processing
@@ -320,11 +319,11 @@ Berkeley, and is notable for its novel approach to in-memory computation, throug
 termed a \textit{resilient distributed dataset} (RDD). An RDD is a set of data on which computations will be performed,
 which can be specified to be cached in volatile memory across multiple machines. What this then allows is multiple
 distributed operations being performed on this same dataset in parallel without such overhead, as secondary storage
-IO operations, which is noted by Spark as a performance limitation of MapReduce. Spark is designed with highly iterative
+IO operations, which is noted by Spark as a performance limitation of MapReduce~\cite{davidson2013optimizing}. Spark is designed with highly iterative
 computations in-mind.
 
 The Spark project has experienced a large growth in terms of project contributions over the past few years, now
-encompassing a number of subprojects running on top of the Spark engine, all suited for different use cases. These
+encompassing a number of sub-projects running on top of the Spark engine, all suited for different use cases. These
 include:
 
 \begin{itemize}
@@ -348,7 +347,7 @@ system --- the original batch mode Spark system continues to use the previously 
 creators claim performance improvements of being $2-5\times$ faster than other DSPS technologies, such as S4
 and Storm, given its use of in-memory stream computation~\cite{zaharia2013discretized}. However, this is a topic of debate,
 with opponents claiming that these Spark performance claims are very much dependent on external factors, such as
-available resources~\cite{web_slideshare_b}.
+available system resources~\cite{web_slideshare_b}.
 
 Both Spark and Spark Streaming have started to gain notable usage in both industry and research projects in academia in
 the last few years. Online video distribution company, Conviva Inc., report to be using Spark for the processing of
@@ -380,10 +379,10 @@ the archiving of data, stream persistence, and imperfection handling is offloade
 Likewise, YARN is used for ensuring fault tolerance through the handling of restarting machines that have failed in a
 cluster, among further resource management~\cite{bockermann2014survey}.
 
-Samza processes streams of tuples through pre-defined jobs which perform any specified operation on those tuples, much
+Samza processes streams of data through pre-defined jobs which perform any specified operation on the data streams, much
 like bolts in Storm. The source of streams in Samza comes from Kafka, which can be also used as an output destination
 for jobs. How the data is received from the actual source (such as a sensor), then sent through Kafka is a matter of
-further implementation~\cite{yangradstack}. Note that a layout of jobs in Samza differs considerably from defining
+further implementation on the part of the programmer~\cite{yangradstack}. Note that a layout of jobs in Samza differs considerably from defining
 a Storm topology layout, in that each individual job defines its input and output sources, rather than jobs being
 linked together in a separate definition file.
 
@@ -413,7 +412,7 @@ high-performance coordination of distributed processes inside distributed applic
 
 Note that a number of performance issues have been noted in S4, including non-linear performance scalability, bad
 resource management, low expectations on fault tolerance, and high reliance on the network~\cite{chauhan2012performance}.
-As mentioned earlier, development on S4 has stagnated, adoption of S4 over DSPS platforms, such as Samza, Storm,
+As mentioned earlier, development on S4 has stagnated. Adoption of S4 over DSPS platforms, such as Samza, Storm,
 and Spark Streaming, has not been seen to be major, and literature in big data research have shown a significant lack of
 focus on S4 when looking at the topics of DSPS technologies.
 
@@ -422,12 +421,12 @@ focus on S4 when looking at the topics of DSPS technologies.
 % subsection realtime_data_processing (end)
 
 
-\section{Discussion and analysis} % (fold)
+\section{Discussion and Analysis} % (fold)
 \label{sub:processing_conclusion}
 
 From the previously covered literature, it is rather difficult to provide a reasonable comparison for all the different
 realtime data processing projects. A lot of the claims made in original literature relating to the projects cannot be
-quantified fairly, as comparisons or tests have not been carried out relating to other projects. Instead, Stonebraker,
+quantified impartially, as comparisons or tests have not been carried out relating to other projects. Instead, Stonebraker,
 \c{C}\~entintemel, and Zdonik proposed what they claim to be the eight requirements for realtime data processing systems~\cite{stonebraker_8_2005},
 which can be used to given an impartial comparison of the previously covered projects. The requirements were defined a
 number of years prior to the creation of the four main realtime data processing systems that were covered (2005), however are highly
@@ -435,7 +434,7 @@ cited as being the defining features that the current generation of realtime dat
 The requirements, put forward by Stonebraker et al., are summarised as follows:
 
 \noindent \textbf{1: Keep the data moving -} This requirement relates to the high mobility of data and importance of low
-latency in the overall processing. Hence, processing should happen as data moves, rather than storing it first, then
+latency in the overall processing. Hence, processing should happen as data moves, rather than storing it first then
 processing what is stored.
 
 \noindent \textbf{2: SQL on streams -} This requirement states that a high-level SQL-like query language should be
@@ -449,7 +448,7 @@ these issues. Simply waiting for all data to arrive if some is missing is not ac
 \noindent \textbf{4: Generate predictable outcomes -} This requirement relates to the determinism associated with the
 outcomes of specified processes to be applied to data. A realtime processing system should have predictable and repeatable
 outcomes. Note that this requirement is rather hard to satisfy as in practice data streams are, by character, rather
-unpredictable. However, the operations performed on given data are required to be predictable.
+unpredictable. However, the operations performed on given data, and thus the outputs, are required to be predictable.
 
 \noindent \textbf{5: Integrate stored and streamed data -} This requirement states that a realtime processing system
 should provide the capabilities to be able to process both data that is already stored and data that is being delivered
@@ -487,7 +486,7 @@ is an important, and often confusing, problem. Most platforms compare themselves
 frameworks, often which are disputed by members in other platform ``camps''~\cite{web_slideshare_b,web_slideshare_a}.
 Hence, providing an informed recommendation based on the features each platform offers, and an impartial performance
 evaluation is a much needed and important contribution to address this gap in qualitative and quantitative evaluations
-of the available platforms.
+of the available platforms. These evaluations will be looked at further in Chapter 4.
 
 This research will further the field of realtime big data processing in addressing these shown gaps, and making the
 decision process far more streamlined for researchers and developers of DSPS technologies alike.

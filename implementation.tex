@@ -37,7 +37,7 @@ exhibited in pipelines. This basic design that we have so far is illustrated in~
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.8\textwidth]{includes/figures/fig_pipeline_simple}
-  \caption{A simplistic overview of our pipeline design. Note the dataflow behaviour exhibited with each component output
+  \caption{A simplistic overview of our pipeline design. Note the dataflow behaviour exhibited with each component's output
   being an input of the following component.}
   \label{fig:pipeline_simple}
 \end{figure}
@@ -79,14 +79,15 @@ will be used in the evaluation parts of the project, we need to implement concre
 we do not have access to any sensors, or any such hardware, for sending readings to the pipeline for processing. Hence, for evaluation
 we have had to simulate the sensor component of the overall pipeline design in some way. Note that this does not affect
 the pipeline in any way, since the actual sensor hardware part of the design is abstracted away from the software pipeline
-itself. The function of the sensors is to send data to the pipeline to the pipeline at any arbitrarily specified interval,
-hence to simulate this functionality multiple methods exist. The most basic of such is arguably reading data from a file
+itself. The function of the sensors is to send data to the pipeline at any arbitrarily specified interval through use of the
+DSPS Data Interface.
+To simulate this functionality multiple methods exist. The most basic of such is arguably reading data from a file
 and placing that onto a stream for the pipeline to process. However, this very much mimics batch processing methods, and
 hence is not ideal for simulating realtime data. Furthermore, placing data from a file onto the pipeline does not accurately
 reflect the client-server networking functionality that will exist in a real sensor-pipeline connection.
 
 A better way to simulate this sensor-pipeline realtime data connection is to develop a data entry interface to the pipeline upon which data can be sent to
-at any time. This data entry interface then can then be used to simulate that arbitrarily specified intervals upon which data can be sent
+at any time. This data entry interface then can then be used to simulate arbitrarily specified intervals upon which data can be sent
 to, thus mimicking the functionality of a sensor. To do this while still adhering to the client-server connection design,
 we can use a socket connection, allowing data to be sent over a specified port to be placed upon the pipeline. Each
 candidate DSPS technology either has native support for server socket connections, given their commonplace as mediums upon
@@ -94,7 +95,7 @@ which data can be sent over, or support from the programming language standard l
 
 Hence, the \textbf{Input Component} will be implemented as a server socket connection,
 and the \textbf{Processing Component} as a filtering task. Speed sensor readings will be passed in along the socket connection
-using a tool allowing interface to network ports, such as \texttt{netcat}\footnote{http://nc110.sourceforge.net/}, and filtered to make sure they are valid
+using a tool allowing interface to network ports, such as \texttt{netcat}\footnote{http://netcat.sourceforge.net/}, and filtered to make sure they are valid
 speed values, between the limits of 0 and 90. Any speeds
 outside of these limits can safely be deemed to be either bad, or noisy, sensor readings. This results in a concrete design as shown
 in~\figref{fig:pipeline_concrete}.
@@ -137,7 +138,7 @@ Our environment consists of a single NeCTAR cloud instance of which the details 
 \end{table}
 
 The NeCTAR cloud instance utilises a single node upon which all processing is performed. In a real deployment, it is
-common to use a full cluster upon which the pipeline would be deployed, where processing is shared between nodes. Due to
+common to use a full cluster upon which the pipeline would be deployed, where processing is shared and distributed between nodes. Due to
 limited testing resources, all testing
 has been performed on a single node cluster, however this remains a constant feature between all implementation and tests
 performed in the project. Furthermore, the pipelines built upon
@@ -229,30 +230,30 @@ simple example of such a Samza project is shown in~\figref{fig:samza_overview}.
 \subsubsection{Programming Overview}
 
 When programming a Samza project, interfaces exist for both the system and task concepts through the \path{org.apache.samza.system.SystemConsumer}
-and \path{org.apache.samza.task.StreamTask} Java interfaces. Default systems exist in the Samza project, and may be
+and \path{org.apache.samza.task.StreamTask} Java interfaces~\cite{Samza:doc}. Default systems exist in the Samza project, and may be
 used to produce streams which can then be processed by an implemented \texttt{StreamTask}.
 
 The \texttt{StreamTask} interface is arguably the main interface in which the most important processing will be done in
 a Samza project. It requires implementing a single method, \texttt{process}, which passes in an immutable message from the stream
-on which the task is configured to consume. These messages are then processed as specified by the programmer before the
-result of the processing is wrapped in a message envelope and produced to a stream specified by the programmer.
+on which the task is configured to consume. These messages are then processed as specified by the programmer, before the
+result of the processing is wrapped in a message envelope and produced to a stream, also specified by the programmer~\cite{Samza:doc}.
 
 The streams on which \texttt{StreamTask} implementations consume are specified in a task specific configuration file,
 independent to that of the implementation source code. These configuration files offer a range of parameters for the
 execution of tasks, each of which are documented\footnote{https://samza.apache.org/learn/documentation/0.9/jobs/configuration-table.html},
-however can result in quite verbose and hard to understand configurations files. For each task configuration, a system
+however can result in quite verbose and hard to understand configuration files. For each task configuration, a system
 needs to be defined that produces to the stream that the task consumes from. These can either be a self-implemented
-system, or an existing pluggable system, such as Kafka.
+system, or an existing pluggable system, such as Kafka~\cite{Samza:doc}.
 
-For self-implementation of systems, then \texttt{SystemConsumer} interface requires much more understanding and effort to
+For self-implementation of systems, the \texttt{SystemConsumer} interface requires much more understanding and effort to
 implement than that of the \texttt{StreamTask} interface. Methods, such as \texttt{start}, \texttt{stop}, \texttt{register},
 and \texttt{poll} need to be implemented, allowing for the producing of messages onto a particular stream. The \texttt{start}
 and \texttt{stop} methods simply connect and disconnect the system to the underlying system, while the \texttt{poll}
 method takes care of producing any messages from the system. The \texttt{register} method is much more complicated in the
 way that it requires registering the implemented system with lower-level components of Samza to integrate the system into
-Samza.
+Samza~\cite{Samza:doc}.
 
-Note that, due to Samza's relative infancy to other DSPS technologies, many of these interfaces either completely lack
+Note that, due to Samza's relative infancy, compared with other DSPS technologies, many of these interfaces either completely lack
 or offer insufficient documentation. Furthermore, for the same reason, example Samza projects are hard to find. This is
 a key factor that will be touched upon in the next chapter on evaluating the DSPS technologies.
 
@@ -312,9 +313,9 @@ through \textit{stream transformations} using the previously mentioned realtime 
 The realtime computation primitives that Storm offers are the components of Storm that are of most interest to the programmer.
 These primitives are known as the \textbf{spout} and \textbf{bolt}, previously looked at in~\sectref{ssub:storm}. To compare
 these components to those present in Samza, the spout acts as a source of streams, much like Samza's systems, while the
-bolts acts as consumers of streams, which process and emit new streams, much like Samza's tasks. Storm offers interfaces
+bolts act as consumers of streams, which process and emit new streams, much like Samza's tasks. Storm offers interfaces
 for implementation of custom spouts and bolts through the \path{backtype.storm.spout.ISpout} and \path{backtype.storm.task.IBolt}
-interfaces, respectively.
+interfaces, respectively~\cite{storm_doc}.
 
 As explained in~\sectref{ssub:storm}, spouts and bolts are arranged in a particular way to make up an overall Storm topology,
 which is used to transform streams in some specified manner. A simple example of such a topology is shown in the previous
@@ -324,18 +325,18 @@ Basic spouts require implementation of multiple methods, \texttt{open}, \texttt{
 which act as a spout initialiser, handler for each tuple to be emitted to a stream, and a tuple type declaration, respectively.
 Implementation of a simple spout is a much easier task in Storm than a system in Samza, due to different provided interfaces
 depending on the type of configuration needed for a particular spout. For example, a very basic spout can be made, using
-a lot of default configuration options, by implementing the \path{backtype.storm.topology.base.BaseRichSpout} interface.
+a lot of default configuration options, by implementing the \path{backtype.storm.topology.base.BaseRichSpout} interface~\cite{storm_doc}.
 
 Bolts also require implementation of three main methods, \texttt{prepare}, \texttt{execute}, and \texttt{declareOutputFields},
-allowing bolts to be initialised, process received tuples in a specified manner, and declare tuple value types, respectively.
+allowing bolts to be initialised, process received tuples in a specified manner, and declare tuple value types, respectively~\cite{storm_doc}.
 
-One major point of difference with this components, to their analogous components in Samza, is that the spout and bolt
+One major point of difference with these components, relative to their analogous components in Samza, is that the spout and bolt
 implements are completely independent to the overall Storm topology layout. In Samza, systems and tasks require the output
 streams to be hardcoded within their respective implementations, however Storm has a further separate source file for
 defining the topology layout. This topology layout is generally defined in a separate file to all spout and bolt implementations
 using the provided \path{backtype.storm.topology.ToplogyBuilder} class. This class exposes methods for defining the
 topology layout, in terms of spout and bolt placement, along with inputs and outputs for each spout and bolt implementation,
-as well as overall topology configuration. An obvious downside to this over Samza configuration files is that it requires
+as well as overall topology configuration~\cite{storm_doc}. An obvious downside to this over Samza configuration files is that it requires
 a recompilation in the case that configuration options need to be tweaked, while Samza configuration files are not part
 of the compiled source code.
 
@@ -346,8 +347,8 @@ Much like the Samza implementation, this implementation also uses \path{java.net
 for listening on a server socket connection for incoming speed values. The \texttt{open} method is used for the creation
 of such a server socket connection, while the \texttt{nextTuple} method is used for attempted to read any values off the
 connection. If a value is encountered, it is constructed into a Storm tuple containing the speed value, and emitted onto
-the configured stream. The \texttt{declareOutputFields} method is then used to declare the speed value type as single
-type of value to be expected to make up a valid tuple.
+the configured stream. The \texttt{declareOutputFields} method is then used to declare the speed value type as a single
+value of type Double to be expected to make up a valid tuple.
 
 \subsubsection{Processing Component}
 
@@ -408,12 +409,12 @@ discretised streams, or DStreams. It differs to how streams are conceptualised i
 streams are still, in essence, an unbounded sequence of data structures, being tuples in Storm, and message envelopes in
 Samza, these data structures are the same data structure which is used to represented data batches in Spark. These are,
 of course, the same resilient distributed dataset (RDD) data structure as explained in the previous chapter, in~\sectref{ssub:spark_streaming}.
-Hence, Spark Streaming DStreams can be decomposed into a sequence of RDDs, making them fully compatible with batch-mode Spark.
+Hence, Spark Streaming DStreams can be decomposed into a sequence of RDDs, making them fully compatible with batch-mode Spark~\cite{spark_stream_doc}.
 
 For programming a Spark Streaming job, there are not a set of provided interfaces expected to be implemented, like in
 Samza or Storm. Instead, all of the computations to be performed on streams are performed on an instantiation of the
 \path{org.apache.spark.streaming.dstream.DStream} class returned from a DStream producing function from the
-\path{org.apache.spark.streaming.StreamingContext} class. Processing performed on DStreams are generally programmed in
+\path{org.apache.spark.streaming.StreamingContext} class~\cite{spark_stream_doc}. Processing performed on DStreams are generally programmed in
 a dataflow fashion, with each function performed on the DStream returning a new DStream.
 
 This way of operating on DStreams in a Spark Streaming program leads to all processing being contained in a single file,
@@ -455,7 +456,7 @@ PySpark, in relation to Storm topologies and Samza projects.
 
 For our Spark Streaming pipeline implementation written in Scala, SBT\footnote{http://www.scala-sbt.org/} was used to assemble a JAR file containing compiled
 bytecode, for ease of use over Maven with Scala projects. For the Spark Streaming pipeline implemented in Python, the
-Python source files were simply used for deployment, both methods enabling the deployment of the Spark Streaming pipelines on
+Python source files were simply used for deployment. Both methods enable the deployment of the Spark Streaming pipelines on
 different Spark installations.
 
 % subsubsection spark_streaming (end)
@@ -469,7 +470,7 @@ different Spark installations.
 In conclusion this chapter has touched upon all details of implementation for each of the prototype pipelines.
 We have detailed how each prototype data filtering pipeline has been built for each candidate system, ready
 for subsequent tests and evaluation, of which will be discussed in the following chapter. Furthermore, the overall
-design of the pipeline that has been implemented has been detailed along along with the details of the overall testing
+design of the pipeline that has been implemented has been detailed along with the details of the overall testing
 environment upon which the pipelines are to be implemented.
 
 % subsection conclusion (end)

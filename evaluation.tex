@@ -56,7 +56,7 @@ categories as shown in~\tabref{tab:irt_data}.
 
 \import{includes/tables/}{data_table}
 
-The sample data batch acquired from the IRT team includes 99\,999 rows of data recorded from each of the shown sensors,
+The sample data batch acquired from the IRT team includes 99,\@999 rows of data recorded from each of the shown sensors,
 organised in a CSV file with headers. This is a general example of how data is currently received and handled by the IRT
 team, however in the case of realtime data processing, data would be received in quite a different manner. Rather than
 being received in large batches of readings, such as the sample dataset acquired, streams of data may be created from
@@ -65,11 +65,11 @@ is streamed in an asynchronous fashion, and can be simply thought of as a given 
 acts upon any data value in a specified fashion whenever they may be received.
 
 Hence, to simulate streaming data from the data samples we have acquired, the DSPS pipeline is constructed to listen on
-a particular TCP socket connection for any incoming data. Once a data value is encountered on the connection, it is fed into
+a particular network socket connection for any incoming data. Once a data value is encountered on the connection, it is fed into
 the pipeline and processed accordingly, while the pipeline continues to listen on the socket for further incoming data.
 As the pipeline is constructed in such a way, we can simulate the data being sent out from sensors using a program, such
-as \texttt{netcat}\footnote{http://nc110.sourceforge.net/}, where we can pipe data from a file to a particular
-socket over a connection. We can also specify time intervals between each data value, simulating time between sensor readings.
+as \texttt{netcat}\footnote{http://netcat.sourceforge.net/}, where we can pipe data from a file to a particular
+port over a connection. We can also specify time intervals between each data value, simulating time between sensor readings.
 
 As each sensor's data reading values are of the same format of floating point numbers,
 the specific sensor data to be used in the quantitative tests is not of major concern. Instead, we have chosen to focus on
@@ -110,7 +110,7 @@ of the systems.
 \subsubsection{Response time to streaming data}
 
 Response time to streaming data refers to the amount of time it takes for each DSPS pipeline to fully process a single
-value of sensor reading data. This time is defined from the time that value is sent along the TCP socket connection, to the time
+value of sensor reading data. This time is defined from the time that value is sent along the network socket connection, to the time
 the given data value is pushed onto the pipeline's output stream. This can be measured using the runtime logs provided
 for each of the DSPS technologies. The purpose of this test is to look at how fast a given pipeline can respond to a
 sensor's reading. This is a highly realistic test for the sort of processing being looked at in the IRT project, as
@@ -124,7 +124,7 @@ of sensor readings. These data batches have been defined in~\sectref{sub:overvie
 test of the pipelines in relation to the IRT project, however it will be a stress-test of sorts, with the purpose of
 seeing how each candidate DSPS pipeline scales with larger amount of data being streamed in at the same time. Five different
 tests will take place, each with data batches of readings of size 100,\@000, 500,\@000, 1,\@000,\@000, 5,\@000,\@000,
-and 10,\@000,\@000, respectively. The throughput time is defined as the time from when the batches are piped along the TCP
+and 10,\@000,\@000, respectively. The throughput time is defined as the time from when the batches are piped along the network
 socket connection, to the time the pipelines have finished processing. These times are measured using the internal DSPS
 technology runtime logs.
 
@@ -143,7 +143,7 @@ defined from the time each DSPS technology is started via the system shell, to t
 ready to accept incoming data streams. This will be measured using the UNIX \texttt{time} command, and allowing the
 DSPS technology to terminate upon readiness. This is considered to be a less important test, as these systems are expected
 to be deployed and run for long continuous periods of time. Start-up is generally not an important consideration, however
-we are interested to see how each DSPS technology compares, and how these values relate to the results from other tests.
+we are interested to see how each DSPS technology compares, and how these results relate to the results from other tests.
 
 % subsubsection tests_to_be_performed (end)
 
@@ -163,8 +163,8 @@ The results to the response time to streaming data test are shown in~\figref{fig
 \end{figure}
 
 Essentially, what can be can be seen from these results is that both Spark Streaming APIs exhibit relatively good performance
-compared to both Storm and Samza. In particular, Spark Streaming running on the Spark JVM API exhibited over $3x$ the
-performance of the next big system, Storm, and nearly $5x$ the performance of the slowest contender, Samza. Further of
+compared to both Storm and Samza. In particular, Spark Streaming running on the Spark JVM API exhibited over $3\times$ the
+performance of the next big system, Storm, and nearly $5\times$ the performance of the slowest contender, Samza. Further of
 note is that at this size of data, a single sensor reading, both Spark Streaming APIs exhibit very similar performance
 in relation to the other DSPS technologies.
 
@@ -186,7 +186,7 @@ The results to the test data throughput time tests are shown in~\figref{fig:thro
 The first fact to note with these results relates to the performance of Spark Streaming, running on the PySpark API, as the
 input data increases. Compared to the other technologies, Spark Streaming (PySpark) exhibits very poor scaling performance
 when dealing with much larger amounts of input data, particularly with 5,\@000,\@000 data points and greater. This drop in
-performance is so much of an issue that the scale at which the results are shown, it is hard to make out differences in
+performance is so much of an issue that at the scale at which the results are shown, it is hard to make out differences in
 performance for the other systems. Hence, to better analyse the results of the other systems, a chart from the same
 data was created with the Spark Streaming (PySpark) results omitted. This can be viewed in~\figref{fig:throughput_time_res_nopyspark}.
 
@@ -202,7 +202,7 @@ at scale, relative to what was seen with Spark Streaming (PySpark). Spark Stream
 greater performance than both Storm and Samza in all tests, while Storm generally is not too far off Spark Streaming's
 performance, showing a similar growth for all tests apart from the 10,\@000,\@000 data points test.
 
-Again, Samza shows the worst overall performer out of the three candidates (not counting PySpark here), with less than
+Again, Samza shows the worst overall performance out of the three candidates (not counting PySpark), with less than
 half the performance of Spark Streaming on the 10,\@000,\@000 data points test.
 
 \subsubsection{Peak system resource usage}
@@ -217,12 +217,19 @@ The results for the peak system resource usage test can be seen in~\figref{fig:r
 \end{figure}
 
 Interestingly, Spark Streaming excels again here, with JVM Spark having over double the performance from the next major
-contender, Storm. Samza, at peak usage, takes up over $5x$ the amount of resident memory that Spark Streaming does, and
-nearly $3x$ the amount that Storm is shown to use. A lot of this resident memory usage may be caused by a lot of the
+contender, Storm. Samza, at peak usage, takes up over $5\times$ the amount of resident memory that Spark Streaming does, and
+nearly $3\times$ the amount that Storm is shown to use. A lot of this resident memory usage may be caused by a lot of the
 software dependencies that Samza and Storm rely on, which Spark Streaming generally does not. Spark, the base project,
 not the realtime processing extension, was designed to be an entire software ecosystem in itself, hence a lot of external
 dependencies that Storm and Samza may have are not needed, possibly leading to this extreme reduction in resident memory
 usage shown here.
+
+A further point of interest here is that Spark Streaming, and thus Spark, is renowned for its in-memory computation model,
+where data is placed solely in resident memory during computation. This design decision would lead to the expectation of
+Spark computations using far more resident system memory than other technologies that do not make such use of resident memory.
+However, as seen here, Spark Streaming is shown to use the least amount of resident memory. This may be to do with the
+amounts of data used. For example, a more data-intensive workload would likely provide much higher resident system memory
+usage in Spark than that of Storm or Samza.
 
 \subsubsection{System start-up time}
 
@@ -238,7 +245,7 @@ The results for the system start-up time test can be seen in~\figref{fig:startup
 Again, we emphasise that this test is of much less importance than the previously covered quantitative tests, due to real-life usage
 of the DSPS technologies. However, it is interesting of note here that Spark Streaming, the overall best performing
 DSPS technology in all other performance-based tests, shows the worst performance in-terms of start-up time, particularly
-the PySpark version of Spark Streaming. Samza, the overall worst performing technology, here shows the best performance
+the PySpark version of Spark Streaming. Samza, the overall worst performing technology, here shows the best performance,
 with being able to be ready for processing from start-up in just over 4 seconds.
 
 % subsection test_results (end)
@@ -263,7 +270,7 @@ programming possibilities for each technology. Each of the metrics that will be 
 \end{itemize}
 
 As each of the underlying DSPS technologies are considerably different in design and usage, it is important to see how
-they contrast in terms of factors that they allow.
+they contrast in terms of factors that they afford.
 
 \subsubsection{Ease of extensibility}
 
@@ -307,7 +314,7 @@ method of project deployment and distribution.
 
 Spark Streaming is noted as the worst performing technology in terms of extensibility, overall. This is mostly due to
 the fact that, by design, a Spark Streaming program is generally very tightly coupled in terms of processing modules.
-All processing logic revolves around the StreamingContext object in a Spark Streaming program, hence everything is
+All processing logic revolves around the \texttt{StreamingContext} object in a Spark Streaming program, hence everything is
 tightly integrated to the placement of this object. Of course, this object can be passed around different modules, however
 it is a rather na\"{\i}ve solution considering the other projects exhibit loose coupling by design.
 
@@ -315,8 +322,8 @@ This tight coupling of logic in Spark Streaming leads to any extensions written 
 be written as modifications of the original source code. This means that previously written source code need to be made
 aware of the changes, and recompiled.
 
-Likewise, in Spark Streaming, configuration is tightly coupled with the programming logic, through use of the SparkConf
-object, on which the StreamingContext object is instantiated. This leads to any future changed in configuration to be
+Likewise, in Spark Streaming, configuration is tightly coupled with the programming logic, through use of the \texttt{SparkConf}
+object, on which the \texttt{StreamingContext} object is instantiated. This leads to any future changed in configuration to be
 written to the original source code, thus leading to project recompilation.
 
 Samza is noted to be far more loosely coupled than that of Spark Streaming, with any extensions of an existing project
@@ -334,9 +341,9 @@ modification of the existing source code being necessary. However, extensions wr
 require knowledge of output streams from existing Storm processing tasks (bolts), which is a necessity when extending a
 Samza project.
 
-Configuration in Storm is also kept separate of the logic written in source code, hence also does not require recompilation
+Configuration in Storm is also kept separate of the logic written in the source code, hence also does not require recompilation
 to reconfigure. However, to reconfigure an existing Storm topology layout, this is generally written in source code using
-the TopologyBuilder class, hence does require a recompilation step.
+the \texttt{TopologyBuilder} class, hence does require a recompilation step.
 
 To summarise, Spark Streaming has shown to lack in extensibility, compared to the other candidate DSPS technologies, mainly
 due to being tightly coupled by design, while Storm and Samza exhibit similar ease in terms of extensibility. Samza and
@@ -361,7 +368,7 @@ as an Apache Incubator project. It may also be attributed to design choices of d
 Furthermore, of note is that many features that are supported in Samza actually depend on the integration of Kafka with
 Samza. If Samza is run standalone, without Kafka, certain features may not be available unless replaced with a similar
 Samza-compatible pluggable system. Due to the nature of Samza and Kafka's tight coupling in most installations, a lot
-of the time, the availability of these features off-loaded to Kafka can be taken for granted.
+of the time, the availability of these features, off-loaded to Kafka, can be taken for granted.
 
 In relation to the IRT project, the most important features that these DSPS systems support are arguably \textbf{SQL on
 streams} and \textbf{Stored and streaming data}. These features refer to the possibility of running more traditional
@@ -396,20 +403,20 @@ up and running, without many compilation and assembly steps that are required in
 Storm and Samza have been noted as having a far higher learning curve to that of Spark Streaming, due to the number of
 interfaces which are required to be implemented to make even the most simple of projects, and the required configuration
 that is necessary for the project to run properly. Spark Streaming does away with these interfaces, and instead all processing
-logic surrounds the StreamingContext class, meaning that as long as this class is instantiated, all the possible processing
+logic surrounds the \texttt{StreamingContext} class, meaning that as long as this class is instantiated, all the possible processing
 functions are available to be used. Thus, a simple processing pipeline based on simple processing logic implemented in each
 system would require a number of different files, each implementing required interfaces, in Storm and Samza, while the
 same logic in Spark Streaming could be done in a number of lines in any supported programming language.
 
 Samza, in particular, has been noted as having the most steep of the learning curves, in terms of programmability, due
-to a required knowledge of many of the underlying software dependencies, such as Kafka, Zookeeper, and various serialisers
+to a required knowledge of many of the underlying software dependencies, such as Kafka, ZooKeeper, and various serialisers
 and deserialisers for Samza messages. Required configuration of a Samza project requires an understanding of these systems for
 even the most simple of processing tasks, while most of the underlying systems in Storm and Spark Streaming are abstracted
 away from the programmer, who generally does not need to worry about these unless performing more advanced tasks.
 
 In terms of required configuration, Spark Streaming allows for the most ease in configuring, due to a low level understanding
 of Spark configuration not being needed for most tasks. Storm also has somewhat of a easy required configuration knowledge,
-mostly due to having the complicated configuration being abstracted away from the programmer unless neccessary, and the
+mostly due to having the more complicated configuration options being abstracted away from the programmer unless necessary, and the
 majority of configuration being defined in the topology file. Samza, however, requires separate, and particularly verbose,
 configuration files for every task and system within a Samza project, as well as many configuration options not having
 defaults. Again, this leads to a good understanding of Samza being needed to configure even a simple project, and a lot
@@ -431,9 +438,9 @@ using a build automation tool, such as Maven\footnote{https://maven.apache.org/}
 However, for deployment and distribution of Spark Streaming projects written in Python, these compilation and build
 assembly steps are not necessary, with Python and Scala Spark Streaming projects affording deployment simply as the Python
 or Scala source files themselves. This greatly eases overall deployment, and distribution of Spark Streaming projects between
-different Spark Stremaing installations residing on different clusters.
+different Spark Streaming installations residing on different clusters.
 
-Furthermore, Storm and Samza require the set-up of external technology dependencies, such as Kafka or Zookeeper, on the
+Furthermore, Storm and Samza require the set-up of external technology dependencies, such as Kafka or ZooKeeper, on the
 cluster on which they will be run, if the implemented project requires such dependencies. Spark Streaming can be deployed
 without external technology dependencies as the Spark project provides Spark distributions with all such dependencies built-in
 and pre-configured~\cite{web:spark-downloads}.
@@ -478,7 +485,7 @@ surprising outcome.
 
 As discussed, while Spark Streaming has been shown to have the overall greatest performance of the three candidate DSPS
 technologies, due to its failing, in terms of extensibility, we cannot recommend it for use in the Monash University IRT
-project. This stems back to our third research questions for this project, looking at the possibility of extending projects
+project. This stems back to our third research question for this project, looking at the possibility of extending projects
 developed in each of the candidate DSPS technologies.
 
 As Storm has shown the second best performance to Spark Streaming, the second best outcome in most qualitative tests,
