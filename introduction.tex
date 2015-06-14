@@ -15,9 +15,7 @@ thesis, is the automated monitoring of railway tracks and cars by the Institute 
 Out of all of these data that we are faced with in such projects, often only specific parts of the data are of particular use for given
 purposes. Hence, rather than attempting to store all the new data that is being generated, an increasingly popular method of
 dealing with such data, in both academia and industry associated with big data, is the processing and analysis of
-data in realtime as it is received. This is also known as online processing, or single pass processing, where data is
-processed in real time before being discarded. Further options also exist where data is stored after processing, depending
-on the specific use-case.
+data in realtime as it is received, before either being stored or sent on for further processing.
 
 There are currently numerous realtime data processing systems that are in development and in production use, both in
 industry and academia. Examples of these realtime data processing frameworks include the widely used Storm
@@ -30,8 +28,8 @@ parallelisable data with the use-case in mind of processing data in-memory using
 algorithms related to data analytics~\cite{liu_survey_2014}.
 
 What is proposed in this chapter is a realtime big data processing pipeline for the aforementioned railway monitoring
-system by the IRT at Monash University. This processing pipeline will allow the possibility that data is able to be
-streamed in realtime from the railway, and processed according to the team's given processing requirements. Multiple
+system by the IRT at Monash University. This processing pipeline will allow data to be
+streamed from the railway and processed, in realtime, according to the team's given processing requirements. Multiple
 technologies exist in which this pipeline can be implemented, so a technology recommendation will be formed through
 the testing and evaluation of different implementations in different technologies.
 

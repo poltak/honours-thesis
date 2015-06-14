@@ -47,7 +47,7 @@ the input of the \textbf{Input Component}, and the contents of each component.
 
 The output of the \textbf{Output Component}
 will simply be whatever extensions are needed to be made to the pipeline. Hence, rather than acting a sink, this component
-will be an abstract interface which any extension needed will be able to adhere to to extend the pipeline. Designing the pipeline
+will be an abstract interface which any extension needed will be able to adhere to extend the pipeline. Designing the pipeline
 in this manner directly addresses our third research question touched upon in Chapter 1, in~\sectref{sub:research_questions}.
 This allows the output data to be dealt with in any manner required by the IRT team, whether it be stored for later
 batch processing, or forwarded on for further realtime processing.
@@ -57,8 +57,8 @@ The sensors generally would not be directly connected to the pipeline, so we cou
 that any sensor connects to, then the interface sends the data to the actual component. This allows data to be fed into
 the pipeline from any type of sensor that is able to adhere to the interface.
 
-The contents of each component is a larger task. For the \textbf{Processing Component}, it will want to be consisting
-of a number of tasks, each of which are tasked to process the data in some manner before forwarding it onto whatever
+The contents of each component is a larger task. The \textbf{Processing Component} will be made up
+of an arbitrary number of tasks, each of which are tasked to process the data in some manner before forwarding it onto whatever
 the next specified task is. This, in itself, acts as a mini-pipeline where the core of processing will be done. Here
 we will say that the \textbf{Processing Component} consists of $n$ sequential processing tasks. For the \textbf{Input Component},
 the contents will consist of a task-like component tasked with passing data onto the processing tasks which make up the
@@ -87,8 +87,8 @@ hence is not ideal for simulating realtime data. Furthermore, placing data from 
 reflect the client-server networking functionality that will exist in a real sensor-pipeline connection.
 
 A better way to simulate this sensor-pipeline realtime data connection is to develop a data entry interface to the pipeline upon which data can be sent to
-at any time. This data entry interface then can then be used to simulate arbitrarily specified intervals upon which data can be sent
-to, thus mimicking the functionality of a sensor. To do this while still adhering to the client-server connection design,
+at any time. This data entry interface can then be used to simulate arbitrarily specified intervals upon which data can be sent,
+thus mimicking the functionality of a sensor. To do this while still adhering to the client-server connection design,
 we can use a socket connection, allowing data to be sent over a specified port to be placed upon the pipeline. Each
 candidate DSPS technology either has native support for server socket connections, given their commonplace as mediums upon
 which data can be sent over, or support from the programming language standard libraries used to implement realtime processing logic.

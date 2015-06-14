@@ -1,5 +1,5 @@
 %!TEX root = thesis.tex
-\chapter{Discussion and Evaluation}
+\chapter{Evaluation and Discussion}
 \label{sec:evaluation}
 
 Evaluation of each of the chosen DSPS technologies will be performed using both qualitative and quantitative testing methods
@@ -155,7 +155,7 @@ we are interested to see how each DSPS technology compares, and how these result
 
 The results to the response time to streaming data test are shown in~\figref{fig:response_time_res}.
 
-\begin{figure}[H]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=1\textwidth]{includes/figures/fig_response_time_res}
   \caption{Results of our response time to streaming data test.}
@@ -176,7 +176,7 @@ surprising find.
 
 The results to the test data throughput time tests are shown in~\figref{fig:throughput_time_res}.
 
-\begin{figure}[H]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=1\textwidth]{includes/figures/fig_throughput_res}
   \caption{Results of our test data throughput time tests.}
@@ -190,7 +190,7 @@ performance is so much of an issue that at the scale at which the results are sh
 performance for the other systems. Hence, to better analyse the results of the other systems, a chart from the same
 data was created with the Spark Streaming (PySpark) results omitted. This can be viewed in~\figref{fig:throughput_time_res_nopyspark}.
 
-\begin{figure}[H]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=1\textwidth]{includes/figures/fig_throughput_nopyspark_res}
   \caption{Results of our test data throughput time tests (PySpark omitted).}
@@ -209,7 +209,7 @@ half the performance of Spark Streaming on the 10,\@000,\@000 data points test.
 
 The results for the peak system resource usage test can be seen in~\figref{fig:resource_usage_res}.
 
-\begin{figure}[H]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=1\textwidth]{includes/figures/fig_peak_resource_res}
   \caption{Results of our peak system resource usage test.}
@@ -235,7 +235,7 @@ usage in Spark than that of Storm or Samza.
 
 The results for the system start-up time test can be seen in~\figref{fig:startup_time}.
 
-\begin{figure}[H]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=1\textwidth]{includes/figures/fig_startup_time_res}
   \caption{Results of our system start-up time test.}
