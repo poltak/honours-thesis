@@ -1,0 +1,603 @@
+\chapter{Samza Pipeline Prototype Implementation}
+\label{lst:samza}
+\begin{lstlisting}[language=java,caption=edu.monash.honours.system.SpeedConsumer (Java)]
+package edu.monash.honours.system;
+
+import edu.monash.honours.util.SpeedReadingPair;
+import org.apache.samza.Partition;
+import org.apache.samza.system.IncomingMessageEnvelope;
+import org.apache.samza.system.SystemStreamPartition;
+import org.apache.samza.util.BlockingEnvelopeMap;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+
+public class SpeedConsumer extends BlockingEnvelopeMap
+{
+  private final ServerSocket serverSocket;
+  private final SystemStreamPartition systemStreamPartition;
+
+  public SpeedConsumer(final String systemName, final String streamName, final int listeningPort) throws IOException
+  {
+    this.systemStreamPartition = new SystemStreamPartition(systemName, streamName, new Partition((0)));
+    this.serverSocket = new ServerSocket(listeningPort);
+  }
+
+  @Override
+  public void start()
+  {
+    new Thread(
+      () -> {
+        try {
+          SpeedConsumer.this.listenOnPort();
+        } catch (InterruptedException e) {
+          SpeedConsumer.this.stop();
+        }
+      }
+    );
+  }
+
+  private void listenOnPort() throws InterruptedException
+  {
+    InputStream inputStream;
+
+    try {
+      while ((inputStream = serverSocket.accept().getInputStream()) != null) {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        double speedReading = Double.valueOf(bufferedReader.readLine());
+
+        put(systemStreamPartition,
+            new IncomingMessageEnvelope(systemStreamPartition, null, null, new SpeedReadingPair(speedReading, false)));
+
+        bufferedReader.close();
+      }
+    } catch (IOException e) {
+      put(systemStreamPartition, new IncomingMessageEnvelope(systemStreamPartition, null, null,
+                                                             "ERROR: Cannot read from port" + e.getMessage()));
+    }
+  }
+
+
+
+
+
+
+
+  @Override
+  public void stop()
+  {
+    try {
+      this.serverSocket.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  public void register(final SystemStreamPartition systemStreamPartition, final String startingOffset)
+  {
+    super.register(systemStreamPartition, startingOffset);
+  }
+}
+\end{lstlisting}
+
+\clearpage
+
+
+\begin{lstlisting}[language=java,caption=edu.monash.honours.system.SpeedSystemFactory (Java)]
+package edu.monash.honours.system;
+
+import org.apache.samza.SamzaException;
+import org.apache.samza.config.Config;
+import org.apache.samza.metrics.MetricsRegistry;
+import org.apache.samza.system.SystemAdmin;
+import org.apache.samza.system.SystemConsumer;
+import org.apache.samza.system.SystemFactory;
+import org.apache.samza.system.SystemProducer;
+import org.apache.samza.util.SinglePartitionWithoutOffsetsSystemAdmin;
+
+import java.io.IOException;
+
+public class SpeedSystemFactory implements SystemFactory
+{
+  private static final String OUTPUT_STREAM_NAME = "speeds";
+
+  @Override
+  public SystemConsumer getConsumer(final String systemName, final Config config, final MetricsRegistry metricsRegistry)
+  {
+    int listeningPort = Integer.getInteger(config.get("systems." + systemName + ".listeningPort"));
+
+    try {
+      return new SpeedConsumer(systemName, OUTPUT_STREAM_NAME, listeningPort);
+    } catch (IOException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  @Override
+  public SystemProducer getProducer(final String s, final Config config, final MetricsRegistry metricsRegistry)
+  {
+    throw new SamzaException("You cannot produce to this feed!");
+  }
+
+
+
+
+
+
+  @Override
+  public SystemAdmin getAdmin(final String s, final Config config)
+  {
+    return new SinglePartitionWithoutOffsetsSystemAdmin();
+  }
+}
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[language=java,caption=edu.monash.honours.task.SpeedCheckStreamTask (Java)]
+package edu.monash.honours.task;
+
+import edu.monash.honours.util.SpeedReadingPair;
+import org.apache.samza.system.IncomingMessageEnvelope;
+import org.apache.samza.system.OutgoingMessageEnvelope;
+import org.apache.samza.system.SystemStream;
+import org.apache.samza.task.MessageCollector;
+import org.apache.samza.task.StreamTask;
+import org.apache.samza.task.TaskCoordinator;
+
+import java.util.Map;
+
+public class SpeedCheckStreamTask implements StreamTask
+{
+  // Constants
+  private static final SystemStream FLAGGED_OUTPUT     = new SystemStream("kafka", "flagged-output");
+  private static final SystemStream SPEED_CHECK_OUTPUT = new SystemStream("kafka", "speed-check-output");
+  private static final double       SPEED_UPPER_LIMIT  = 90;
+  private static final double       SPEED_LOWER_LIMIT  = 0;
+
+  private static int totalMessageCount = 0;
+  private int messageCount;
+
+  public SpeedCheckStreamTask()
+  {
+    this.messageCount = 0;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /**
+   * Listens on a stream providing speed readings, and processes those speed readings depending on whether or not they
+   * exceed a specified threshold.
+   *
+   * Forwards on speed value to flagged stream if that value exceeds thresholds, else forwards on speed for further
+   * processing.
+   */
+  public void process(final IncomingMessageEnvelope incomingMessageEnvelope, final MessageCollector messageCollector,
+                      final TaskCoordinator taskCoordinator) throws Exception
+  {
+    SpeedReadingPair speedReadingPair = (SpeedReadingPair) incomingMessageEnvelope.getMessage();
+    this.messageCount++;  // Keep count of number of messages that come through here
+    totalMessageCount += this.messageCount; // Keep count of total number of messages received on this stream.
+
+
+    if (speedReadingPair.getSpeed() < SPEED_LOWER_LIMIT || speedReadingPair.getSpeed() > SPEED_UPPER_LIMIT) {
+      // Flag speeds that exceed thresholds
+      speedReadingPair.flag();
+      messageCollector.send(new OutgoingMessageEnvelope(FLAGGED_OUTPUT, speedReadingPair));
+    }
+
+    // Send speed on for further processing
+    messageCollector.send(new OutgoingMessageEnvelope(SPEED_CHECK_OUTPUT, speedReadingPair));
+  }
+}
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[language=java,caption=edu.monash.honours.util.SpeedReadingPair (Java)]
+package edu.monash.honours.util;
+
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Map;
+
+public class SpeedReadingPair
+{
+  private final double key;
+  private boolean value;
+
+  public SpeedReadingPair(final double key, final boolean value)
+  {
+    this.key = key;
+    this.value = value;
+  }
+
+  public SpeedReadingPair(Map<String, Object> jsonObject)
+  {
+    this((Double) jsonObject.get("speed"), (Boolean) jsonObject.get("flag"));
+  }
+
+  @Override
+  public String toString()
+  {
+    return "{" + this.key + ":" + this.value + "}";
+  }
+
+  public double getSpeed()
+  {
+    return this.key;
+  }
+
+  public boolean flagged()
+  {
+    return this.value;
+  }
+
+  public void flag()
+  {
+    this.value = true;
+  }
+
+  public static Map<String, Object> toMap(SpeedReadingPair pair)
+  {
+    Map<String, Object> jsonObject = new HashMap<String, Object>();
+
+    jsonObject.put("speed", pair.getSpeed());
+    jsonObject.put("flag", pair.flagged());
+
+    return jsonObject;
+  }
+
+  public static String toJson(SpeedReadingPair pair)
+  {
+    return pair.toString();
+  }
+}
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[caption=SpeedCheckStreamTask (Samza config)]
+# Job
+job.factory.class=org.apache.samza.job.yarn.YarnJobFactory
+job.name=speed-check
+
+
+# YARN
+yarn.package.path=file://${basedir}/target/${project.artifactId}-${pom.version}-dist.tar.gz
+
+
+# Task
+task.class=edu.monash.honours.task.SpeedCheckStreamTask
+task.inputs=speed-input
+
+
+# Serializers
+serializers.registry.json.class=org.apache.samza.serializers.JsonSerdeFactory
+
+
+# speed-input System
+systems.speed-input.samza.factory=edu.monash.honours.system.SpeedSystemFactory
+systems.speed-input.listeningPort=9999
+
+
+# Kafka System
+systems.kafka.samza.factory=org.apache.samza.system.kafka.KafkaSystemFactory
+systems.kafka.samza.msg.serde=json
+systems.kafka.consumer.zookeeper.connect=localhost:2181/
+systems.kafka.producer.bootstrap.servers=localhost:9092
+\end{lstlisting}
+
+
+\clearpage
+\chapter{Storm Pipeline Prototype Implementation}
+\label{lst:storm}
+
+\begin{lstlisting}[language=java,caption=edu.monash.honours.bolt.SpeedCheckBolt (Java)]
+package edu.monash.honours.bolt;
+
+import backtype.storm.task.OutputCollector;
+import backtype.storm.task.TopologyContext;
+import backtype.storm.topology.OutputFieldsDeclarer;
+import backtype.storm.topology.base.BaseRichBolt;
+import backtype.storm.tuple.Fields;
+import backtype.storm.tuple.Tuple;
+import backtype.storm.tuple.Values;
+
+import java.util.Map;
+
+public class SpeedCheckBolt extends BaseRichBolt
+{
+  private final static int SPEED_UPPER_BOUND = 90;
+  private final static int SPEED_LOWER_LIMIT = 0;
+
+  private static int      totalTupleCount = 0;
+
+  private int             tupleCount;
+  private OutputCollector collector;
+
+
+
+
+
+
+  /**
+   * Runs once when this bolt is created.
+   */
+  public void prepare(final Map map, final TopologyContext topologyContext, final OutputCollector outputCollector)
+  {
+    this.collector = outputCollector;
+    this.tupleCount = 0;
+  }
+
+  /**
+   * Runs every time a tuple is received.
+   *
+   * @param tuple The input tuple containing a single speed field.
+   */
+  public void execute(final Tuple tuple)
+  {
+    updateTupleCounts();
+
+    Object receivedValue = tuple.getValue(0);
+
+    Values emitTuple;
+    if (receivedValue instanceof Double) {
+      // If received value is a double, check the speed received
+      emitTuple = checkSpeed((Double) receivedValue);
+    } else {
+      // else, ignore processing and send the message onwards
+      emitTuple = new Values(receivedValue, true);
+    }
+
+    this.collector.emit(tuple, emitTuple);
+    this.collector.ack(tuple);
+  }
+
+  /**
+   * Declare the output fields as being speed and a noise flag.
+   */
+  public void declareOutputFields(final OutputFieldsDeclarer outputFieldsDeclarer)
+  {
+    outputFieldsDeclarer.declare(new Fields("speed", "noiseFlag"));
+  }
+
+
+  /**
+   * Keeps count of tuples that pass through this bolt.
+   */
+  private void updateTupleCounts()
+  {
+    this.tupleCount++;
+    totalTupleCount += this.tupleCount;
+  }
+
+  /**
+   * Checks the given speed to see if it within limits.
+   *
+   * @param speed Speed to check.
+   * @return A Values tuple with two fields: speed and a noise flag. Noise flag is checked if speed exceeds limits.
+   */
+  private Values checkSpeed(double speed)
+  {
+    if (speed > SPEED_UPPER_BOUND || speed < SPEED_LOWER_LIMIT) {
+      return new Values(speed, true);
+    }
+
+    return new Values(speed, false);
+  }
+}
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[language=java,caption=edu.monash.honours.spout.SpeedOutputSpout (Java)]
+package edu.monash.honours.spout;
+
+import backtype.storm.spout.SpoutOutputCollector;
+import backtype.storm.task.TopologyContext;
+import backtype.storm.topology.OutputFieldsDeclarer;
+import backtype.storm.topology.base.BaseRichSpout;
+import backtype.storm.tuple.Fields;
+import backtype.storm.tuple.Values;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.util.Map;
+
+public class SpeedOutputSpout extends BaseRichSpout
+{
+  /**
+   * The key in the storm config under which the listening port is declared
+   */
+  private static final String LISTENING_PORT_CONFIG_KEY = "spout.listeningPort";
+
+  private SpoutOutputCollector collector;
+  private ServerSocket         serverSocket;
+
+  /**
+   * Runs once when this spout is created.
+   *
+   * @param conf Storm topology configuration map.
+   * @param topologyContext
+   * @param spoutOutputCollector
+   */
+  public void open(final Map conf, final TopologyContext topologyContext,
+                   final SpoutOutputCollector spoutOutputCollector)
+  {
+    this.collector = spoutOutputCollector;
+
+    try {
+      this.serverSocket = new ServerSocket(Integer.valueOf((String) conf.get(LISTENING_PORT_CONFIG_KEY)));
+    } catch (IOException e) {
+      this.collector.emit(new Values("ERROR: Cannot open port -\n" + e.getMessage()));
+    }
+  }
+
+  /**
+   * Run every time a new value is sent to this spout.
+   *
+   * Emits a tuple containing a single speed value for further processing.
+   */
+  public void nextTuple()
+  {
+    try {
+      BufferedReader bufferedReader = new BufferedReader(
+        (new InputStreamReader(serverSocket.accept().getInputStream())));
+      double speedReading = Double.valueOf(bufferedReader.readLine());
+
+      this.collector.emit(new Values(speedReading));
+    } catch (IOException e) {
+      this.collector.emit(new Values("ERROR: Cannot read from port -\n" + e.getMessage()));
+    }
+  }
+
+  /**
+   * Declare the output field as being a single speed value.
+   */
+  public void declareOutputFields(final OutputFieldsDeclarer outputFieldsDeclarer)
+  {
+    outputFieldsDeclarer.declare(new Fields("speed"));
+  }
+}
+\end{lstlisting}
+\clearpage
+
+\begin{lstlisting}[language=java,caption=edu.monash.honours.SpeedCheckTopology (Java)]
+package edu.monash.honours;
+
+import backtype.storm.Config;
+import backtype.storm.LocalCluster;
+import backtype.storm.topology.TopologyBuilder;
+import backtype.storm.utils.Utils;
+import edu.monash.honours.bolt.SpeedCheckBolt;
+import edu.monash.honours.spout.SpeedOutputSpout;
+
+public class SpeedCheckTopology
+{
+  /**
+   * The listening port upon which the spout will get data.
+   */
+  public static final String LISTENING_PORT = "8888";
+
+  public static void main(String[] args) throws Exception
+  {
+    TopologyBuilder builder = new TopologyBuilder();
+
+    builder.setSpout("speed", new SpeedOutputSpout());
+    builder.setBolt("speed-check", new SpeedCheckBolt()).shuffleGrouping("speed");
+
+    Config conf = new Config();
+    conf.put("spout.listeningPort", LISTENING_PORT);
+    conf.setDebug(true);
+
+    LocalCluster cluster = new LocalCluster();
+    cluster.submitTopology("speed-checker", conf, builder.createTopology());
+    Utils.sleep(100000);
+    cluster.killTopology("speed-checker");
+    cluster.shutdown();
+  }
+}
+\end{lstlisting}
+
+\clearpage
+\chapter{Spark Streaming Pipeline Prototype Implementations}
+\label{lst:spark}
+
+\begin{lstlisting}[language=scala,caption=edu.monash.honours.SpeedCheck (Scala)]
+package edu.monash.honours
+
+import org.apache.spark.SparkConf
+import org.apache.spark.streaming.{StreamingContext, Seconds}
+
+object SpeedCheck
+{
+  val SPEED_UPPER_LIMIT = 85
+  val SPEED_LOWER_LIMIT = 0
+
+  def main(args: Array[String])
+  {
+    val sparkConf = new SparkConf().setMaster("local[2]").setAppName("SpeedCheck")
+    val ssc = new StreamingContext(sparkConf, Seconds(1))
+    val speedStream = ssc.socketTextStream("localhost", 9999)
+
+    speedStream.map(checkSpeed)
+
+    speedStream.print()
+
+    ssc.start()
+    ssc.awaitTermination()
+  }
+
+  def checkSpeed(speedValue: String): (String, Boolean) = {
+    if (speedValue.asInstanceOf[Double] > SPEED_UPPER_LIMIT || speedValue.asInstanceOf[Double] < SPEED_LOWER_LIMIT) {
+      (speedValue, false)
+    } else {
+      (speedValue, true)
+    }
+  }
+}
+\end{lstlisting}
+\clearpage
+
+\begin{lstlisting}[language=python,caption=edu.monash.honours.SpeedCheck (Python)]
+__author__ = 'poltak'
+
+from pyspark import SparkContext
+from pyspark.streaming import StreamingContext
+
+SPEED_UPPER_LIMIT = 85
+SPEED_LOWER_LIMIT = 0
+SOCKET_ADDRESS = "localhost"
+SOCKET_PORT = 9999
+
+
+def init_spark(name):
+    sc = SparkContext("local[2]", name)
+    return StreamingContext(sc, 2)
+
+
+def close_spark(ssc):
+    ssc.start()
+    ssc.awaitTermination()
+
+
+def check_speed(speed):
+    try:
+        if float(speed) > SPEED_UPPER_LIMIT or float(speed) < SPEED_LOWER_LIMIT:
+            return speed, False
+        else:
+            return speed, True
+    except ValueError:
+        return speed, False
+
+
+def main():
+    ssc = init_spark("pyspark-speed-check")
+    speed_stream = ssc.socketTextStream(SOCKET_ADDRESS, SOCKET_PORT)
+
+    speed_stream = speed_stream.map(check_speed)
+
+    speed_stream.pprint()
+
+    close_spark(ssc)
+
+
+if __name__ == '__main__':
+    main()
+\end{lstlisting}
