@@ -46,7 +46,7 @@ We now have a simple design of the pipeline, however we are left with the questi
 the input of the \textbf{Input Component}, and the contents of each component.
 
 The output of the \textbf{Output Component}
-will simply be whatever extensions are needed to be made to the pipeline. Hence, rather than acting a sink, this component
+will simply be whatever extensions are needed to be made to the pipeline. Hence, rather than acting as a sink, this component
 will be an abstract interface which any extension needed will be able to adhere to extend the pipeline. Designing the pipeline
 in this manner directly addresses our third research question touched upon in Chapter 1, in~\sectref{sub:research_questions}.
 This allows the output data to be dealt with in any manner required by the IRT team, whether it be stored for later
@@ -269,6 +269,8 @@ stream, which will consumed by the filtering task.
 The system's \texttt{stop} method simply will be used to close the server connection, while the \texttt{register} method will
 be used to register the system with the previously mentioned default speed value stream.
 
+The source code of this Samza system can be seen in Appendices~\ref{samza-speedconsumersystem} and~\ref{samza-systemfactory}.
+
 \subsubsection{Processing Component}
 
 For the implementation of the processing component design in Samza, this revolves around the \texttt{StreamTask} interface.
@@ -277,6 +279,9 @@ produced to. The main \texttt{process} method can then be used to consume a valu
 received is between the acceptable speed limits. Depending on the outcome of this test, the message is either flagged for
 being noisy, or not, and then produced to a stream for valid values, or a stream for noisy data. This allows the filtering
 of data, with flagged data being produced to a separate stream to those data that are deemed to be valid.
+
+The source code of this Samza task is available in Appendices~\ref{samza-task} and~\ref{samza-util}, while the task configuration
+is available in Appendix~\ref{samza-config}.
 
 \subsubsection{Output Component}
 
@@ -291,8 +296,6 @@ through use of Java build automation tools, such as Maven or Gradle.
 
 For the implementation of our designed pipeline, Maven was used to assemble a JAR file containing compiled bytecode, which can be deployed on different
 Samza installations.
-
-\textit{Note that the source code of our implementation can be seen in Appendix~\ref{lst:samza}.}
 
 % subsubsection samza (end)
 
@@ -342,6 +345,8 @@ as well as overall topology configuration~\cite{storm_doc}. An obvious downside 
 a recompilation in the case that configuration options need to be tweaked, while Samza configuration files are not part
 of the compiled source code.
 
+The source code for the Storm topology built and configured for our prototype pipeline can be viewed in Appendix~\ref{storm-topology}.
+
 \subsubsection{Input Component}
 
 For the implementation of the input component design in Storm, this revolves around the \texttt{BaseRichSpout} interface.
@@ -352,6 +357,8 @@ connection. If a value is encountered, it is constructed into a Storm tuple cont
 the configured stream. The \texttt{declareOutputFields} method is then used to declare the speed value type as a single
 value of type Double to be expected to make up a valid tuple.
 
+The source code for this Storm spout is available in Appendix~\ref{storm-spout}.
+
 \subsubsection{Processing Component}
 
 For the implementation of the processing component design in Storm, this revolves around the \texttt{BaseRichBolt} interface.
@@ -359,6 +366,8 @@ The \texttt{execute} method is used to test the data value in the received tuple
 implementation. Based on the outcome of the test, a new tuple is made with two values: the speed value along with a
 noise flag, being flagged if the speed value fails the test, unflagged otherwise. The newly constructed tuple is then
 emitted to the output stream for further processing.
+
+The source code for this Storm bolt is available in Appendix~\ref{storm-bolt}.
 
 \subsubsection{Output Component}
 
@@ -373,8 +382,6 @@ bytecode, assembled using Java build automation tools.
 
 For the implementation of our designed pipeline, Maven was used to assemble a JAR file containing compiled bytecode, which
 is free to be deployed on different Storm installations.
-
-\textit{Note that the source code of our implementation can be seen in Appendix~\ref{lst:storm}.}
 
 % subsubsection storm (end)
 
@@ -450,6 +457,9 @@ project through means of extra processing tasks that operate on existing streams
 in the way of adding further processing on the DStream that is produced from previously performed operations, such
 as the previously mentioned speed test function mapping.
 
+The source code for our Spark Streaming implementation can be seen in Scala in Appendix~\ref{spark-scala}, and in Python
+in Appendix~\ref{spark-python}.
+
 \subsubsection{Deployment}
 
 Spark Streaming programs are compiled and distributed in the same fashion in which Samza and Storm projects are. However,
@@ -462,8 +472,6 @@ For our Spark Streaming pipeline implementation written in Scala, SBT\footnote{h
 bytecode, for ease of use over Maven with Scala projects. For the Spark Streaming pipeline implemented in Python, the
 Python source files were simply used for deployment. Both methods enable the deployment of the Spark Streaming pipelines on
 different Spark installations.
-
-\textit{Note that the source code of our implementation can be seen in Appendix~\ref{lst:spark}.}
 
 % subsubsection spark_streaming (end)
 

@@ -27,7 +27,7 @@ mentioned Spark Streaming project, along with its mother project, Spark~\cite{we
 parallelisable data with the use-case in mind of processing data in-memory using highly iterative machine learning
 algorithms related to data analytics~\cite{liu_survey_2014}.
 
-What is proposed in this chapter is a realtime big data processing pipeline for the aforementioned railway monitoring
+What is proposed in this thesis is a realtime big data processing pipeline for the aforementioned railway monitoring
 system by the IRT at Monash University. This processing pipeline will allow data to be
 streamed from the railway and processed, in realtime, according to the team's given processing requirements. Multiple
 technologies exist in which this pipeline can be implemented, so a technology recommendation will be formed through
@@ -62,7 +62,7 @@ The most popular solution for this problem, up until recently, has been the MapR
  model of programming along with
 some type of scalable distributed storage system~\cite{bifet_mining_2013}. The MapReduce model was started at Google,
 Inc.\@ with their own proprietary implementation along with their proprietary distributed file system, known as the Google
-File System (GFS)~\cite{ghemawat_google_2003}. Without going into the low-level details of MapReduce and GFS, the use of this solution at Google
+File System (GFS)~\cite{ghemawat_google_2003}. The use of this solution at Google
 allowed the company to easily handle all the data that was coming into their servers, including those related to Google Search, and perform the necessary
 processing operations that was needed at the time~\cite{ghemawat_google_2003,dean_mapreduce:_2008}.
 
@@ -157,12 +157,12 @@ storage and processing systems.
 The main aim of the entire IRT research project is to develop a fully automated, non-relational big data pipeline to manage
 the data received from railway car sensors as a part of Monash University's Institute of Railway Technology project. The
 intention is to replace their current relational solution, with a non-relational big data system, offering at least the same capabilities at a larger scale and
-with higher performance. The scope of this project is relatively large, and the project, or sub-project, outlined in this
-thesis only covers a portion of the greater aforementioned project.
+with higher performance. The scope of the overall project is relatively large, hence what is covered in this thesis
+refers to only a portion of the required work in the IRT.
 
-The main aim of this sub-project, outlined in this thesis, is to investigate possible solutions of dealing with the railway sensor data being
-streamed and processed in realtime. Based on identified candidate solutions, a recommendation will be formed which will be
-used by the IRT team to implement their required realtime processing logic.
+The main aim of this thesis is to investigate possible solutions of dealing with the railway sensor data being
+streamed and processed in realtime, allowing such processing as the cleaning of noise from sensor readings. Based on identified
+candidate solutions, a recommendation will be formed which will be used by the IRT team to implement their required realtime processing logic.
 
 To allow the possibility of realtime data streaming from the railway sensors, and forming a recommendation for the most
 suitable solution, appropriate data stream processing system
@@ -226,7 +226,7 @@ performance. These problems are exacerbated given the non-realtime nature of the
 are only discovered much later after-the-fact. To overcome these issues, and to look forward into the hypothetical,
 but likely, possibility of having the technological infrastructure to support realtime data processing, this research
 aims to develop a realtime processing pipeline, taking the data straight from the railway sensors and perform any
-needed realtime processing, and come up with a DSPS technology recommendation for the implementation of this pipeline.
+needed realtime processing, such as data noise removal, and come up with a DSPS technology recommendation for the implementation of this pipeline.
 
 This chapter also outlined a brief context of the research project and big data as a whole, the scope of this sub-project,
 and this sub-project's research questions. Finally it was concluded with an overview of the entire structure of this thesis. The

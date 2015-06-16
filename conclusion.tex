@@ -81,6 +81,14 @@ tests. Looking at further cluster set-ups, this would allow an informed evaluati
 Of interest would be the differences in performance, and the ease of distributed and parallel programming, afforded by the different DSPS technologies across
 different cluster set-ups.
 
+A notable change in the landscape of realtime data stream processing technologies, within the time of writing this thesis,
+has been the announcement of a new realtime DSPS, Twitter Heron, produced in-house at Twitter~\cite{twitter-heron-web}. This technology was specifically
+created with the intention of replacing Storm functionality at Twitter~\cite{Kulkarni:2015:THS:2723372.2742788}. A paper, published by Kulkarni, et al.\@ in
+early June, 2015, notes Twitter Heron exhibiting far greater performance than Storm when used in the same context~\cite{Kulkarni:2015:THS:2723372.2742788}.
+At current, the Twitter Heron project remains closed-source and only for use at Twitter, however given the possibility of
+open-sourcing and release for use outside of Twitter, Heron would provide an additional platform on which to evaluate Storm
+against for use in the IRT project.
+
 Lastly, it would be of interest to evaluate the prototype pipeline designed and implemented in this research, running on our recommended
 DSPS technology, Storm, while in use with the entire IRT project ecosystem. Hence, it would be needed to be put in place,
 between the sensors located on train cars, and the data storage layer, allowing the performance of it to be evaluated.

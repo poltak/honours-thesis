@@ -296,7 +296,7 @@ the topology~\cite{jones2013process}. An example Storm topology is shown in~\fig
   \centering
   \includegraphics[width=0.8\textwidth]{includes/figures/fig_storm_topology1}
   \caption{An example Storm topology showing the source of the tuple stream from spouts A and B, received from an array
-  of sensors, which then forwards the stream on for processing at bolts A and B. Note that bolts can forward streams
+  of sensors, which then forwards the stream on for processing at bolts A and B. Bolts can forward streams
   onto other bolts.}
   \label{fig:storm_topology}
 \end{figure}
@@ -473,6 +473,14 @@ is inconclusive on whether or not they adhere to the particular requirement.
 
 \import{includes/tables/}{data_processing_compare}
 
+From this table, we can note that literature covering both deterministic outcomes and instant response from each of the DSPS technologies
+are not consistent. This may not be a problem for the project at hand, however proves to be a factor for further research.
+Furthermore, the possibility of performing batch computations on stored data are not available on both S4 and Samza. Given
+the dominance of batch processing shown to be needed in many areas of big data processing, this would be an important
+factor of adoption of DSPS technologies in many existing applications. Existing applications may want to introduce realtime
+data processing on-top of their existing batch processing logic. With technologies affording both batch and realtime data processing
+possibilities, both Storm and Spark Streaming would be very appealing options.
+
 % subsection conclusion (end)
 
 % section big_data_processing_background (end)
@@ -487,6 +495,18 @@ frameworks, often which are disputed by members in other platform ``camps''~\cit
 Hence, providing an informed recommendation based on the features each platform offers, and an impartial performance
 evaluation is a much needed and important contribution to address this gap in qualitative and quantitative evaluations
 of the available platforms. These evaluations will be looked at further in Chapter 4.
+
+From looking at existing literature in the area of realtime data stream processing, we have identified four candidate
+data stream processing technologies for use in the evaluation:
+\begin{itemize}
+  \item Storm
+  \item Samza
+  \item Spark Streaming
+  \item S4
+\end{itemize}
+However, due to the noted issues in S4 relating to lack of development, lack of adoption, and performance issues, in relevant
+literature, we have made the decision to ignore S4 for use in the overall evaluation. Hence, evaluation will be constrained
+to the candidate DSPS technologies of Samza, Spark Streaming, and Storm.
 
 This research will further the field of realtime big data processing in addressing these shown gaps, and making the
 decision process far more streamlined for researchers and developers of DSPS technologies alike.

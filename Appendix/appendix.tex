@@ -1,6 +1,5 @@
 \chapter{Samza Pipeline Prototype Implementation}
-\label{lst:samza}
-\begin{lstlisting}[language=java,caption=edu.monash.honours.system.SpeedConsumer (Java)]
+\begin{lstlisting}[language=java,caption=edu.monash.honours.system.SpeedConsumer (Java),label=samza-speedconsumersystem]
 package edu.monash.honours.system;
 
 import edu.monash.honours.util.SpeedReadingPair;
@@ -87,7 +86,7 @@ public class SpeedConsumer extends BlockingEnvelopeMap
 \clearpage
 
 
-\begin{lstlisting}[language=java,caption=edu.monash.honours.system.SpeedSystemFactory (Java)]
+\begin{lstlisting}[language=java,caption=edu.monash.honours.system.SpeedSystemFactory (Java),label=samza-systemfactory]
 package edu.monash.honours.system;
 
 import org.apache.samza.SamzaException;
@@ -138,7 +137,7 @@ public class SpeedSystemFactory implements SystemFactory
 \end{lstlisting}
 
 \clearpage
-\begin{lstlisting}[language=java,caption=edu.monash.honours.task.SpeedCheckStreamTask (Java)]
+\begin{lstlisting}[language=java,caption=edu.monash.honours.task.SpeedCheckStreamTask (Java),label=samza-task]
 package edu.monash.honours.task;
 
 import edu.monash.honours.util.SpeedReadingPair;
@@ -209,7 +208,7 @@ public class SpeedCheckStreamTask implements StreamTask
 \end{lstlisting}
 
 \clearpage
-\begin{lstlisting}[language=java,caption=edu.monash.honours.util.SpeedReadingPair (Java)]
+\begin{lstlisting}[language=java,caption=edu.monash.honours.util.SpeedReadingPair (Java),label=samza-util]
 package edu.monash.honours.util;
 
 import java.util.AbstractMap;
@@ -271,7 +270,7 @@ public class SpeedReadingPair
 \end{lstlisting}
 
 \clearpage
-\begin{lstlisting}[caption=SpeedCheckStreamTask (Samza config)]
+\begin{lstlisting}[caption=SpeedCheckStreamTask (Samza config),label=samza-config]
 # Job
 job.factory.class=org.apache.samza.job.yarn.YarnJobFactory
 job.name=speed-check
@@ -307,7 +306,7 @@ systems.kafka.producer.bootstrap.servers=localhost:9092
 \chapter{Storm Pipeline Prototype Implementation}
 \label{lst:storm}
 
-\begin{lstlisting}[language=java,caption=edu.monash.honours.bolt.SpeedCheckBolt (Java)]
+\begin{lstlisting}[language=java,caption=edu.monash.honours.bolt.SpeedCheckBolt (Java),label=storm-bolt]
 package edu.monash.honours.bolt;
 
 import backtype.storm.task.OutputCollector;
@@ -404,7 +403,7 @@ public class SpeedCheckBolt extends BaseRichBolt
 \end{lstlisting}
 
 \clearpage
-\begin{lstlisting}[language=java,caption=edu.monash.honours.spout.SpeedOutputSpout (Java)]
+\begin{lstlisting}[language=java,caption=edu.monash.honours.spout.SpeedOutputSpout (Java),label=storm-spout]
 package edu.monash.honours.spout;
 
 import backtype.storm.spout.SpoutOutputCollector;
@@ -478,7 +477,7 @@ public class SpeedOutputSpout extends BaseRichSpout
 \end{lstlisting}
 \clearpage
 
-\begin{lstlisting}[language=java,caption=edu.monash.honours.SpeedCheckTopology (Java)]
+\begin{lstlisting}[language=java,caption=edu.monash.honours.SpeedCheckTopology (Java),label=storm-topology]
 package edu.monash.honours;
 
 import backtype.storm.Config;
@@ -519,7 +518,7 @@ public class SpeedCheckTopology
 \chapter{Spark Streaming Pipeline Prototype Implementations}
 \label{lst:spark}
 
-\begin{lstlisting}[language=scala,caption=edu.monash.honours.SpeedCheck (Scala)]
+\begin{lstlisting}[language=scala,caption=edu.monash.honours.SpeedCheck (Scala),label=spark-scala]
 package edu.monash.honours
 
 import org.apache.spark.SparkConf
@@ -555,7 +554,7 @@ object SpeedCheck
 \end{lstlisting}
 \clearpage
 
-\begin{lstlisting}[language=python,caption=edu.monash.honours.SpeedCheck (Python)]
+\begin{lstlisting}[language=python,caption=edu.monash.honours.SpeedCheck (Python),label=spark-python]
 __author__ = 'poltak'
 
 from pyspark import SparkContext
