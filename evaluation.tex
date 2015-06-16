@@ -354,12 +354,20 @@ This is, unfortunately, not the case with Spark Streaming.
 \subsubsection{Available DSPS features}
 
 As these features were looked at previously in the literature review chapter, in~\sectref{sub:processing_conclusion},
-this table has been reconstructed in~\tabref{tab:dsps_features}, with S4 omitted due to being omitted from our candidate
-DSPS systems.
+this table has been reconstructed in~\tabref{tab:dsps_features}, with S4 omitted due to being excluded from our candidate
+DSPS systems. Furthermore, certain features that were deemed as inconclusive through analysis of existing literature have
+been decided upon through our further understanding of the technologies through our implementation phase. These features,
+that have changed from the table that was given in~\sectref{sub:processing_conclusion}, have been marked in~\tabref{tab:dsps_features}
+in bold.
 
 \import{includes/tables/}{data_processing_compare_nos4}
 
-In our implementation, the majority of these requirements were not of concern.
+In our work, the majority of these features were not of concern as they were not required for our prototype implementation.
+Our implementation focused solely on the processing of independent, unordered streaming data, hence \textbf{SQL on streams}, \textbf{Stored and
+streaming data}, both relating to batch processing capabilities, and \textbf{Handling stream imperfections}, relating to
+interdependent, or sequential data, were out of scope. Furthermore, as our implementation was only evaluated
+using a single-node cluster test environment, \textbf{Partition and scalability} was of no concern. However, we will
+touch upon some of these features, as they are a concern to the IRT project's aims as a whole.
 
 One obvious point of note, at first glance of the results, is that both Spark Streaming and Samza lack many of the realtime processing
 features that are present in Storm. This may be put down to the fact that both Spark Streaming, as an extension
@@ -385,6 +393,11 @@ language~\cite{web:storm-trident}. Spark Streaming, being built on top of the ba
 supports batch processing by off-loading to Spark, and an SQL-like query language through the new Spark SQL extension~\cite{web:sparksql}.
 Conversely, Samza does not afford any native type of batch processing functionality, or any SQL-like query language at
 the time of writing.
+
+Regarding the features previously deemed to be inconclusive, from a review of existing literature, both \textbf{Partition and
+scaling} and \textbf{Instant response} features have been noted as having findings. Through our tests performed with
+large batches off data being streamed in all at once, we have noted that all candidate DSPS technologies exhibit instant
+responses to data at all scales.
 
 
 \subsubsection{Ease of programmability}

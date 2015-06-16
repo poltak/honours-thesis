@@ -12,11 +12,11 @@
                                                 & \textbf{Storm}            & \textbf{Spark Streaming}  & \textbf{S4}               & \textbf{Samza}          \\ \hline
 \textbf{1: Data mobility}                       & Fetch                     & Micro-batch               & Push                      & Fetch (Kafka)           \\ \hline
 \textbf{2: SQL on streams}                      & Extension (Trident)       & Yes (SparkSQL)            & No                        & No                      \\ \hline
-\textbf{3: Handling stream imperfections}       & User responsiblity        & N/A                       & No                        & Yes (Kafka)             \\ \hline
+\textbf{3: Handling stream imperfections}       & User responsibility        & N/A                       & No                        & Yes (Kafka)             \\ \hline
 \textbf{4: Deterministic outcomes}              & N/A                       & N/A                       & Depends on operation      & N/A                     \\ \hline
-\textbf{5: Stored and streaming data}           & Yes (Lambda architecture) & Yes (Spark)               & No                      & No                      \\ \hline
+\textbf{5: Stored and streaming data}           & Yes (Trident) & Yes (Spark)               & No                      & No                      \\ \hline
 \textbf{6: High availability}                   & Yes (rollback recovery)   & Yes (checkpoint recovery) & Yes (checkpoint recovery) & Yes (rollback recovery) \\ \hline
-\textbf{7: Partition and scaling}               & User responsiblity        & N/A                       & Yes (KVP)                 & Yes (Kafka topics)      \\ \hline
+\textbf{7: Partition and scaling}               & User responsibility        & N/A                       & Yes (KVP)                 & Yes (Kafka topics)      \\ \hline
 \textbf{8: Instant response}                    & N/A                       & N/A                       & N/A                       & N/A                     \\ \hline
 \end{tabular}
 \end{adjustbox}
