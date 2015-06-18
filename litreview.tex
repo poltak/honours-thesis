@@ -290,16 +290,7 @@ The programming model for Storm consists of a Storm topology. This topology is m
 either ``transform'' the data in some specified way (known as a \textit{bolt}), or input the data from a specified source
 before outputting it to one of the given bolts (known as a \textit{spout}). The layout of spouts and bolts are then
 constructed in a separate topology definition, defining the way the data streams (represented as tuples) flow through
-the topology~\cite{jones2013process}. An example Storm topology is shown in~\figref{fig:storm_topology}.
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.8\textwidth]{includes/figures/fig_storm_topology1}
-  \caption{An example Storm topology showing the source of the tuple stream from spouts A and B, received from an array
-  of sensors, which then forwards the stream on for processing at bolts A and B. Bolts can forward streams
-  onto other bolts.}
-  \label{fig:storm_topology}
-\end{figure}
+the topology~\cite{jones2013process}.
 
 Storm, while predominantly written in Clojure, running on the JVM, allows topologies to be defined and written in any
 available programming language through the use of a Thrift definition for topologies~\cite{About8:online}. Thrift is
@@ -310,7 +301,7 @@ and Python, however most official Storm documentation, at present, use Java.
 % subsubsection storm (end)
 
 
-\subsection{Spark StreaminS} % (fold)
+\subsection{Spark Streaming} % (fold)
 \label{ssub:spark_streaming}
 
 Spark is another popular big data distributed processing framework, offering of both realtime data processing

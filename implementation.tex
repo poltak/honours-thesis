@@ -323,8 +323,16 @@ for implementation of custom spouts and bolts through the \path{backtype.storm.s
 interfaces, respectively~\cite{storm_doc}.
 
 As explained in~\sectref{ssub:storm}, spouts and bolts are arranged in a particular way to make up an overall Storm topology,
-which is used to transform streams in some specified manner. A simple example of such a topology is shown in the previous
-chapter, in~\figref{fig:storm_topology}.
+which is used to transform streams in some specified manner. A simple example of such a topology is shown in~\figref{fig:storm_topology}.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.8\textwidth]{includes/figures/fig_storm_topology1}
+  \caption{An example Storm topology showing the source of the tuple stream from spouts A and B, received from an array
+  of sensors, which then forwards the stream on for processing at bolts A and B. Bolts can forward streams
+  onto other bolts.}
+  \label{fig:storm_topology}
+\end{figure}
 
 Basic spouts require implementation of multiple methods, \texttt{open}, \texttt{nextTuple}, and \texttt{declareOutputFields},
 which act as a spout initialiser, handler for each tuple to be emitted to a stream, and a tuple type declaration, respectively.
